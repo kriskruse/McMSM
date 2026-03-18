@@ -1,5 +1,9 @@
 # McMSM
 
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+
+
 ## Description
 McMSM is a Minecraft modpack server manager.
 It lets you upload modpacks, store metadata, deploy a Docker container for each pack, and control runtime actions from a React UI.
@@ -33,7 +37,9 @@ It lets you upload modpacks, store metadata, deploy a Docker container for each 
 - Docker Desktop (or Docker Engine + Compose)
 - Java 25 JDK
 - Maven 3.9+
-- Node.js 20+ and npm (for frontend local run)
+- Node.js 20+ and npm
+- PowerShell 5.1+ (Windows) or PowerShell 7+ (for `buildAndRun.ps1`)
+- Bash (for `buildAndRun.sh` on Linux/macOS)
 
 ### 1) Clone repository
 ```powershell
@@ -41,33 +47,60 @@ git clone <your-repo-url>
 cd "McMSM"
 ```
 
-### 2) Start database
+### 2) Build and run everything with the helper script
+
+Windows (PowerShell):
 ```powershell
+.\buildAndRun.ps1
+```
+
+Linux/macOS (bash):
+```bash
+chmod +x ./buildAndRun.sh
+./buildAndRun.sh
+```
+
+What this script does:
+- Ensures Docker Compose, Maven, and npm are available
+- Starts the `postgres` container if needed and waits for healthy status
+- Builds backend with `mvn clean package -DskipTests`
+- Installs frontend dependencies (unless `-SkipFrontendInstall` is used)
+- Builds frontend with `npm run build`
+- Starts backend (`mvn spring-boot:run`) and frontend (`npm run dev`)
+
+Optional script parameters:
+```powershell
+.\buildAndRun.ps1 -SkipFrontendInstall
+.\buildAndRun.ps1 -ProjectName mcmsm -ComposeFile docker-compose.yml -BackendPom backend/pom.xml -FrontendDir frontend
+```
+
+```bash
+./buildAndRun.sh --skip-frontend-install
+./buildAndRun.sh --project-name mcmsm --compose-file docker-compose.yml --backend-pom backend/pom.xml --frontend-dir frontend
+```
+
+Process behavior note:
+- `buildAndRun.ps1` opens backend and frontend in new PowerShell windows.
+- `buildAndRun.sh` starts backend and frontend in background and writes logs to `backend/backend-dev.log` and `frontend/frontend-dev.log`.
+
+Backend runs on `http://localhost:8080` and exposes API under `/api`.
+Frontend runs on Vite default `http://localhost:5173`.
+
+### 3) Manual workflow (alternative)
+```powershell
+# Start database
 docker compose up -d postgres
-```
 
-### 3) Run backend
-Option A (helper script):
-```powershell
-.\buildAndRunBackend.ps1
-```
-
-Option B (manual):
-```powershell
+# Run backend
 cd backend
 mvn spring-boot:run
-```
 
-The backend runs on `http://localhost:8080` and exposes API under `/api`.
-
-### 4) Run frontend (new terminal)
-```powershell
-cd frontend
+# Run frontend (new terminal)
+cd ..\frontend
 npm install
 npm run dev
 ```
 
-Vite serves the frontend locally (default `http://localhost:5173`).
 
 ## Configuration Notes
 - Backend DB defaults are in `backend/src/main/resources/application.properties`
@@ -85,16 +118,6 @@ Vite serves the frontend locally (default `http://localhost:5173`).
 - **Archive**: removes deployed container and marks pack as saved while retaining modpack files
 - Backend now removes stale DB entries if modpack folders are missing on refresh/update flows
 
-## Useful Development Commands
-```powershell
-# Backend tests
-cd backend
-mvn test
-
-# Frontend production build
-cd frontend
-npm run build
-```
 
 ## TODO:
 - Center align the X button on the modpack expanded view
