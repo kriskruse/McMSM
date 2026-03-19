@@ -4,11 +4,15 @@
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
 
-## Description
-McMSM is a Minecraft modpack server manager.
-It lets you upload modpacks, store metadata, deploy a Docker container for each pack, and control runtime actions from a React UI.
+McMSM (Minecraft Modpack Server Manager) is a full-stack application designed to simplify the management of Minecraft modpack servers. 
+It patches a personal need for a lightweight, self-hosted solution to manage modpacks without relying on third-party services or complex server setups.
+The application allows users to upload modpacks, configure server settings, and manage the lifecycle of modpack instances (deploy, start, stop, delete) through an intuitive web interface. 
+
+The project is meant to solve a untouch pain point for people who host multiple modpack servers for themselves and their friends.
+The project is open to contributions and feedback, and I hope it can grow into a robust tool.
 
 ### Core Features
+Currently, the following features are implemented, but hoping to expand in the future:
 - Upload and register modpacks in the backend database
 - Edit modpack metadata (name, versions, Java config, port, entrypoint)
 - Deploy, start, stop, delete, and archive modpack runtime containers
