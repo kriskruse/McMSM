@@ -1,6 +1,14 @@
 package dk.broegger_kruse.applicationdemo.services;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import dk.broegger_kruse.applicationdemo.entities.ModPack;
+import dk.broegger_kruse.applicationdemo.entities.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,15 +19,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -41,19 +54,182 @@ public class FileService {
     private static final int DEFAULT_XMX_MIB = 8192;
     private static final int XMX_OVERHEAD_MIB = 250;
     private static final Pattern XMX_PATTERN = Pattern.compile("(?i)^(?:-Xmx)?(\\d+)([mMgG])$");
+    private static final Type USER_LIST_TYPE = new TypeToken<List<UserEntity>>() { }.getType();
+    private static final Type MODPACK_LIST_TYPE = new TypeToken<List<ModPack>>() { }.getType();
 
     private final Path modpacksRoot;
     private final Path tempRoot;
+    private final Path metadataRoot;
+    private final Path usersFile;
+    private final Path modpacksMetadataFile;
     private final ResourceLoader resourceLoader;
+    private final Gson gson;
+    private final ReentrantReadWriteLock usersLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock modpacksLock = new ReentrantReadWriteLock();
 
     public FileService(
             @Value("${app.storage.modpacks-root:modpacks}") String modpacksRootPath,
             @Value("${app.storage.temp-root:${java.io.tmpdir}/application-demo}") String tempRootPath,
+            @Value("${app.storage.metadata-root:data}") String metadataRootPath,
             ResourceLoader resourceLoader
     ) {
         this.modpacksRoot = Path.of(modpacksRootPath).toAbsolutePath().normalize();
         this.tempRoot = Path.of(tempRootPath).toAbsolutePath().normalize();
+        this.metadataRoot = Path.of(metadataRootPath).toAbsolutePath().normalize();
+        this.usersFile = this.metadataRoot.resolve("users.json");
+        this.modpacksMetadataFile = this.metadataRoot.resolve("modpacks.json");
         this.resourceLoader = resourceLoader;
+        JsonSerializer<Instant> instantSerializer = (src, typeOfSrc, context) -> new JsonPrimitive(src.toString());
+        JsonDeserializer<Instant> instantDeserializer = (json, typeOfT, context) -> {
+            try {
+                return Instant.parse(json.getAsString());
+            } catch (Exception ex) {
+                throw new JsonParseException("Invalid Instant value: " + json, ex);
+            }
+        };
+
+        this.gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Instant.class, instantSerializer)
+                .registerTypeAdapter(Instant.class, instantDeserializer)
+                .create();
+
+        initializeMetadataStore();
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return readUsers();
+    }
+
+    public Optional<UserEntity> findUserByUsername(String username) {
+        return readUsers().stream()
+                .filter(user -> Objects.equals(user.getUsername(), username))
+                .findFirst();
+    }
+
+    public Optional<UserEntity> findUserByUsernameAndPassword(String username, String password) {
+        return readUsers().stream()
+                .filter(user -> Objects.equals(user.getUsername(), username) && Objects.equals(user.getPassword(), password))
+                .findFirst();
+    }
+
+    public boolean existsByUsername(String username) {
+        return findUserByUsername(username).isPresent();
+    }
+
+    public UserEntity saveUser(UserEntity userEntity) {
+        Objects.requireNonNull(userEntity, "userEntity must not be null");
+
+        var lock = usersLock.writeLock();
+        lock.lock();
+        try {
+            List<UserEntity> users = this.readJsonList(usersFile, USER_LIST_TYPE);
+            if (userEntity.getId() == null) {
+                userEntity.setId(nextUserId(users));
+                users.add(userEntity);
+            } else {
+                var replaced = false;
+                for (var index = 0; index < users.size(); index++) {
+                    if (Objects.equals(users.get(index).getId(), userEntity.getId())) {
+                        users.set(index, userEntity);
+                        replaced = true;
+                        break;
+                    }
+                }
+
+                if (!replaced) {
+                    users.add(userEntity);
+                }
+            }
+
+            writeJsonList(usersFile, users);
+            return userEntity;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public List<ModPack> getAllModPacks() {
+        return readModPacks();
+    }
+
+    public List<ModPack> getAllModPacksByDeployment(boolean isDeployed) {
+        return readModPacks().stream()
+                .filter(pack -> Objects.equals(Boolean.TRUE.equals(pack.getIsDeployed()), isDeployed))
+                .toList();
+    }
+
+    public Optional<ModPack> findModPackById(Long packId) {
+        return readModPacks().stream()
+                .filter(pack -> Objects.equals(pack.getPackId(), packId))
+                .findFirst();
+    }
+
+    public boolean existsModPackByName(String name) {
+        return readModPacks().stream().anyMatch(pack -> Objects.equals(pack.getName(), name));
+    }
+
+    public ModPack saveModPack(ModPack modPack) {
+        Objects.requireNonNull(modPack, "modPack must not be null");
+
+        var lock = modpacksLock.writeLock();
+        lock.lock();
+        try {
+            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
+            if (modPack.getPackId() == null) {
+                modPack.setPackId(nextModPackId(modPacks));
+                modPacks.add(modPack);
+            } else {
+                var replaced = false;
+                for (var index = 0; index < modPacks.size(); index++) {
+                    if (Objects.equals(modPacks.get(index).getPackId(), modPack.getPackId())) {
+                        modPacks.set(index, modPack);
+                        replaced = true;
+                        break;
+                    }
+                }
+
+                if (!replaced) {
+                    modPacks.add(modPack);
+                }
+            }
+
+            writeJsonList(modpacksMetadataFile, modPacks);
+            return modPack;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void deleteModPack(ModPack modPack) {
+        Objects.requireNonNull(modPack, "modPack must not be null");
+        deleteModPackById(modPack.getPackId());
+    }
+
+    public void deleteModPackById(Long packId) {
+        var lock = modpacksLock.writeLock();
+        lock.lock();
+        try {
+            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
+            modPacks.removeIf(pack -> Objects.equals(pack.getPackId(), packId));
+            writeJsonList(modpacksMetadataFile, modPacks);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void deleteAllModPacks(List<ModPack> stalePacks) {
+        var staleIds = stalePacks.stream().map(ModPack::getPackId).toList();
+
+        var lock = modpacksLock.writeLock();
+        lock.lock();
+        try {
+            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
+            modPacks.removeIf(pack -> staleIds.contains(pack.getPackId()));
+            writeJsonList(modpacksMetadataFile, modPacks);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public ModPack createDraftModPackFromFile(MultipartFile file) {
@@ -226,6 +402,100 @@ public class FileService {
         }
 
         modPack.setPath(targetPath.toString());
+    }
+
+    private void initializeMetadataStore() {
+        try {
+            Files.createDirectories(metadataRoot);
+            ensureJsonFileInitialized(usersFile);
+            ensureJsonFileInitialized(modpacksMetadataFile);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed initializing file metadata store.", e);
+        }
+    }
+
+    private void ensureJsonFileInitialized(Path filePath) throws IOException {
+        if (Files.exists(filePath)) {
+            return;
+        }
+
+        Files.createDirectories(Objects.requireNonNullElse(filePath.getParent(), metadataRoot));
+        Files.writeString(filePath, "[]", CREATE, TRUNCATE_EXISTING);
+    }
+
+    private List<UserEntity> readUsers() {
+        var lock = usersLock.readLock();
+        lock.lock();
+        try {
+            return this.<UserEntity>readJsonList(usersFile, USER_LIST_TYPE);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private List<ModPack> readModPacks() {
+        var lock = modpacksLock.readLock();
+        lock.lock();
+        try {
+            return this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private <T> List<T> readJsonList(Path filePath, Type listType) {
+        try {
+            ensureJsonFileInitialized(filePath);
+            var raw = Files.readString(filePath, StandardCharsets.UTF_8);
+            if (raw.isBlank()) {
+                return new ArrayList<>();
+            }
+
+            @SuppressWarnings("unchecked")
+            List<T> parsed = gson.fromJson(raw, listType);
+            return parsed == null ? new ArrayList<>() : new ArrayList<>(parsed);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed reading metadata file: " + filePath, e);
+        }
+    }
+
+    private <T> void writeJsonList(Path filePath, List<T> entries) {
+        try {
+            Files.createDirectories(Objects.requireNonNullElse(filePath.getParent(), metadataRoot));
+            var tempFile = Files.createTempFile(metadataRoot, "store-", ".tmp");
+            try {
+                Files.writeString(tempFile, gson.toJson(entries), StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
+                moveAtomicallyOrReplace(tempFile, filePath);
+            } finally {
+                Files.deleteIfExists(tempFile);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed writing metadata file: " + filePath, e);
+        }
+    }
+
+    private void moveAtomicallyOrReplace(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException atomicMoveException) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private Long nextUserId(List<UserEntity> users) {
+        return users.stream()
+                .map(UserEntity::getId)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(0L) + 1;
+    }
+
+    private Long nextModPackId(List<ModPack> modPacks) {
+        return modPacks.stream()
+                .map(ModPack::getPackId)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(0L) + 1;
     }
 
     private void unzipArchive(Path archivePath, Path outputDir) throws IOException {

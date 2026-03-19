@@ -1,0 +1,156 @@
+name: Release McMSM
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "[0-9]*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to create/update (defaults to v{pom-version})"
+        required: false
+        type: string
+      draft:
+        description: "Create as draft release"
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: "Mark release as prerelease"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java 25 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Resolve version, tag, and release flags
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          VERSION="$(python -c "import xml.etree.ElementTree as ET; ns={'m':'http://maven.apache.org/POM/4.0.0'}; root=ET.parse('backend/pom.xml').getroot(); print(root.find('m:version', ns).text.strip())")"
+          if [[ -z "$VERSION" ]]; then
+            echo "Failed to resolve backend version from backend/pom.xml" >&2
+            exit 1
+          fi
+
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            RELEASE_TAG="${GITHUB_REF_NAME}"
+          elif [[ -n "${{ inputs.tag || '' }}" ]]; then
+            RELEASE_TAG="${{ inputs.tag }}"
+          else
+            RELEASE_TAG="v${VERSION}"
+          fi
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            IS_DRAFT="${{ inputs.draft }}"
+            IS_PRERELEASE="${{ inputs.prerelease }}"
+          else
+            IS_DRAFT="false"
+            IS_PRERELEASE="false"
+          fi
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=$RELEASE_TAG" >> "$GITHUB_ENV"
+          echo "IS_DRAFT=$IS_DRAFT" >> "$GITHUB_ENV"
+          echo "IS_PRERELEASE=$IS_PRERELEASE" >> "$GITHUB_ENV"
+
+      - name: Build backend package (includes frontend bundle)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mvn -B -f backend/pom.xml clean package -DskipTests
+
+      - name: Prepare release artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SOURCE_JAR="$(find backend/target -maxdepth 1 -type f -name '*.jar' ! -name '*.original.jar' | head -n 1)"
+          if [[ -z "$SOURCE_JAR" ]]; then
+            echo "No backend jar found in backend/target" >&2
+            exit 1
+          fi
+
+          RELEASE_JAR="McMSM-${VERSION}.jar"
+          cp "$SOURCE_JAR" "$RELEASE_JAR"
+          echo "RELEASE_JAR_PATH=$RELEASE_JAR" >> "$GITHUB_ENV"
+
+      - name: Generate release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          NOTES_FILE="${RUNNER_TEMP}/release-notes.md"
+          {
+            echo "# McMSM Release version ${VERSION}"
+            echo
+            echo "## Commits since last release"
+          } > "$NOTES_FILE"
+
+          PREVIOUS_TAG="$(git tag --sort=-creatordate | grep -Fxv "${RELEASE_TAG}" | head -n 1 || true)"
+          if [[ -n "$PREVIOUS_TAG" ]]; then
+            RANGE="${PREVIOUS_TAG}..HEAD"
+            echo "_Compared to tag \`${PREVIOUS_TAG}\`._" >> "$NOTES_FILE"
+          else
+            RANGE="HEAD"
+            echo "_No previous release tag found. Showing available commit history._" >> "$NOTES_FILE"
+          fi
+          echo >> "$NOTES_FILE"
+
+          COMMITS_RAW="$(git log --reverse --pretty=format:'%H%x1f%h%x1f%s%x1f%b%x1f%an%x1e' "$RANGE")"
+          if [[ -z "$COMMITS_RAW" ]]; then
+            echo "- No commits found in the selected range." >> "$NOTES_FILE"
+          else
+            while IFS=$'\x1e' read -r ENTRY; do
+              [[ -z "$ENTRY" ]] && continue
+
+              IFS=$'\x1f' read -r SHA SHORT_SHA TITLE BODY AUTHOR <<< "$ENTRY"
+              DESCRIPTION="$(printf '%s' "$BODY" | sed 's/\r$//' | awk 'NF {print; exit}')"
+              if [[ -z "$DESCRIPTION" ]]; then
+                DESCRIPTION="No description"
+              fi
+
+              echo "- [\`${SHORT_SHA}\`](https://github.com/${GITHUB_REPOSITORY}/commit/${SHA}) - ${TITLE} - ${DESCRIPTION} - by ${AUTHOR}" >> "$NOTES_FILE"
+            done < <(printf '%s' "$COMMITS_RAW")
+          fi
+
+          echo "RELEASE_NOTES_PATH=$NOTES_FILE" >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          target_commitish: ${{ github.sha }}
+          name: McMSM Release version ${{ env.VERSION }}
+          body_path: ${{ env.RELEASE_NOTES_PATH }}
+          files: ${{ env.RELEASE_JAR_PATH }}
+          draft: ${{ env.IS_DRAFT }}
+          prerelease: ${{ env.IS_PRERELEASE }}
+

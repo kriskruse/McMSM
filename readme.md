@@ -1,7 +1,6 @@
 # McMSM
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
 
 McMSM (Minecraft Modpack Server Manager) is a full-stack application designed to simplify the management of Minecraft modpack servers. 
@@ -32,18 +31,18 @@ Currently, the following features are implemented, but hoping to expand in the f
 - Docker Java client for container lifecycle operations
 
 ### Data + Infrastructure
-- PostgreSQL 18 (Docker Compose)
-- Docker / Docker Compose
+- File-based metadata storage (`backend/data` by default)
+- Docker (for managed Minecraft modpack runtime containers)
 
 ## How To Deploy And Run
 
 ### Prerequisites
-- Docker Desktop (or Docker Engine + Compose)
+- Docker Desktop (or Docker Engine)
 - Java 25 JDK
 - Maven 3.9+
 - Node.js 20+ and npm
-- PowerShell 5.1+ (Windows) or PowerShell 7+ (for `buildAndRun.ps1`)
-- Bash (for `buildAndRun.sh` on Linux/macOS)
+- PowerShell 5.1+ (Windows) or PowerShell 7+ (for `devBuildAndRun.ps1`)
+- Bash (for `devBuildAndRun.sh` on Linux/macOS)
 
 ### 1) Clone repository
 ```powershell
@@ -51,70 +50,85 @@ git clone <your-repo-url>
 cd "McMSM"
 ```
 
-### 2) Build and run everything with the helper script
+### 2) Build and run with the helper script
 
 Windows (PowerShell):
 ```powershell
-.\buildAndRun.ps1
+.\devBuildAndRun.ps1
 ```
 
 Linux/macOS (bash):
 ```bash
-chmod +x ./buildAndRun.sh
-./buildAndRun.sh
+chmod +x ./devBuildAndRun.sh
+./devBuildAndRun.sh
 ```
 
 What this script does:
-- Ensures Docker Compose, Maven, and npm are available
-- Starts the `postgres` container if needed and waits for healthy status
 - Builds backend with `mvn clean package -DskipTests`
-- Installs frontend dependencies (unless `-SkipFrontendInstall` is used)
-- Builds frontend with `npm run build`
-- Starts backend (`mvn spring-boot:run`) and frontend (`npm run dev`)
+- During backend packaging, runs frontend `npm ci` + `npm run build`
+- Copies frontend build output into backend static resources
+- Starts backend with `mvn spring-boot:run`
 
 Optional script parameters:
 ```powershell
-.\buildAndRun.ps1 -SkipFrontendInstall
-.\buildAndRun.ps1 -ProjectName mcmsm -ComposeFile docker-compose.yml -BackendPom backend/pom.xml -FrontendDir frontend
+.\devBuildAndRun.ps1 -BackendPom backend/pom.xml
 ```
 
 ```bash
-./buildAndRun.sh --skip-frontend-install
-./buildAndRun.sh --project-name mcmsm --compose-file docker-compose.yml --backend-pom backend/pom.xml --frontend-dir frontend
+./devBuildAndRun.sh --backend-pom backend/pom.xml
 ```
 
 Process behavior note:
-- `buildAndRun.ps1` opens backend and frontend in new PowerShell windows.
-- `buildAndRun.sh` starts backend and frontend in background and writes logs to `backend/backend-dev.log` and `frontend/frontend-dev.log`.
+- The app runs as a single backend process.
+- Frontend assets are served by Spring Boot from the bundled static build.
 
-Backend runs on `http://localhost:8080` and exposes API under `/api`.
-Frontend runs on Vite default `http://localhost:5173`.
+Application runs on `http://localhost:8080` and exposes API under `/api`.
 
 ### 3) Manual workflow (alternative)
 ```powershell
-# Start database
-docker compose up -d postgres
+# Build package (includes frontend build + bundle copy)
+cd backend
+mvn clean package -DskipTests
 
 # Run backend
-cd backend
 mvn spring-boot:run
-
-# Run frontend (new terminal)
-cd ..\frontend
-npm install
-npm run dev
 ```
 
 
 ## Configuration Notes
-- Backend DB defaults are in `backend/src/main/resources/application.properties`
+- Backend defaults are in `backend/src/main/resources/application.properties`
 - Environment overrides are supported:
-  - `SPRING_DATASOURCE_URL`
-  - `SPRING_DATASOURCE_USERNAME`
-  - `SPRING_DATASOURCE_PASSWORD`
   - `MODPACKS_ROOT`
   - `TEMP_DIR`
+  - `DATA_ROOT`
   - `RUNTIME_SYNC_INTERVAL_MS`
+  - `MAX_UPLOAD_FILE_SIZE`
+  - `MAX_UPLOAD_REQUEST_SIZE`
+
+## Releases (GitHub Actions)
+- Workflow file: `.github/workflows/release.yml`
+- It builds backend from the newest commit (including bundled frontend), renames artifact to `McMSM-{version}.jar`, and creates a GitHub release.
+- Release title format: `McMSM Release version {version}`
+- Release notes start with `# McMSM Release version {version}` and include one line per commit since the previous release tag:
+  - `{commit id link} - title - description - by {Author}`
+
+### How to control release flow
+- `workflow_dispatch` (manual): start from the Actions tab and optionally provide:
+  - `tag` (defaults to `v{version}` from `backend/pom.xml`)
+  - `draft` (`true`/`false`)
+  - `prerelease` (`true`/`false`)
+- `push.tags` (automatic): pushing a matching tag triggers release automatically.
+
+Example tag workflow:
+```powershell
+git tag v1.0
+git push origin v1.0
+```
+
+Manual trigger options:
+1. Use manual dispatch when you want approval gates or custom tag/draft/prerelease flags.
+2. Use tags when you want release creation to be part of your normal Git flow.
+3. Use both: create tags for stable versions, manual dispatch for hotfix/prerelease control.
 
 ## Modpack Lifecycle Notes
 - **Saved instance**: files + metadata exist, but no active deployment container
@@ -126,12 +140,20 @@ npm run dev
 ## TODO:
 - Center align the X button on the modpack expanded view
 - Add an indicator to the upload view between the upload done and form creation steps.
+- Fix expanded modpack view auto-scroll when streaming logs to the console.
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
 - Create a flow for releases on github with a build pipeline that builds the backend and frontend, creates a release, and uploads the built artifacts to the release.
 
+
+### Security Considerations:
+- Add hashing and encryption to user data.
+- Do proper authentication and authorization for the API endpoints, just basic user auth.
+- 
 
 ## Feature Ideas:
 - Backup worlds
 - Update modpacks by uploading a new zip and keeping the same metadata, world and optional configuration files.
 - Proper flow to ensure modpack servers are ran with proper java args
 - Create an update functionality for the manager application itself.
+- Automated modpack downloading from CurseForge or Modrinth APIs.
+- Modpack explorer to view possible modpacks to download and manage from the app itself.

@@ -1,60 +1,25 @@
 package dk.broegger_kruse.applicationdemo.entities;
 
 import dk.broegger_kruse.applicationdemo.interfaces.IModPack;
-import jakarta.persistence.*;
 import java.time.Instant;
 
-@Entity
-@Table(name = "modpacks", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class ModPack implements IModPack {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long packId;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String path;
-
-    @Column(name = "pack_version", nullable = false)
     private String packVersion;
-
-    @Column(name = "minecraft_version", nullable = false)
     private String minecraftVersion;
-
-    @Column(name = "java_version", nullable = false)
     private Integer javaVersion;
-
-    @Column(name = "java_xmx")
     private String javaXmx;
-
-    @Column(nullable = false)
     private String port;
-
-    @Column(name = "entry_point", nullable = false)
     private String entryPoint;
-
-    @Column(name = "container_name")
     private String containerName;
-
-    @Column(name = "container_id")
     private String containerId;
-
-    @Column(name = "is_deployed")
     private Boolean isDeployed;
-
-    @Column(name = "status", nullable = false)
     private String status;
-
-    @Column(name = "last_deploy_at")
     private Instant lastDeployAt;
-
-    @Column(name = "last_deploy_error", length = 4000)
     private String lastDeployError;
-
-    @Column(name = "updated_at")
     private Instant updatedAt;
 
 

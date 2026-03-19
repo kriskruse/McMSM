@@ -1,20 +1,11 @@
 package dk.broegger_kruse.applicationdemo.entities;
 
 import dk.broegger_kruse.applicationdemo.interfaces.IUserEntity;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class UserEntity implements IUserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private String username;
-
-    @Column(nullable = false)
     private String password;
 
     public UserEntity(String username, String password) {

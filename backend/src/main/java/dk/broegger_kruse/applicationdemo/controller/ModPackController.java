@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/modpacks")
+@RequestMapping("/api/modpacks")
 public class ModPackController {
     private static final Logger logger = LoggerFactory.getLogger(ModPackController.class);
 
