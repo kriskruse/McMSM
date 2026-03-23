@@ -1,0 +1,183 @@
+{
+	extra: {
+		texture: "minecraft:end_stone_bricks",
+		name: "§fEnd",
+		power: 15000,
+		cooldown: 50,
+		level:5000
+	},
+	block: [
+		{
+			weight: 6,
+			content: "silentgems:ammolite_ore"
+		},
+		{
+			weight: 6,
+			content: "endergetic:chiseled_end_stone_bricks"
+		},
+		{
+			weight: 6,
+			content: "bigreactors:anglesite_ore"
+		},
+		{
+			weight: 7,
+			content: "endergetic:eumus_poismoss"
+		},
+		{
+			weight: 6,
+			content: "silentgems:kunzite_ore"
+		},
+		{
+			weight: 7,
+			content: "silentgems:ender_ore"
+		},
+		{
+			weight: 68,
+			content: "minecraft:end_stone"
+		},
+		{
+			weight: 6,
+			content: "silentgems:sodalite_ore"
+		},
+		{
+			weight: 4,
+			content: "silentgems:hardened_end_stone"
+		},
+		{
+			weight: 5,
+			content: "endergetic:end_corrock_block"
+		},
+		{
+			weight: 8,
+			content: "endergetic:poismoss"
+		},
+		{
+			weight: 14,
+			content: "minecraft:purpur_pillar"
+		},
+		{
+			weight: 6,
+			content: "silentgems:yellow_diamond_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:pearl_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:chrysoprase_ore"
+		},
+		{
+			weight: 5,
+			content: "endergetic:eumus"
+		},
+		{
+			weight: 45,
+			content: "minecraft:end_stone_bricks"
+		},
+		{
+			weight: 6,
+			content: "silentgems:sunstone_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:tektite_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:cats_eye_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:kyanite_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:pyrope_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:jade_ore"
+		},
+		{
+			weight: 5,
+			content: "endergetic:poise_cluster"
+		},
+		{
+			weight: 14,
+			content: "quark:biotite_ore"
+		},
+		{
+			weight: 6,
+			content: "endergetic:cracked_end_stone_bricks"
+		},
+		{
+			weight: 6,
+			content: "silentgems:rose_quartz_ore"
+		},
+		{
+			weight: 6,
+			content: "silentgems:multi_ore_light"
+		},
+		{
+			weight: 6,
+			content: "silentgems:coral_ore"
+		},
+		{
+			weight: 22,
+			content: "minecraft:purpur_block"
+		},
+		{
+			weight: 6,
+			content: "silentgear:azure_silver_ore"
+		},
+		{
+			weight: 4,
+			content: "endergetic:cracked_eumus_bricks"
+		},
+		{
+			weight: 6,
+			content: "silentgems:apatite_ore"
+		},
+		{
+			weight: 5,
+			content: "endergetic:cracked_purpur_block"
+		},
+		{
+			weight: 6,
+			content: "silentgems:fluorite_ore"
+		}
+	],
+	entity: [
+		{
+			weight: 2,
+			content: {
+				id: "endergetic:puff_bug"
+			}
+		},
+		{
+			weight: 4,
+			content: {
+				id: "minecraft:endermite"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				id: "silentgems:ender_slime"
+			}
+		},
+		{
+			weight: 6,
+			content: {
+				id: "minecraft:enderman"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "endergetic:booflo"
+			}
+		}
+	]
+}

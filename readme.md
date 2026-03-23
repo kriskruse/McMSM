@@ -126,9 +126,14 @@ Manual trigger options:
 - Center align the X button on the modpack expanded view
 - Add an indicator to the upload view between the upload done and form creation steps.
 - Fix expanded modpack view auto-scroll when streaming logs to the console.
+- Add a warning for port overlap when creating/editing modpacks.
+- fix metadata edit form not listing minecraft versions.
+- Add some overflow handling for the modpack name in the modpack card view.
 
 #### Medium
 - Add an indicator for the backend Docker connection status.
+- Add a flow that tries to extract the Modpack version from the uploaded zip name and pre-fills the version field in the metadata form.
+- Make the Dashboard do an upload when you drop a zip file on it, instead of just the upload view.
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.

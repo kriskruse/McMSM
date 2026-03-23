@@ -1,0 +1,57 @@
+{
+	phase: [
+		{
+			weight: 2,
+			content: "800"
+		}
+	],
+	extra: {
+		texture: "astralsorcery:marble_engraved",
+		name: "§bAstral",
+		power: 1000,
+		cooldown: 80,
+		level:1800
+	},
+	block: [
+		{
+			weight: 8,
+			content: "astralsorcery:marble_runed"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:marble_bricks"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:marble_engraved"
+		},
+		{
+			weight: 9,
+			content: "minecraft:sand"
+		},
+		{
+			weight: 6,
+			content: "astralsorcery:starmetal_ore"
+		},
+		{
+			weight: 6,
+			content: "astralsorcery:aquamarine_sand_ore"
+		},
+		{
+			weight: 4,
+			content: "astralsorcery:rock_crystal_ore"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:marble_chiseled"
+		},
+		{
+			weight: 30,
+			content: "astralsorcery:marble_raw"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:marble_arch"
+		}
+	]
+}

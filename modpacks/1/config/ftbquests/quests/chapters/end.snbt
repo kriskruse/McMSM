@@ -1,0 +1,174 @@
+{
+	id: "0000000000000351"
+	group: ""
+	order_index: 13
+	filename: "end"
+	title: "End"
+	icon: "minecraft:end_portal_frame"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			dependencies: ["00000000000001BE"]
+			hide: true
+			id: "0000000000000352"
+			tasks: [{
+				id: "0000000000000353"
+				type: "kill"
+				entity: "silentgems:ender_slime"
+				value: 20L
+			}]
+			rewards: [
+				{
+					id: "0000000000000354"
+					type: "item"
+					item: "minecraft:ender_pearl"
+					count: 4
+				}
+				{
+					id: "0000000000000355"
+					type: "item"
+					item: "minecraft:ender_eye"
+					count: 5
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: -1.5d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "0000000000000356"
+			tasks: [{
+				id: "0000000000000357"
+				type: "item"
+				item: "minecraft:end_stone"
+				count: 64L
+			}]
+			rewards: [{
+				id: "0000000000000358"
+				type: "item"
+				item: "minecraft:end_stone"
+				count: 32
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.5d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "0000000000000359"
+			tasks: [{
+				id: "000000000000035A"
+				type: "item"
+				item: "minecraft:end_stone_bricks"
+				count: 64L
+			}]
+			rewards: [{
+				id: "000000000000035B"
+				type: "item"
+				item: "minecraft:end_stone_bricks"
+				count: 32
+			}]
+		}
+		{
+			icon: "minecraft:chorus_fruit"
+			x: 1.5d
+			y: 0.0d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "000000000000035C"
+			tasks: [{
+				id: "000000000000035D"
+				type: "item"
+				item: "minecraft:purpur_block"
+				count: 120L
+			}]
+			rewards: [{
+				id: "000000000000035E"
+				type: "item"
+				item: "minecraft:chorus_fruit"
+			}]
+		}
+		{
+			x: -1.5d
+			y: 0.0d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "000000000000035F"
+			tasks: [{
+				id: "0000000000000360"
+				type: "item"
+				item: "endergetic:eumus"
+				count: 50L
+			}]
+			rewards: [{
+				id: "0000000000000361"
+				type: "item"
+				item: "endergetic:eumus"
+				count: 30
+			}]
+		}
+		{
+			x: 4.5d
+			y: 0.0d
+			dependencies: ["0000000000000349"]
+			hide: true
+			id: "0000000000000362"
+			tasks: [{
+				id: "0000000000000363"
+				type: "item"
+				item: "minecraft:dragon_breath"
+			}]
+			rewards: [{
+				id: "0000000000000364"
+				type: "item"
+				item: "endergetic:acidian_lantern"
+				count: 10
+			}]
+		}
+		{
+			x: 4.5d
+			y: 1.5d
+			dependencies: ["0000000000000362"]
+			hide: true
+			id: "0000000000000365"
+			tasks: [{
+				id: "0000000000000366"
+				type: "item"
+				item: "minecraft:dragon_head"
+			}]
+			rewards: [{
+				id: "0000000000000367"
+				type: "item"
+				item: "productivebees:draconic_dust"
+				count: 10
+			}]
+		}
+		{
+			x: 6.5d
+			y: 1.5d
+			dependencies: ["0000000000000365"]
+			hide: true
+			id: "0000000000000368"
+			tasks: [{
+				id: "0000000000000369"
+				type: "item"
+				item: {
+					id: "minecraft:elytra"
+					Count: 1b
+					tag: {
+						Damage: 0
+					}
+				}
+			}]
+			rewards: [{
+				id: "000000000000036A"
+				type: "item"
+				item: "silentgear:elytra_blueprint"
+			}]
+		}
+	]
+}

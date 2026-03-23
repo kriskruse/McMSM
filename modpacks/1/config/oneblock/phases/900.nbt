@@ -1,0 +1,1499 @@
+{
+	phase: [
+		{
+			weight: 54,
+			content: "300"
+		},
+		{
+			weight: 25,
+			content: "0"
+		},
+		{
+			weight: 3,
+			content: "200"
+		}
+	],
+	extra: {
+		texture: "minecraft:lime_terracotta",
+		name: "§aOverworld",
+		power: 4000,
+		cooldown: 60,
+		level:900
+	},
+	block: [
+		{
+			weight: 7,
+			content: "minecraft:terracotta"
+		},
+		{
+			weight: 4,
+			content: "quark:brimstone"
+		},
+		{
+			weight: 7,
+			content: "minecraft:purple_terracotta"
+		},
+		{
+			weight: 4,
+			content: "quark:myalite_crystal"
+		},
+		{
+			weight: 4,
+			content: "quark:limestone"
+		},
+		{
+			weight: 7,
+			content: "minecraft:snow_block"
+		},
+		{
+			weight: 4,
+			content: "quark:jasper"
+		},
+		{
+			weight: 4,
+			content: "minecraft:blue_ice"
+		},
+		{
+			weight: 4,
+			content: "quark:green_crystal"
+		},
+		{
+			weight: 9,
+			content: "minecraft:red_sand"
+		},
+		{
+			weight: 4,
+			content: "quark:slate"
+		},
+		{
+			weight: 7,
+			content: "minecraft:yellow_terracotta"
+		},
+		{
+			weight: 6,
+			content: "minecraft:red_sandstone"
+		},
+		{
+			weight: 4,
+			content: "minecraft:mycelium"
+		},
+		{
+			weight: 4,
+			content: "quark:orange_crystal"
+		},
+		{
+			weight: 4,
+			content: "minecraft:honeycomb_block"
+		},
+		{
+			weight: 5,
+			content: "minecraft:magma_block"
+		},
+		{
+			weight: 4,
+			content: "minecraft:packed_ice"
+		},
+		{
+			weight: 4,
+			content: "quark:basalt"
+		},
+		{
+			weight: 4,
+			content: "quark:violet_crystal"
+		},
+		{
+			weight: 4,
+			content: "quark:blue_crystal"
+		},
+		{
+			weight: 4,
+			content: "quark:permafrost"
+		},
+		{
+			weight: 4,
+			content: "quark:black_crystal"
+		},
+		{
+			weight: 7,
+			content: "minecraft:light_gray_terracotta"
+		},
+		{
+			weight: 7,
+			content: "minecraft:pink_terracotta"
+		},
+		{
+			weight: 4,
+			content: "quark:red_crystal"
+		},
+		{
+			weight: 9,
+			content: "minecraft:sand"
+		},
+		{
+			weight: 4,
+			content: "quark:myalite"
+		},
+		{
+			weight: 7,
+			content: "minecraft:gray_terracotta"
+		},
+		{
+			weight: 6,
+			content: "minecraft:sandstone"
+		},
+		{
+			weight: 4,
+			content: "quark:indigo_crystal"
+		},
+		{
+			weight: 6,
+			content: "minecraft:ice"
+		},
+		{
+			weight: 2,
+			content: "minecraft:bee_nest"
+		},
+		{
+			weight: 4,
+			content: "quark:yellow_crystal"
+		}
+	],
+	entity: [
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				CanJoinRaid: 1b,
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 12.0d,
+						Modifiers: [
+							{
+								Amount: -1.0954422662109581E-4d,
+								Operation: 1,
+								UUID: [I; -180021215, 1132874057, -1797816872, 1471827663],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.5d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				PatrolLeader: 0b,
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				SpellTicks: 0,
+				id: "minecraft:evoker",
+				Patrolling: 0b,
+				Health: 24.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-118.61626f, -8.803227f],
+				HandItems: [
+					{},
+					{}
+				],
+				Wave: 0,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "minecraft:trader_llama"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				Tame: 0b,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.0d,
+						Name: "minecraft:generic.armor"
+					},
+					{
+						Base: 26.0d,
+						Name: "minecraft:generic.max_health"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.0014493200934315052d,
+								Operation: 1,
+								UUID: [I; -494708859, -704559574, -2137548142, 574710733],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.5501017660031094d,
+						Name: "minecraft:horse.jump_strength"
+					},
+					{
+						Base: 0.24645254038983572d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				Bred: 0b,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				EatingHaystack: 0b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:horse",
+				Age: 0,
+				Health: 53.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-125.57541f, -18.984808f],
+				HandItems: [
+					{},
+					{}
+				],
+				Variant: 258,
+				ArmorDropChances: [0.085f, 0.085f, 0.0f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				Temper: 0,
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				NoGravity: 1b,
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 4.0d,
+						Name: "minecraft:generic.attack_damage"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.008534755859407014d,
+								Operation: 1,
+								UUID: [I; -1994962300, -2049687534, -1534878190, 190118620],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.699999988079071d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.0f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:vex",
+				Health: 14.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 0b,
+				Rotation: [36.218845f, 11.015363f],
+				HandItems: [
+					{
+						id: "minecraft:iron_sword",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: 0s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.06548183095529872d,
+								Operation: 1,
+								UUID: [I; 390618329, -466271740, -1423520983, 805146844],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				RabbitType: 0,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:rabbit",
+				Age: 0,
+				MoreCarrotTicks: 0,
+				Health: 3.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [135.0f, -31.67382f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "quark:crab"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Sitting: 0b,
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.07910791488791838d,
+								Operation: 1,
+								UUID: [I; 963250793, -1062056310, -1889025963, -579100681],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.20000000298023224d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:parrot",
+				Age: 0,
+				Health: 6.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [107.75781f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				Variant: 1,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				IsBaby: 0b,
+				Attributes: [
+					{
+						Base: 0.05919583839460862d,
+						Name: "minecraft:zombie.spawn_reinforcements"
+					},
+					{
+						Base: 0.0d,
+						Modifiers: [
+							{
+								Amount: 0.04609295365368291d,
+								Operation: 0,
+								UUID: [I; -1454131326, -1060943767, -1077242973, 424641472],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.knockback_resistance"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 35.0d,
+						Modifiers: [
+							{
+								Amount: -0.002946052931784909d,
+								Operation: 1,
+								UUID: [I; 860297019, -1913631023, -1623393315, 496117123],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.23000000417232513d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				InWaterTime: -1,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				Xp: 0,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:zombie_villager",
+				ConversionTime: -1,
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [15.486496f, 3.6315613f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				CanBreakDoors: 0b,
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				VillagerData: {
+					profession: "minecraft:mason",
+					level: 1,
+					type: "minecraft:plains"
+				},
+				HurtTime: 0s,
+				DrownedConversionTime: -1
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.026370731579834068d,
+								Operation: 1,
+								UUID: [I; -1283484033, 1794918299, -1412543756, -2121540930],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.20000000298023224d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:mooshroom",
+				Age: 0,
+				Health: 10.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-132.53348f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Type: "red",
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				IsBaby: 0b,
+				Attributes: [
+					{
+						Base: 0.09910163616243119d,
+						Name: "minecraft:zombie.spawn_reinforcements"
+					},
+					{
+						Base: 0.0d,
+						Modifiers: [
+							{
+								Amount: 0.036610168163743434d,
+								Operation: 0,
+								UUID: [I; -912434867, 1049971531, -1512805769, 1902893550],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.knockback_resistance"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 35.0d,
+						Modifiers: [
+							{
+								Amount: -0.004177633854442865d,
+								Operation: 1,
+								UUID: [I; 485478542, -1565834072, -2131858501, 2005146413],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.23000000417232513d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				InWaterTime: -1,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:husk",
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [109.19515f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				CanBreakDoors: 0b,
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s,
+				DrownedConversionTime: -1
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "minecraft:llama"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 20.0d,
+						Modifiers: [
+							{
+								Amount: 0.022125112049023052d,
+								Operation: 1,
+								UUID: [I; 1932944091, 1987399199, -1973680797, 1460050736],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:polar_bear",
+				Age: 0,
+				AngerTime: 0,
+				Health: 30.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-3.0689697f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "minecraft:wandering_trader"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Sitting: 0b,
+				Attributes: [
+					{
+						Base: 8.0d,
+						Name: "minecraft:generic.max_health"
+					},
+					{
+						Base: 4.0d,
+						Name: "minecraft:generic.attack_damage"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.07588530050811837d,
+								Operation: 1,
+								UUID: [I; -753639692, 496911835, -1570947185, 187348889],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:wolf",
+				Age: 0,
+				CollarColor: 14b,
+				AngerTime: 0,
+				Health: 8.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-66.609985f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "quark:wrapped"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.07082627113317923d,
+								Operation: 1,
+								UUID: [I; -1643320620, 1470645923, -1878761573, -672287664],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.15000000596046448d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HiddenGene: "brown",
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:panda",
+				MainGene: "weak",
+				Age: 0,
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [78.13564f, -16.96779f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 1b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				HasEgg: 0b,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.05193631764441741d,
+								Operation: 1,
+								UUID: [I; -1268349059, 961103060, -1555899780, 1084196957],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				TravelPosZ: 0,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:turtle",
+				Age: 0,
+				Health: 30.0f,
+				LeftHanded: 0b,
+				TravelPosY: 0,
+				Air: 300s,
+				OnGround: 1b,
+				TravelPosX: 0,
+				Rotation: [351.05978f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				HomePosZ: 244,
+				CanPickUpLoot: 0b,
+				HomePosY: 64,
+				HurtTime: 0s,
+				HomePosX: 244
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "minecraft:bee"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.001599583774093446d,
+								Operation: 1,
+								UUID: [I; -1746036835, -1294055180, -2052619540, -36411742],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:ocelot",
+				Age: 0,
+				Health: 10.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-130.18092f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				Trusting: 0b,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				HasStung: 0b,
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 48.0d,
+						Modifiers: [
+							{
+								Amount: -0.02682794361383043d,
+								Operation: 1,
+								UUID: [I; -933782891, -1686682237, -1417597813, 1974076045],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				CannotEnterHiveTicks: 0,
+				PersistenceRequired: 0b,
+				id: "minecraft:bee",
+				Age: 0,
+				TicksSincePollination: 15,
+				AngerTime: 0,
+				Health: 10.0f,
+				HasNectar: 0b,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [8.636413f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CropsGrownSincePollination: 0,
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.02719405050678203d,
+								Operation: 1,
+								UUID: [I; 1376624148, -515751600, -1738658766, 1322478572],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:stray",
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [168.10428f, 0.0f],
+				HandItems: [
+					{
+						id: "minecraft:bow",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "minecraft:donkey"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				CanJoinRaid: 1b,
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.06372559527644132d,
+								Operation: 1,
+								UUID: [I; -1009257550, -1716237973, -1982668996, 2011237539],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				PatrolLeader: 0b,
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:witch",
+				Patrolling: 0b,
+				Health: 26.0f,
+				LeftHanded: 1b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [43.162773f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				Wave: 0,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "minecraft:mule"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				id: "minecraft:villager"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "quark:frog"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				CanJoinRaid: 1b,
+				Attributes: [
+					{
+						Base: 5.0d,
+						Name: "minecraft:generic.attack_damage"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 12.0d,
+						Modifiers: [
+							{
+								Amount: 0.019496467894042815d,
+								Operation: 1,
+								UUID: [I; -463460628, -411284707, -2065953042, 1254287122],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.3499999940395355d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				PatrolLeader: 0b,
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:vindicator",
+				Patrolling: 0b,
+				Health: 24.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-77.947266f, 1.0881859f],
+				HandItems: [
+					{
+						id: "minecraft:iron_axe",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{}
+				],
+				Wave: 0,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				CanJoinRaid: 1b,
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 32.0d,
+						Modifiers: [
+							{
+								Amount: -0.01986697526214445d,
+								Operation: 1,
+								UUID: [I; -46529730, -1642378272, -1173928455, -724619198],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.3499999940395355d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				PatrolLeader: 0b,
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:pillager",
+				Patrolling: 0b,
+				Health: 24.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-101.03885f, 1.1269222f],
+				HandItems: [
+					{
+						id: "minecraft:crossbow",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{}
+				],
+				Wave: 0,
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s,
+				Inventory: []
+			}
+		}
+	]
+}

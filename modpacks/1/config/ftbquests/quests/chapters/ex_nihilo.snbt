@@ -1,0 +1,419 @@
+{
+	id: "79F742F7C7BA6374"
+	group: ""
+	order_index: 14
+	filename: "ex_nihilo"
+	title: "Ex Nihilo"
+	icon: "oneblock:ex_nihilo"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			title: "Early phases"
+			x: -2.0d
+			y: 0.0d
+			dependencies: ["4484C7F9072DB408"]
+			hide: true
+			id: "2A95CEF63B25A027"
+			tasks: [
+				{
+					id: "2D815B359FB4F143"
+					type: "item"
+					title: "Flatland Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 0
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 0
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "3F1B422019FF2A94"
+					type: "item"
+					title: "Farmland Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 200
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 200
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "1F51FA4C7D831F44"
+					type: "item"
+					title: "Underground Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 300
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 300
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "28459AA544A890B5"
+					type: "item"
+					title: "Overworld Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 800
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 900
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+			rewards: [{
+				id: "546B11C53631D327"
+				type: "item"
+				item: "oneblock:ex_nihilo"
+			}]
+		}
+		{
+			title: "Magic phases"
+			x: 0.0d
+			y: 0.0d
+			dependencies: ["4484C7F9072DB408"]
+			hide: true
+			id: "55B46521F06E4FD3"
+			tasks: [
+				{
+					id: "27A569E993E4749E"
+					type: "item"
+					title: "Astral Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 1800
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 1800
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "7A573667CE3A5A7B"
+					type: "item"
+					title: "Magicka Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 2000
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 2000
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "4C4B3FE53653FD60"
+					type: "item"
+					title: "MagicBundle Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 2200
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 2200
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+			rewards: [{
+				id: "4E724E452551700A"
+				type: "item"
+				item: "oneblock:ex_nihilo"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 0.0d
+			dependencies: ["4484C7F9072DB408"]
+			hide: true
+			id: "0984E71452F059AA"
+			tasks: [
+				{
+					id: "7271720B36C52288"
+					type: "item"
+					title: "Abyss Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 3000
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 3000
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "019C60867511500F"
+					type: "item"
+					title: "Bumblezone Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 3800
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 3800
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "4605F71FA5BCC05E"
+					type: "item"
+					title: "Nether Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 4200
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 4200
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+				{
+					id: "30016E36124A9A02"
+					type: "item"
+					title: "End Catalyst"
+					icon: {
+						id: "oneblock:nihilo_catalyst"
+						Count: 1b
+						tag: {
+							oblevel: 5000
+						}
+					}
+					item: {
+						id: "itemfilters:and"
+						Count: 1b
+						tag: {
+							items: [
+								{
+									id: "oneblock:nihilo_catalyst"
+									Count: 1b
+								}
+								{
+									id: "itemfilters:weak_nbt"
+									Count: 1b
+									tag: {
+										value: {
+											oblevel: 5000
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+			rewards: [{
+				id: "2543E90A8FD082AB"
+				type: "item"
+				item: "oneblock:ex_nihilo"
+			}]
+		}
+	]
+}

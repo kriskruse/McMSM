@@ -1,0 +1,51 @@
+
+[general]
+	#
+	#Set to false to disable the circle
+	"Place Circle" = true
+	#Set to false to prevent the oneblock placement block from being automaticaly replaced by a new oneblock
+	"Auto placement" = true
+	#Type of the level up message
+	#Allowed Values: TITLE, ACTIONBAR
+	"Message type" = "TITLE"
+	#
+	#Set to false to disable the OBMaker give at spawn
+	#
+	"Give OBMaker" = false
+	#Customize the one block level up message
+	#%X% -> X position of the one block.
+	#%Y% -> Y position of the one block.
+	#%Z% -> Z position of the one block.
+	#%Level% -> level name of the one block.
+	#Note :
+	#You can type § to use minecraft colors
+	#Set an empty space to disable message
+	"Level up message" = "%Level%"
+	#All players within this radius of the oneblock will receive the level up message
+	#Range: > 0
+	"Message sending radius" = 15
+
+[generators]
+	#Power consumption in FE per tick
+	#This amount will be used for all phases
+	#Set to 0 to use phase's power consumption instead
+	#The Ex Nihilo Generator won't consume energy if the phase's power consumption is also set to 0
+	#Range: > 0
+	"FE/tick" = 0
+	#Penalty per enchantment level
+	#Power consumption is multiplied by this value for each enchantment level on your enchanted book
+	#Power = BasePower * (penalty^levels)
+	#Range: 1.0 ~ 3.4028234663852886E38
+	"ench penalty" = 1.3
+	#Generation Cooldown (in ticks)
+	#This cooldown will be used for all phases
+	#Set to 0 to use phase's cooldown instead
+	#Range: > 0
+	Ticks = 0
+	#Set true to disable mob kill sounds
+	Mute = true
+	#Energy capacity
+	#Should be set to the maximum power consumption at least to work properly
+	#Range: > 0
+	capacity = 10000000
+

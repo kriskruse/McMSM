@@ -1,0 +1,352 @@
+{
+	id: "0000000000000247"
+	group: ""
+	order_index: 9
+	filename: "bumblezone"
+	title: "Bumblezone"
+	icon: "minecraft:bee_nest"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			description: [
+				"Throw an enderpearl at any Bee Nest or Beehive."
+				"You can leave the bumblezone by falling into the void."
+			]
+			dependencies: ["00000000000001E1"]
+			hide: true
+			id: "0000000000000248"
+			tasks: [{
+				id: "0000000000000249"
+				type: "dimension"
+				title: "Explore the bumblezone"
+				icon: "minecraft:bee_nest"
+				dimension: "the_bumblezone:the_bumblezone"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 1.5d
+			dependencies: ["0000000000000248"]
+			id: "000000000000024C"
+			tasks: [{
+				id: "000000000000024D"
+				type: "item"
+				item: "buzzier_bees:crystallized_honey_block"
+				count: 64L
+			}]
+			rewards: [{
+				id: "0000000000000255"
+				type: "item"
+				item: "buzzier_bees:honey_lamp"
+				count: 4
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.5d
+			dependencies: ["0000000000000248"]
+			id: "000000000000024E"
+			tasks: [{
+				id: "000000000000024F"
+				type: "item"
+				item: "minecraft:honeycomb_block"
+				count: 64L
+			}]
+			rewards: [{
+				id: "0000000000000256"
+				type: "item"
+				item: "buzzier_bees:honey_lamp"
+				count: 4
+			}]
+		}
+		{
+			x: 0.0d
+			y: 2.5d
+			dependencies: ["0000000000000248"]
+			id: "0000000000000250"
+			tasks: [{
+				id: "0000000000000251"
+				type: "item"
+				item: "the_bumblezone:honey_crystal_shards"
+				count: 16L
+			}]
+			rewards: [{
+				id: "0000000000000254"
+				type: "item"
+				item: "the_bumblezone:honey_crystal"
+				count: 16
+			}]
+		}
+		{
+			x: 1.0d
+			y: 1.5d
+			dependencies: ["0000000000000248"]
+			id: "0000000000000252"
+			tasks: [{
+				id: "0000000000000253"
+				type: "item"
+				item: "minecraft:honey_block"
+				count: 64L
+			}]
+			rewards: [{
+				id: "0000000000000257"
+				type: "item"
+				item: "buzzier_bees:honey_lamp"
+				count: 4
+			}]
+		}
+		{
+			title: "More"
+			x: 5.5d
+			y: 0.0d
+			dependencies: ["000000000000025A"]
+			id: "0000000000000258"
+			tasks: [{
+				id: "0000000000000259"
+				type: "item"
+				item: "productivebees:advanced_oak_beehive"
+			}]
+			rewards: [{
+				id: "000000000000025F"
+				type: "item"
+				item: "minecraft:honeycomb"
+				count: 4
+			}]
+		}
+		{
+			title: "Bee farm"
+			x: 3.0d
+			y: 0.0d
+			dependencies: ["0000000000000248"]
+			id: "000000000000025A"
+			tasks: [{
+				id: "000000000000025B"
+				type: "item"
+				item: "minecraft:beehive"
+			}]
+			rewards: [{
+				id: "000000000000025C"
+				type: "item"
+				item: "minecraft:honeycomb"
+				count: 4
+			}]
+		}
+		{
+			title: "Always more"
+			x: 5.5d
+			y: 1.5d
+			dependencies: ["0000000000000258"]
+			id: "000000000000025D"
+			tasks: [{
+				id: "000000000000025E"
+				type: "item"
+				item: "productivebees:expansion_box_oak"
+			}]
+			rewards: [
+				{
+					id: "0000000000000260"
+					type: "item"
+					item: "productivebees:advanced_oak_beehive"
+				}
+				{
+					id: "0000000000000261"
+					type: "item"
+					item: "productivebees:expansion_box_oak"
+				}
+			]
+		}
+		{
+			title: "Capture them all !"
+			x: 3.0d
+			y: -1.5d
+			dependencies: ["000000000000025A"]
+			id: "0000000000000262"
+			tasks: [{
+				id: "0000000000000263"
+				type: "item"
+				item: {
+					id: "productivebees:bee_cage"
+					Count: 1b
+					tag: { }
+				}
+			}]
+			rewards: [
+				{
+					id: "0000000000000264"
+					type: "item"
+					item: {
+						id: "productivebees:bee_cage"
+						Count: 1b
+						tag: { }
+					}
+					count: 2
+				}
+				{
+					id: "0000000000000265"
+					type: "item"
+					item: "minecraft:honeycomb"
+				}
+			]
+		}
+		{
+			x: -3.0d
+			y: -1.0d
+			dependencies: ["00000000000001E1"]
+			hide: true
+			id: "0000000000003B0D"
+			tasks: [{
+				id: "0000000000003B0E"
+				type: "item"
+				item: "buzzier_bees:bee_bottle"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 0.5d
+			description: ["Honey !"]
+			dependencies: ["00000000000001E1"]
+			hide: true
+			id: "0000000000003B0F"
+			tasks: [{
+				id: "0000000000003B10"
+				type: "item"
+				item: "productivebees:centrifuge"
+			}]
+			rewards: [{
+				id: "0000000000003B11"
+				type: "item"
+				item: "minecraft:honeycomb"
+			}]
+		}
+		{
+			title: "For science"
+			icon: "productivebees:bottler"
+			x: 5.5d
+			y: -1.5d
+			description: [
+				"Don't judge me. It's for science."
+				""
+				"Squash a bee on the top of the bottle to get its DNA."
+			]
+			dependencies: ["0000000000000258"]
+			id: "70AC117648BE249D"
+			tasks: [
+				{
+					id: "2C10E796356BB8FE"
+					type: "item"
+					item: "productivebees:bottler"
+				}
+				{
+					id: "20C8F20D451AF277"
+					type: "item"
+					item: "minecraft:piston"
+				}
+				{
+					id: "0D8CA043436DE955"
+					type: "item"
+					item: "minecraft:glass_bottle"
+				}
+			]
+		}
+		{
+			x: 5.5d
+			y: -3.0d
+			description: ["Centrifuge the squashed bee material to get samples."]
+			dependencies: ["70AC117648BE249D"]
+			id: "1A2CAEF61EBBF83C"
+			tasks: [{
+				id: "400311C5FEBE719F"
+				type: "item"
+				item: "productivebees:gene"
+			}]
+		}
+		{
+			icon: "productivebees:incubator"
+			x: 7.0d
+			y: -3.0d
+			description: ["Combine a sample with a honey treat and feed your BaBee with it."]
+			dependencies: ["1A2CAEF61EBBF83C"]
+			id: "4DE7DF7F569AA8C8"
+			tasks: [
+				{
+					id: "4920FCF165638354"
+					type: "item"
+					item: "productivebees:incubator"
+				}
+				{
+					id: "166740E602C79231"
+					type: "item"
+					item: "productivebees:honey_treat"
+				}
+			]
+		}
+		{
+			title: "Egg incubator"
+			x: 8.5d
+			y: -3.0d
+			description: ["Incubator can be used to create bee eggs with bee type gene samples"]
+			dependencies: ["4DE7DF7F569AA8C8"]
+			id: "017152BB024A1C16"
+			tasks: [{
+				id: "3B567855D15DCBA2"
+				type: "item"
+				title: "Iron Bee Egg"
+				icon: {
+					id: "productivebees:spawn_egg_configurable_bee"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:iron"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:spawn_egg_configurable_bee"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:iron"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:iron"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 7.0d
+			y: -1.5d
+			description: [
+				"Some bees can only be spawned from their spawn egg."
+				"Please check JEI"
+			]
+			dependencies: ["00000000000001E1"]
+			id: "3922D5A50CD0E9F3"
+			tasks: [{
+				id: "7F47A0E25C1C6FAC"
+				type: "checkmark"
+				title: "Bee crafting"
+			}]
+		}
+	]
+}

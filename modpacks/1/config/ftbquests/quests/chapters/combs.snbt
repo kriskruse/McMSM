@@ -1,0 +1,3031 @@
+{
+	id: "0000000000000268"
+	group: ""
+	order_index: 10
+	filename: "combs"
+	title: "Combs"
+	icon: "minecraft:honeycomb"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000269"
+			tasks: [{
+				id: "000000000000026A"
+				type: "item"
+				item: "productivebees:honeycomb_soulium"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000026B"
+			tasks: [{
+				id: "000000000000026C"
+				type: "item"
+				item: "productivebees:honeycomb_supremium"
+			}]
+		}
+		{
+			x: 0.0d
+			y: -2.0d
+			dependencies: ["0000000000000259"]
+			hide: true
+			id: "000000000000026D"
+			tasks: [{
+				id: "000000000000026E"
+				type: "checkmark"
+				title: "Bee produces"
+				icon: "minecraft:honeycomb"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000026F"
+			tasks: [{
+				id: "0000000000000270"
+				type: "item"
+				item: "productivebees:honeycomb_slimy"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000271"
+			tasks: [{
+				id: "0000000000000272"
+				type: "item"
+				item: "productivebees:honeycomb_silver"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000273"
+			tasks: [{
+				id: "0000000000000274"
+				type: "item"
+				item: "productivebees:honeycomb_silicon"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000275"
+			tasks: [{
+				id: "0000000000000276"
+				type: "item"
+				item: "productivebees:honeycomb_rotten"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000277"
+			tasks: [{
+				id: "0000000000000278"
+				type: "item"
+				item: "productivebees:honeycomb_redstone"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000279"
+			tasks: [{
+				id: "000000000000027A"
+				type: "item"
+				item: "productivebees:honeycomb_quartz"
+			}]
+		}
+		{
+			x: 4.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000027B"
+			tasks: [{
+				id: "000000000000027C"
+				type: "item"
+				item: "productivebees:honeycomb_prudentium"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000027D"
+			tasks: [{
+				id: "000000000000027E"
+				type: "item"
+				item: "productivebees:honeycomb_emerald"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000027F"
+			tasks: [{
+				id: "0000000000000280"
+				type: "item"
+				item: "productivebees:honeycomb_elementium"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000281"
+			tasks: [{
+				id: "0000000000000282"
+				type: "item"
+				item: "productivebees:honeycomb_draconic"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000283"
+			tasks: [{
+				id: "0000000000000284"
+				type: "item"
+				item: "productivebees:honeycomb_diamond"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000285"
+			tasks: [{
+				id: "0000000000000286"
+				type: "item"
+				item: "productivebees:honeycomb_copper"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000287"
+			tasks: [{
+				id: "0000000000000288"
+				type: "item"
+				item: "productivebees:honeycomb_brazen"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000289"
+			tasks: [{
+				id: "000000000000028A"
+				type: "item"
+				item: "productivebees:honeycomb_bone"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000028B"
+			tasks: [{
+				id: "000000000000028C"
+				type: "item"
+				item: "productivebees:honeycomb_blazing"
+			}]
+		}
+		{
+			x: 4.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000028D"
+			tasks: [{
+				id: "000000000000028E"
+				type: "item"
+				item: "productivebees:honeycomb_amber"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000028F"
+			tasks: [{
+				id: "0000000000000290"
+				type: "item"
+				title: "Spinel Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:spinel"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:spinel"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:spinel"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -3.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000291"
+			tasks: [{
+				id: "0000000000000292"
+				type: "item"
+				title: "Topaz Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:topaz"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:topaz"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:topaz"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000293"
+			tasks: [{
+				id: "0000000000000294"
+				type: "item"
+				title: "Green Sapphire Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:green_sapphire"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:green_sapphire"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:green_sapphire"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000295"
+			tasks: [{
+				id: "0000000000000296"
+				type: "item"
+				title: "Amethyst Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:amethyst"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:amethyst"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:amethyst"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000297"
+			tasks: [{
+				id: "0000000000000298"
+				type: "item"
+				title: "Morganite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:morganite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:morganite"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:morganite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 1.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000299"
+			tasks: [{
+				id: "000000000000029A"
+				type: "item"
+				item: "productivebees:honeycomb_zinc"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000029B"
+			tasks: [{
+				id: "000000000000029C"
+				type: "item"
+				item: "productivebees:honeycomb_withered"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000029D"
+			tasks: [{
+				id: "000000000000029E"
+				type: "item"
+				item: "productivebees:honeycomb_tertium"
+			}]
+		}
+		{
+			x: 4.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000029F"
+			tasks: [{
+				id: "00000000000002A0"
+				type: "item"
+				item: "productivebees:honeycomb_terrasteel"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002A1"
+			tasks: [{
+				id: "00000000000002A2"
+				type: "item"
+				title: "Peridot Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:peridot"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:peridot"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:peridot"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -3.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002A3"
+			tasks: [{
+				id: "00000000000002A4"
+				type: "item"
+				title: "Onyx Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:onyx"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:onyx"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:onyx"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002A5"
+			tasks: [{
+				id: "00000000000002A6"
+				type: "item"
+				title: "Aquamarine Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:aquamarine"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:aquamarine"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:aquamarine"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002A7"
+			tasks: [{
+				id: "00000000000002A8"
+				type: "item"
+				title: "Citrine Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:citrine"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:citrine"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:citrine"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002A9"
+			tasks: [{
+				id: "00000000000002AA"
+				type: "item"
+				item: "productivebees:honeycomb_ruby"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002AB"
+			tasks: [{
+				id: "00000000000002AC"
+				type: "item"
+				title: "Mana Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:mana"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:mana"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:mana"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 2.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002AD"
+			tasks: [{
+				id: "00000000000002AE"
+				type: "item"
+				title: "Tanzanite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:tanzanite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:tanzanite"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:tanzanite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 3.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002AF"
+			tasks: [{
+				id: "00000000000002B0"
+				type: "item"
+				title: "Yellorium Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:yellorium"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:yellorium"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:yellorium"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 4.0d
+			y: 3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002B1"
+			tasks: [{
+				id: "00000000000002B2"
+				type: "item"
+				title: "Marble Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:marble"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+								tag: {
+									EntityTag: {
+										type: "productivebees:marble"
+									}
+								}
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:marble"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -4.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002B3"
+			tasks: [{
+				id: "00000000000002B4"
+				type: "item"
+				item: "productivebees:honeycomb_imperium"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002B5"
+			tasks: [{
+				id: "00000000000002B6"
+				type: "item"
+				item: "productivebees:honeycomb_starmetal"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002B7"
+			tasks: [{
+				id: "00000000000002B8"
+				type: "item"
+				title: "Carnelian Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:carnelian"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:carnelian"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002B9"
+			tasks: [{
+				id: "00000000000002BA"
+				type: "item"
+				title: "Phosphophyllite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:phosphophyllite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:phosphophyllite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002BB"
+			tasks: [{
+				id: "00000000000002BC"
+				type: "item"
+				title: "Garnet Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:garnet"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:garnet"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 1.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002BD"
+			tasks: [{
+				id: "00000000000002BE"
+				type: "item"
+				title: "Agate Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:agate"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:agate"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 2.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002BF"
+			tasks: [{
+				id: "00000000000002C0"
+				type: "item"
+				title: "Heliodor Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:heliodor"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:heliodor"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 3.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002C1"
+			tasks: [{
+				id: "00000000000002C2"
+				type: "item"
+				title: "Opal Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:opal"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:opal"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 4.0d
+			y: 4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002C3"
+			tasks: [{
+				id: "00000000000002C4"
+				type: "item"
+				item: "productivebees:honeycomb_sapphire"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002C5"
+			tasks: [{
+				id: "00000000000002C6"
+				type: "item"
+				item: "productivebees:honeycomb_lapis"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002C7"
+			tasks: [{
+				id: "00000000000002C8"
+				type: "item"
+				item: "productivebees:honeycomb_magmatic"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002C9"
+			tasks: [{
+				id: "00000000000002CA"
+				type: "item"
+				item: "productivebees:honeycomb_manasteel"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002CB"
+			tasks: [{
+				id: "00000000000002CC"
+				type: "item"
+				item: "productivebees:honeycomb_milky"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002CD"
+			tasks: [{
+				id: "00000000000002CE"
+				type: "item"
+				item: "productivebees:honeycomb_netherite"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002CF"
+			tasks: [{
+				id: "00000000000002D0"
+				type: "item"
+				item: "productivebees:honeycomb_obsidian"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002D1"
+			tasks: [{
+				id: "00000000000002D2"
+				type: "item"
+				item: "productivebees:honeycomb_powdery"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002D3"
+			tasks: [{
+				id: "00000000000002D4"
+				type: "item"
+				item: "productivebees:honeycomb_prosperity"
+			}]
+		}
+		{
+			x: 4.0d
+			y: 5.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002D5"
+			tasks: [{
+				id: "00000000000002D6"
+				type: "item"
+				item: "productivebees:honeycomb_inferium"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002D7"
+			tasks: [{
+				id: "00000000000002D8"
+				type: "item"
+				item: "productivebees:honeycomb_glowing"
+			}]
+		}
+		{
+			x: -3.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002D9"
+			tasks: [{
+				id: "00000000000002DA"
+				type: "item"
+				item: "productivebees:honeycomb_gold"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002DB"
+			tasks: [{
+				id: "00000000000002DC"
+				type: "item"
+				item: "productivebees:honeycomb_ghostly"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002DD"
+			tasks: [{
+				id: "00000000000002DE"
+				type: "item"
+				item: "productivebees:honeycomb_experience"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002DF"
+			tasks: [{
+				id: "00000000000002E0"
+				type: "item"
+				item: "productivebees:honeycomb_ender_biotite"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002E1"
+			tasks: [{
+				id: "00000000000002E2"
+				type: "item"
+				item: "productivebees:honeycomb_fossilised"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002E3"
+			tasks: [{
+				id: "00000000000002E4"
+				type: "item"
+				item: "productivebees:honeycomb_ender"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002E5"
+			tasks: [{
+				id: "00000000000002E6"
+				type: "item"
+				item: "productivebees:honeycomb_iron"
+			}]
+		}
+		{
+			x: 4.0d
+			y: 6.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002EA"
+			tasks: [{
+				id: "00000000000002EB"
+				type: "item"
+				title: "Malachite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:malachite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:malachite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -4.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002EC"
+			tasks: [{
+				id: "00000000000002ED"
+				type: "item"
+				title: "Coral Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:coral"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:coral"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -3.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002EE"
+			tasks: [{
+				id: "00000000000002EF"
+				type: "item"
+				title: "Zircon Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:zircon"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:zircon"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002F0"
+			tasks: [{
+				id: "00000000000002F1"
+				type: "item"
+				title: "Sodalite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:sodalite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:sodalite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002F2"
+			tasks: [{
+				id: "00000000000002F3"
+				type: "item"
+				title: "Sunstone Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:sunstone"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:sunstone"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002F4"
+			tasks: [{
+				id: "00000000000002F5"
+				type: "item"
+				title: "Benitoite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:benitoite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:benitoite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 1.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002F6"
+			tasks: [{
+				id: "00000000000002F7"
+				type: "item"
+				title: "Moonstone Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:moonstone"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:moonstone"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 2.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002F8"
+			tasks: [{
+				id: "00000000000002F9"
+				type: "item"
+				title: "Ammolite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:ammolite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:ammolite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 3.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002FA"
+			tasks: [{
+				id: "00000000000002FB"
+				type: "item"
+				title: "Jade Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:jade"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:jade"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 4.0d
+			y: 7.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002FC"
+			tasks: [{
+				id: "00000000000002FD"
+				type: "item"
+				title: "Black Diamond Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:black_diamond"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:black_diamond"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -4.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "00000000000002FE"
+			tasks: [{
+				id: "00000000000002FF"
+				type: "item"
+				title: "Jasper Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:jasper"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:jasper"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -3.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000300"
+			tasks: [{
+				id: "0000000000000301"
+				type: "item"
+				title: "Pyrope Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:pyrope"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:pyrope"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000302"
+			tasks: [{
+				id: "0000000000000303"
+				type: "item"
+				title: "Iolite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:iolite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:iolite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000304"
+			tasks: [{
+				id: "0000000000000305"
+				type: "item"
+				title: "Moldavite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:moldavite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:moldavite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000306"
+			tasks: [{
+				id: "0000000000000307"
+				type: "item"
+				title: "Ametrine Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:ametrine"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:ametrine"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 1.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000308"
+			tasks: [{
+				id: "0000000000000309"
+				type: "item"
+				title: "Kyanite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:kyanite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:kyanite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 2.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000030A"
+			tasks: [{
+				id: "000000000000030B"
+				type: "item"
+				title: "Fluorite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:fluorite"
+						}
+					}
+				}
+				item: "productivebees:honeycomb_fluorite"
+			}]
+		}
+		{
+			x: 3.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000030C"
+			tasks: [{
+				id: "000000000000030D"
+				type: "item"
+				title: "Alexandrite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:alexandrite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:alexandrite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 4.0d
+			y: 8.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000030E"
+			tasks: [{
+				id: "000000000000030F"
+				type: "item"
+				title: "Kunzite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:kunzite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:kunzite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -4.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000310"
+			tasks: [{
+				id: "0000000000000311"
+				type: "item"
+				title: "Rose Quartz Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:rose_quartz"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:rose_quartz"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -3.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000312"
+			tasks: [{
+				id: "0000000000000313"
+				type: "item"
+				title: "Yellow Diamond Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:yellow_diamond"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:yellow_diamond"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000314"
+			tasks: [{
+				id: "0000000000000315"
+				type: "item"
+				title: "Cat's eye Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:cats_eye"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:cats_eye"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000316"
+			tasks: [{
+				id: "0000000000000317"
+				type: "item"
+				title: "Lepidolite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:lepidolite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:lepidolite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000318"
+			tasks: [{
+				id: "0000000000000319"
+				type: "item"
+				title: "Tektite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:tektite"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:tektite"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 1.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000031A"
+			tasks: [{
+				id: "000000000000031B"
+				type: "item"
+				title: "Apatite Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:apatite"
+						}
+					}
+				}
+				item: "productivebees:honeycomb_apatite"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000031C"
+			tasks: [{
+				id: "000000000000031D"
+				type: "item"
+				title: "Turquoise Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:turquoise"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:turquoise"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 3.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "000000000000031E"
+			tasks: [{
+				id: "000000000000031F"
+				type: "item"
+				title: "Euclase Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:euclase"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:euclase"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 4.0d
+			y: 9.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000320"
+			tasks: [{
+				id: "0000000000000321"
+				type: "item"
+				title: "Pearl Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:pearl"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:pearl"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -4.0d
+			y: 10.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "0000000000000322"
+			tasks: [{
+				id: "0000000000000323"
+				type: "item"
+				title: "Chrysoprase Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:chrysoprase"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:chrysoprase"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: -4.0d
+			hide_dependency_lines: true
+			dependencies: [
+				"0000000000000279"
+				"0000000000000275"
+				"0000000000000273"
+				"000000000000026B"
+				"0000000000000269"
+				"000000000000026F"
+				"0000000000000271"
+				"0000000000000277"
+				"000000000000027B"
+				"000000000000028D"
+				"000000000000028B"
+				"0000000000000289"
+				"0000000000000287"
+				"0000000000000285"
+				"0000000000000283"
+				"0000000000000281"
+				"000000000000027F"
+				"000000000000027D"
+				"000000000000028F"
+				"0000000000000291"
+				"0000000000000293"
+				"0000000000000295"
+				"0000000000000297"
+				"0000000000000299"
+				"000000000000029B"
+				"000000000000029D"
+				"000000000000029F"
+				"00000000000002B1"
+				"00000000000002AF"
+				"00000000000002AD"
+				"00000000000002AB"
+				"00000000000002A9"
+				"00000000000002A7"
+				"00000000000002A5"
+				"00000000000002A3"
+				"00000000000002A1"
+				"00000000000002B3"
+				"00000000000002B5"
+				"00000000000002B7"
+				"00000000000002B9"
+				"00000000000002BB"
+				"00000000000002BD"
+				"00000000000002BF"
+				"00000000000002C1"
+				"00000000000002C3"
+				"00000000000002D5"
+				"00000000000002D3"
+				"00000000000002D1"
+				"00000000000002CF"
+				"00000000000002CD"
+				"00000000000002CB"
+				"00000000000002C9"
+				"00000000000002C7"
+				"00000000000002C5"
+				"00000000000002D7"
+				"00000000000002D9"
+				"00000000000002DB"
+				"00000000000002DD"
+				"00000000000002DF"
+				"00000000000002E1"
+				"00000000000002E3"
+				"00000000000002E5"
+				"00000000000002EA"
+				"00000000000002FC"
+				"00000000000002FA"
+				"00000000000002F8"
+				"00000000000002F6"
+				"00000000000002F4"
+				"00000000000002F2"
+				"00000000000002F0"
+				"00000000000002EE"
+				"00000000000002EC"
+				"00000000000002FE"
+				"0000000000000300"
+				"0000000000000302"
+				"0000000000000304"
+				"0000000000000306"
+				"0000000000000308"
+				"000000000000030A"
+				"000000000000030C"
+				"000000000000030E"
+				"0000000000000320"
+				"000000000000031E"
+				"000000000000031C"
+				"000000000000031A"
+				"0000000000000318"
+				"0000000000000316"
+				"0000000000000314"
+				"0000000000000312"
+				"0000000000000310"
+				"0000000000000322"
+			]
+			hide_text_until_complete: true
+			id: "0000000000000326"
+			tasks: [{
+				id: "0000000000000327"
+				type: "checkmark"
+				title: "All combs obtained"
+				icon: "productivebees:honeycomb_allthemodium"
+			}]
+			rewards: [
+				{
+					id: "0000000000000328"
+					type: "item"
+					item: "productivebees:upgrade_comb_block"
+					count: 10
+				}
+				{
+					id: "0000000000000329"
+					type: "item"
+					item: "productivebees:upgrade_productivity"
+					count: 10
+				}
+				{
+					id: "000000000000032A"
+					type: "item"
+					item: "tinymobfarm:inferno_farm"
+				}
+				{
+					id: "000000000000032B"
+					type: "item"
+					item: "productivebees:advanced_oak_beehive"
+					count: 20
+				}
+			]
+		}
+		{
+			x: -3.0d
+			y: 10.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "462E0C27F3C5C30B"
+			tasks: [{
+				id: "5F723BAAAE1B6033"
+				type: "item"
+				title: "Neptunium Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:neptunium"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:neptunium"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -2.0d
+			y: 10.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "4C6AD951F9A87CF2"
+			tasks: [{
+				id: "2D5E9B11C7835DF3"
+				type: "item"
+				title: "Arcane Gold Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:arcane_gold"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:arcane_gold"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+		{
+			x: -1.0d
+			y: 10.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000026D"]
+			hide: true
+			id: "28EC19C50C0880CF"
+			tasks: [{
+				id: "6D5EECA32482DEF1"
+				type: "item"
+				title: "Pewter Comb"
+				icon: {
+					id: "productivebees:configurable_honeycomb"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:pewter"
+						}
+					}
+				}
+				item: {
+					id: "itemfilters:and"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "productivebees:configurable_honeycomb"
+								Count: 1b
+							}
+							{
+								id: "itemfilters:strong_nbt"
+								Count: 1b
+								tag: {
+									value: {
+										EntityTag: {
+											type: "productivebees:pewter"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}]
+		}
+	]
+}

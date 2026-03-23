@@ -1,0 +1,382 @@
+{
+	id: "000000000000036B"
+	group: ""
+	order_index: 15
+	filename: "all_in_one"
+	title: "All in One"
+	icon: "refinedstorage:creative_storage_block"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			title: "All in One"
+			icon: "refinedstorage:creative_storage_block"
+			x: 0.0d
+			y: 0.0d
+			dependencies: [
+				"0000000000000002"
+				"0000000000000007"
+				"0000000000000040"
+				"000000000000019B"
+				"00000000000001C6"
+				"0000000000000098"
+				"00000000000001ED"
+				"00000000000001CD"
+				"0000000000000247"
+				"000000000000021C"
+				"00000000000002E7"
+				"0000000000000351"
+				"0000000000000268"
+				"0000000000003AEE"
+			]
+			hide: true
+			id: "000000000000036C"
+			tasks: [{
+				id: "000000000000036D"
+				type: "checkmark"
+				title: "All in One"
+			}]
+			rewards: [
+				{
+					id: "000000000000036E"
+					type: "item"
+					item: "refinedstorage:creative_storage_block"
+				}
+				{
+					id: "000000000000036F"
+					type: "item"
+					item: "refinedstorage:creative_fluid_storage_block"
+				}
+				{
+					id: "0000000000000370"
+					type: "item"
+					item: "ars_nouveau:creative_spell_book"
+				}
+				{
+					id: "0000000000000371"
+					type: "xp_levels"
+					xp_levels: 1000
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: 1.5d
+			subtitle: "Awesome ! You have completed the modpack !"
+			description: [
+				"Awesome ! You have completed the modpack !"
+				"Or did you cheat ?"
+				"Anyway, thanks for playing the All in One modpack !"
+			]
+			dependencies: ["000000000000036C"]
+			hide: true
+			id: "0000000000000372"
+			tasks: [{
+				id: "0000000000000373"
+				type: "checkmark"
+				title: "Congratulations !"
+				icon: "minecraft:totem_of_undying"
+			}]
+		}
+		{
+			icon: "botania:enchanted_soil"
+			tags: [
+				"boost"
+				"unlock_farmland"
+			]
+			x: -3.5d
+			y: -2.0d
+			description: [
+				"The Farmland questline needs to be completed."
+				"The last phase will generate more content from the Farmland phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"0000000000000040"
+			]
+			hide: true
+			optional: true
+			id: "7B5C6A5C2751293F"
+			tasks: [{
+				id: "5586F7A47820FFC5"
+				type: "checkmark"
+				title: "Farmland boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:dirt"
+			tags: [
+				"boost"
+				"unlock_flatland"
+			]
+			x: -4.5d
+			y: -2.0d
+			description: [
+				"The Flatland questline needs to be completed."
+				"The last phase will generate more content from the Flatland phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"0000000000000007"
+			]
+			hide: true
+			optional: true
+			id: "0584EF1E706C673D"
+			tasks: [{
+				id: "4CCE248D865DB339"
+				type: "checkmark"
+				title: "Flatland boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:stone"
+			tags: [
+				"boost"
+				"unlock_underground"
+			]
+			x: -2.5d
+			y: -2.0d
+			description: [
+				"The Underground questline needs to be completed."
+				"The last phase will generate more content from the Underground phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"000000000000019B"
+			]
+			hide: true
+			optional: true
+			id: "09357A9C21BDACE9"
+			tasks: [{
+				id: "79D00BBB10BC1345"
+				type: "checkmark"
+				title: "Underground boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:grass_block"
+			tags: [
+				"boost"
+				"unlock_overworld"
+			]
+			x: -1.5d
+			y: -2.0d
+			description: [
+				"The Overworld questline needs to be completed."
+				"The last phase will generate more content from the Overworld phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"00000000000001C6"
+			]
+			hide: true
+			optional: true
+			id: "2E1BA57CDE38F66B"
+			tasks: [{
+				id: "2B301C7F5BFF6852"
+				type: "checkmark"
+				title: "Overworld boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "astralsorcery:marble_engraved"
+			tags: [
+				"boost"
+				"unlock_astral"
+			]
+			x: -0.5d
+			y: -2.0d
+			description: [
+				"The Astral questline needs to be completed."
+				"The last phase will generate more content from the Astral phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"00000000000001CD"
+			]
+			hide: true
+			optional: true
+			id: "392FD61A399DFDB4"
+			tasks: [{
+				id: "6487312C20C2FF5F"
+				type: "checkmark"
+				title: "Astral boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "ars_nouveau:mana_gem_block"
+			tags: [
+				"boost"
+				"unlock_magicka"
+			]
+			x: 0.5d
+			y: -2.0d
+			description: [
+				"The Magicka questline needs to be completed."
+				"The last phase will generate more content from the Magicka phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"00000000000001ED"
+			]
+			hide: true
+			optional: true
+			id: "124C0F4C1EA38582"
+			tasks: [{
+				id: "080E93DA035F96C5"
+				type: "checkmark"
+				title: "Magicka boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:sea_lantern"
+			tags: [
+				"boost"
+				"unlock_abyss"
+			]
+			x: 1.5d
+			y: -2.0d
+			description: [
+				"The Abyss questline needs to be completed."
+				"The last phase will generate more content from the Abyss phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"000000000000021C"
+			]
+			hide: true
+			optional: true
+			id: "1D837C1AEA34D923"
+			tasks: [{
+				id: "339FA9AF3FBEF7D9"
+				type: "checkmark"
+				title: "Abyss boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:bee_nest"
+			tags: [
+				"boost"
+				"unlock_bumblezone"
+			]
+			x: 2.5d
+			y: -2.0d
+			description: [
+				"The Bumblezone questline needs to be completed."
+				"The last phase will generate more content from the Bumblezone phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"0000000000000247"
+			]
+			hide: true
+			optional: true
+			id: "2680E5CCD92EB165"
+			tasks: [{
+				id: "15778B1FB5D45B81"
+				type: "checkmark"
+				title: "Bumblezone boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:netherrack"
+			tags: [
+				"boost"
+				"unlock_nether"
+			]
+			x: 3.5d
+			y: -2.0d
+			description: [
+				"The Nether questline needs to be completed."
+				"The last phase will generate more content from the Nether phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"00000000000002E7"
+			]
+			hide: true
+			optional: true
+			id: "575FDF819A0F6ADE"
+			tasks: [{
+				id: "6449D1D1F51A1764"
+				type: "checkmark"
+				title: "Nether boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:end_portal_frame"
+			tags: [
+				"boost"
+				"unlock_end"
+			]
+			x: 4.5d
+			y: -2.0d
+			description: [
+				"The End questline needs to be completed."
+				"The last phase will generate more content from the End phase."
+			]
+			dependencies: [
+				"0000000000000349"
+				"0000000000000351"
+			]
+			hide: true
+			optional: true
+			id: "591F94670C19B76E"
+			tasks: [{
+				id: "4091DAEC5627174E"
+				type: "checkmark"
+				title: "End boost"
+				disable_toast: true
+			}]
+		}
+		{
+			icon: "minecraft:glass"
+			tags: [
+				"boost"
+				""
+			]
+			x: 0.0d
+			y: -3.0d
+			description: [
+				"Removes the current boost."
+				"The last phase will generate content without any boost."
+				"A boost is available once you complete the corresponding questline."
+			]
+			dependencies: ["0000000000000349"]
+			hide: true
+			optional: true
+			id: "45986D09D2C6FB4C"
+			tasks: [{
+				id: "6D3F2533297B7832"
+				type: "checkmark"
+				title: "Remove boost"
+			}]
+		}
+		{
+			title: "Player statue"
+			icon: {
+				id: "oneblock:statue"
+				Count: 1b
+				tag: {
+					Owner: { }
+				}
+			}
+			x: 0.0d
+			y: -4.0d
+			description: ["The Ex Nihilo Generator can also benefit from a boost. You just have to place a Player statue nearby."]
+			dependencies: ["0000000000000349"]
+			hide: true
+			optional: true
+			id: "4CE066BC1328B83C"
+		}
+	]
+}

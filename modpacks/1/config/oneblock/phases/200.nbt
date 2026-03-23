@@ -1,0 +1,153 @@
+{
+	phase: [
+		{
+			weight: 2,
+			content: "0"
+		}
+	],
+	extra: {
+		texture: "botania:enchanted_soil",
+		name: "§eFarmland",
+		power: 80,
+		cooldown: 90,
+		level: 200
+	},
+	block: [
+		{
+			weight: 2,
+			content: "farmersdelight:carrot_crate"
+		},
+		{
+			weight: 4,
+			content: "minecraft:dried_kelp_block"
+		},
+		{
+			weight: 1,
+			content: "botania:light_gray_petal_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:cabbage_crate"
+		},
+		{
+			weight: 1,
+			content: "botania:white_petal_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:onion_crate"
+		},
+		{
+			weight: 1,
+			content: "botania:light_blue_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:orange_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:green_petal_block"
+		},
+		{
+			weight: 16,
+			content: "minecraft:pumpkin"
+		},
+		{
+			weight: 1,
+			content: "botania:brown_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:cyan_petal_block"
+		},
+		{
+			weight: 40,
+			content: "minecraft:dirt"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:straw_bale"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:rice_bale"
+		},
+		{
+			weight: 1,
+			content: "botania:pink_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:red_petal_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:rich_soil"
+		},
+		{
+			weight: 1,
+			content: "botania:gray_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:black_petal_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:tomato_crate"
+		},
+		{
+			weight: 1,
+			content: "botania:lime_petal_block"
+		},
+		{
+			weight: 2,
+			content: "quark:bamboo_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:potato_crate"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:rice_bag"
+		},
+		{
+			weight: 40,
+			content: "minecraft:grass_block"
+		},
+		{
+			weight: 1,
+			content: "botania:yellow_petal_block"
+		},
+		{
+			weight: 16,
+			content: "minecraft:melon"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:beetroot_crate"
+		},
+		{
+			weight: 1,
+			content: "botania:magenta_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:purple_petal_block"
+		},
+		{
+			weight: 6,
+			content: "minecraft:hay_block"
+		},
+		{
+			weight: 1,
+			content: "botania:blue_petal_block"
+		},
+		{
+			weight: 2,
+			content: "farmersdelight:organic_compost"
+		}
+	]
+}

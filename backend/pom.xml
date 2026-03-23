@@ -20,45 +20,50 @@
   </properties>
 
     <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+
+
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-webmvc</artifactId>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.13.2</version>
       </dependency>
 
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java</artifactId>
+        <version>3.7.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-transport-jersey</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-transport-jersey-jakarta</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
-
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.13.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.docker-java</groupId>
-      <artifactId>docker-java</artifactId>
-      <version>3.7.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.github.docker-java</groupId>
-          <artifactId>docker-java-transport-jersey</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.github.docker-java</groupId>
-          <artifactId>docker-java-transport-jersey-jakarta</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.docker-java</groupId>
-      <artifactId>docker-java-transport-httpclient5</artifactId>
-      <version>3.7.0</version>
-    </dependency>
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java-transport-httpclient5</artifactId>
+        <version>3.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+        <scope>dev</scope>
+      </dependency>
 
     </dependencies>
 

@@ -1,0 +1,134 @@
+{
+  "availability": {
+    "tier": 3,
+    "categories": [
+      "gem"
+    ],
+    "visible": true,
+    "gear_blacklist": [],
+    "can_salvage": true
+  },
+  "crafting_items": {
+    "main": {
+      "tag": "forge:gems/mana"
+    }
+  },
+  "name": {
+    "translate": "Mana Gem"
+  },
+  "stats": {
+    "main": {
+      "durability": 400.0,
+      "armor_durability": 25.0,
+      "repair_value": 0.5,
+      "enchantability": 30.0,
+      "harvest_level": 1.0,
+      "harvest_speed": 13.0,
+      "melee_damage": 1.8,
+      "magic_damage": 2.0,
+      "attack_speed": 0.05,
+      "rarity": 30.0,
+      "armor": 12.0,
+      "armor/helmet": 2.5,
+      "armor/chestplate": 4.0,
+      "armor/leggings": 3.5,
+      "armor/boots": 2.0,
+      "magic_armor": 12.0,
+      "ranged_damage": 1.1,
+      "ranged_speed": 0.0,
+      "projectile_speed": 1.15,
+      "projectile_accuracy": 0.85,
+      "silentgems:chargeability": 1.1
+    },
+    "rod": {
+      "durability": {
+        "mul2": -0.1
+      },
+      "harvest_speed": {
+        "mul2": 0.35
+      },
+      "rarity": 26.0
+    },
+    "tip": {
+      "durability": {
+        "add": 225.0
+      },
+      "armor_durability": {
+        "add": 6.0
+      },
+      "harvest_level": {
+        "max": 1.0
+      },
+      "harvest_speed": {
+        "add": 2.5
+      },
+      "melee_damage": {
+        "add": 1.2
+      },
+      "magic_damage": {
+        "add": 2.5
+      },
+      "ranged_damage": {
+        "add": 1.0
+      },
+      "rarity": {
+        "add": 18.0
+      }
+    },
+    "adornment": {}
+  },
+  "traits": {
+    "main": [
+      {
+        "name": "silentgear:brittle",
+        "level": 1
+      },
+      {
+        "name": "silentgear:accelerate",
+        "level": 2
+      },
+      {
+        "name" : "silentgear:holy",
+        "level": 2 
+      }
+    ],
+    "rod": [
+      {
+        "name": "silentgear:brittle",
+        "level": 4,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.5
+          }
+        ]
+      },
+      {
+        "name": "silentgear:accelerate",
+        "level": 3,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.5
+          }
+        ]
+      }
+    ],
+    "tip": [
+      {
+        "name": "silentgear:brittle",
+        "level": 1
+      },
+      {
+        "name": "silentgear:accelerate",
+        "level": 2
+      }
+    ],
+    "adornment": [
+      {
+        "name": "silentgear:holy",
+        "level": 2
+      }
+    ]
+  }
+}

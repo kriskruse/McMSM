@@ -1,0 +1,184 @@
+{
+	id: "00000000000001CD"
+	group: ""
+	order_index: 6
+	filename: "astral"
+	title: "Astral"
+	icon: "astralsorcery:marble_engraved"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: -1.0d
+			y: 0.0d
+			dependencies: ["00000000000001E5"]
+			hide: true
+			id: "00000000000001CE"
+			tasks: [{
+				id: "00000000000001CF"
+				type: "item"
+				item: "astralsorcery:aquamarine"
+				count: 32L
+			}]
+			rewards: [{
+				id: "00000000000001D0"
+				type: "item"
+				item: "astralsorcery:liquid_starlight_bucket"
+			}]
+		}
+		{
+			x: 0.0d
+			y: -1.0d
+			hide_dependency_lines: true
+			dependencies: ["00000000000001DF"]
+			id: "00000000000001D1"
+			tasks: [{
+				id: "00000000000001D2"
+				type: "item"
+				item: "astralsorcery:marble_raw"
+				count: 64L
+			}]
+			rewards: [{
+				id: "00000000000001D3"
+				type: "item"
+				item: "astralsorcery:marble_raw"
+				count: 32
+			}]
+		}
+		{
+			x: 1.0d
+			y: 0.0d
+			dependencies: ["00000000000001E1"]
+			hide: true
+			id: "00000000000001D4"
+			tasks: [{
+				id: "00000000000001D5"
+				type: "item"
+				item: "astralsorcery:starmetal_ore"
+				count: 20L
+			}]
+			rewards: [{
+				id: "00000000000001D6"
+				type: "item"
+				item: "astralsorcery:starmetal"
+			}]
+		}
+		{
+			x: -1.5d
+			y: -4.0d
+			dependencies: ["00000000000001E7"]
+			hide: true
+			id: "00000000000001D9"
+			tasks: [{
+				id: "00000000000001DA"
+				type: "item"
+				item: "astralsorcery:aquamarine"
+				count: 128L
+			}]
+			rewards: [{
+				id: "00000000000001DB"
+				type: "item"
+				item: "mysticalagriculture:aquamarine_seeds"
+			}]
+		}
+		{
+			x: 1.5d
+			y: -4.0d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "00000000000001DC"
+			tasks: [{
+				id: "00000000000001DD"
+				type: "item"
+				item: {
+					id: "astralsorcery:rock_crystal"
+					Count: 1b
+					tag: {
+						astralsorcery: { }
+					}
+				}
+				count: 30L
+			}]
+			rewards: [{
+				id: "00000000000001DE"
+				type: "item"
+				item: "mysticalagriculture:rock_crystal_seeds"
+			}]
+		}
+		{
+			title: "Mineralis Ritual"
+			x: 0.0d
+			y: -2.5d
+			description: [
+				"The mineralis ritual is another way to generate ores."
+				"Please read the Astral Sorcery book"
+			]
+			hide_dependency_lines: true
+			dependencies: ["00000000000001D1"]
+			id: "6CC3096F3741F230"
+			tasks: [{
+				id: "7B37BDC33122956F"
+				type: "item"
+				item: "astralsorcery:ritual_link"
+			}]
+		}
+		{
+			title: "Astral Sorcery"
+			x: 0.0d
+			y: 1.0d
+			description: ["Link your crystal to a crafting table using the Linking Tool."]
+			hide_dependency_lines: true
+			dependencies: ["00000000000001D1"]
+			id: "331C2A7965200DE0"
+			tasks: [{
+				id: "6951E8F55A62AE7F"
+				type: "item"
+				item: {
+					id: "astralsorcery:rock_collector_crystal"
+					Count: 1b
+					tag: {
+						astralsorcery: { }
+					}
+				}
+			}]
+			rewards: [{
+				id: "1C87FBB9EE10A9B0"
+				type: "item"
+				item: "astralsorcery:tome"
+			}]
+		}
+		{
+			x: 0.0d
+			y: -4.0d
+			hide_dependency_lines: true
+			dependencies: ["00000000000001D1"]
+			hide: true
+			id: "1690B73940D536A9"
+			tasks: [
+				{
+					id: "05A734189C8AF505"
+					type: "item"
+					item: "astralsorcery:well"
+				}
+				{
+					id: "7873BABD0CB59BED"
+					type: "item"
+					item: "minecraft:lava_bucket"
+				}
+			]
+		}
+		{
+			title: "Astral Tome"
+			x: 0.0d
+			y: 2.5d
+			description: ["The Astral Tome is very important to know how the mod works. Some crafting recipes are only present in this book. Please read it carefully."]
+			dependencies: ["331C2A7965200DE0"]
+			hide: true
+			id: "387C20D85A24F435"
+			tasks: [{
+				id: "7EEF00737EFCFA86"
+				type: "checkmark"
+			}]
+		}
+	]
+}

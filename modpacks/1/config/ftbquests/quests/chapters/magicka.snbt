@@ -1,0 +1,604 @@
+{
+	id: "00000000000001ED"
+	group: ""
+	order_index: 7
+	filename: "magicka"
+	title: "Magicka"
+	icon: "ars_nouveau:mana_gem_block"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			icon: "ars_nouveau:mana_gem_block"
+			x: -1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000021A"]
+			hide: true
+			id: "00000000000001EF"
+			tasks: [{
+				id: "00000000000001F0"
+				type: "item"
+				item: "ars_nouveau:mana_gem"
+				count: 128L
+			}]
+			rewards: [{
+				id: "00000000000001F2"
+				type: "item"
+				item: {
+					id: "productivebees:spawn_egg_configurable_bee"
+					Count: 1b
+					tag: {
+						EntityTag: {
+							type: "productivebees:mana"
+						}
+					}
+				}
+			}]
+		}
+		{
+			x: -1.5d
+			y: -1.5d
+			dependencies: ["0000000000000201"]
+			hide: true
+			id: "00000000000001F3"
+			tasks: [{
+				id: "00000000000001F4"
+				type: "item"
+				item: "ars_nouveau:blue_archwood_log"
+				count: 40L
+			}]
+			rewards: [{
+				id: "00000000000001F5"
+				type: "item"
+				item: "ars_nouveau:blue_archwood_sapling"
+				count: 4
+			}]
+		}
+		{
+			x: -0.5d
+			y: -1.5d
+			dependencies: ["0000000000000201"]
+			hide: true
+			id: "00000000000001F6"
+			tasks: [{
+				id: "00000000000001F7"
+				type: "item"
+				item: "ars_nouveau:purple_archwood_log"
+				count: 40L
+			}]
+			rewards: [{
+				id: "00000000000001F8"
+				type: "item"
+				item: "ars_nouveau:purple_archwood_sapling"
+				count: 4
+			}]
+		}
+		{
+			x: 0.5d
+			y: -1.5d
+			dependencies: ["0000000000000201"]
+			hide: true
+			id: "00000000000001F9"
+			tasks: [{
+				id: "00000000000001FA"
+				type: "item"
+				item: "ars_nouveau:green_archwood_log"
+				count: 40L
+			}]
+			rewards: [{
+				id: "00000000000001FB"
+				type: "item"
+				item: "ars_nouveau:green_archwood_sapling"
+				count: 4
+			}]
+		}
+		{
+			x: 1.5d
+			y: -1.5d
+			dependencies: ["0000000000000201"]
+			hide: true
+			id: "00000000000001FC"
+			tasks: [{
+				id: "00000000000001FD"
+				type: "item"
+				item: "ars_nouveau:red_archwood_log"
+				count: 40L
+			}]
+			rewards: [{
+				id: "00000000000001FE"
+				type: "item"
+				item: "ars_nouveau:red_archwood_sapling"
+				count: 4
+			}]
+		}
+		{
+			x: 1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000021A"]
+			hide: true
+			id: "0000000000000203"
+			tasks: [
+				{
+					id: "0000000000000204"
+					type: "item"
+					item: "ars_nouveau:arcane_stone"
+					count: 64L
+				}
+				{
+					id: "0000000000000209"
+					type: "item"
+					item: "ars_nouveau:arcane_bricks"
+					count: 64L
+				}
+				{
+					id: "000000000000020A"
+					type: "item"
+					item: "ars_nouveau:ab_alternating"
+					count: 64L
+				}
+				{
+					id: "000000000000020B"
+					type: "item"
+					item: "ars_nouveau:ab_basket"
+					count: 64L
+				}
+				{
+					id: "000000000000020C"
+					type: "item"
+					item: "ars_nouveau:ab_herring"
+					count: 64L
+				}
+				{
+					id: "000000000000020D"
+					type: "item"
+					item: "ars_nouveau:ab_mosaic"
+					count: 64L
+				}
+				{
+					id: "000000000000020E"
+					type: "item"
+					item: "ars_nouveau:ab_smooth_slab"
+					count: 64L
+				}
+				{
+					id: "000000000000020F"
+					type: "item"
+					item: "ars_nouveau:ab_smooth"
+					count: 64L
+				}
+				{
+					id: "0000000000000210"
+					type: "item"
+					item: "ars_nouveau:ab_clover"
+					count: 64L
+				}
+			]
+			rewards: [
+				{
+					id: "0000000000000211"
+					type: "item"
+					item: "ars_nouveau:arcane_stone"
+					count: 128
+				}
+				{
+					id: "0000000000000212"
+					type: "item"
+					item: "ars_nouveau:arcane_bricks"
+					count: 128
+				}
+				{
+					id: "0000000000000213"
+					type: "item"
+					item: "ars_nouveau:ab_alternating"
+					count: 128
+				}
+				{
+					id: "0000000000000214"
+					type: "item"
+					item: "ars_nouveau:ab_basket"
+					count: 128
+				}
+				{
+					id: "0000000000000215"
+					type: "item"
+					item: "ars_nouveau:ab_herring"
+					count: 128
+				}
+				{
+					id: "0000000000000216"
+					type: "item"
+					item: "ars_nouveau:ab_mosaic"
+					count: 128
+				}
+				{
+					id: "0000000000000217"
+					type: "item"
+					item: "ars_nouveau:ab_smooth_slab"
+					count: 128
+				}
+				{
+					id: "0000000000000218"
+					type: "item"
+					item: "ars_nouveau:ab_smooth"
+					count: 128
+				}
+				{
+					id: "0000000000000219"
+					type: "item"
+					item: "ars_nouveau:ab_clover"
+					count: 128
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: -3.0d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "000000000000021A"
+			tasks: [{
+				id: "000000000000021B"
+				type: "item"
+				item: "ars_nouveau:mana_gem"
+			}]
+		}
+		{
+			title: "Ars Nouveau"
+			x: 0.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000021A"]
+			id: "75E5D4FA6A4EF893"
+			tasks: [{
+				id: "089D14AE5C4FCFA9"
+				type: "item"
+				item: "ars_nouveau:worn_notebook"
+			}]
+		}
+		{
+			x: -2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["75E5D4FA6A4EF893"]
+			id: "65570D87767C1578"
+			tasks: [{
+				id: "10A462EADDC91E5E"
+				type: "item"
+				item: "ars_nouveau:novice_spell_book"
+			}]
+		}
+		{
+			title: "Novice equipment"
+			icon: {
+				id: "ars_nouveau:novice_hood"
+				Count: 1b
+				tag: {
+					Damage: 0
+				}
+			}
+			x: -2.0d
+			y: 3.5d
+			dependencies: ["65570D87767C1578"]
+			id: "1BD0C8B5FC064E17"
+			tasks: [
+				{
+					id: "7C07BB9D9818EA4F"
+					type: "item"
+					item: {
+						id: "ars_nouveau:novice_boots"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "3AA71FE055DF9A92"
+					type: "item"
+					item: {
+						id: "ars_nouveau:novice_leggings"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "26DE6EA4E527BC0D"
+					type: "item"
+					item: {
+						id: "ars_nouveau:novice_robes"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "641D5F49BEA76717"
+					type: "item"
+					item: {
+						id: "ars_nouveau:novice_hood"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+			]
+			rewards: [
+				{
+					id: "4B005A57CB8BD2AF"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 1s
+								id: "ars_nouveau:mana_regen"
+							}]
+						}
+					}
+					count: 4
+				}
+				{
+					id: "6FFF116D805C9393"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 1s
+								id: "ars_nouveau:mana_boost"
+							}]
+						}
+					}
+					count: 4
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["1BD0C8B5FC064E17"]
+			id: "6B4CCC1C0B4331B2"
+			tasks: [{
+				id: "510CFD955B63871E"
+				type: "item"
+				item: "ars_nouveau:apprentice_spell_book"
+			}]
+		}
+		{
+			title: "Mage equipment"
+			icon: {
+				id: "ars_nouveau:apprentice_hood"
+				Count: 1b
+				tag: {
+					Damage: 0
+				}
+			}
+			x: 0.0d
+			y: 3.5d
+			dependencies: ["6B4CCC1C0B4331B2"]
+			id: "79453CADB895B4E2"
+			tasks: [
+				{
+					id: "2EC6E13FFBE99AAF"
+					type: "item"
+					item: {
+						id: "ars_nouveau:apprentice_boots"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "7CF53AD894BDAA5F"
+					type: "item"
+					item: {
+						id: "ars_nouveau:apprentice_leggings"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "0DB69CDBEFC58CD4"
+					type: "item"
+					item: {
+						id: "ars_nouveau:apprentice_robes"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "711D02124424472A"
+					type: "item"
+					item: {
+						id: "ars_nouveau:apprentice_hood"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+			]
+			rewards: [
+				{
+					id: "2AEFE6F5213DE2E9"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 2s
+								id: "ars_nouveau:mana_regen"
+							}]
+						}
+					}
+					count: 4
+				}
+				{
+					id: "6E88F5D4F02F047E"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 2s
+								id: "ars_nouveau:mana_boost"
+							}]
+						}
+					}
+					count: 4
+				}
+			]
+		}
+		{
+			x: 2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["79453CADB895B4E2"]
+			id: "24BFFED4E87775AF"
+			tasks: [{
+				id: "1C8A465CEAB72A02"
+				type: "item"
+				item: "ars_nouveau:archmage_spell_book"
+			}]
+		}
+		{
+			title: "Archmage equipment"
+			icon: {
+				id: "ars_nouveau:archmage_hood"
+				Count: 1b
+				tag: {
+					Damage: 0
+				}
+			}
+			x: 2.0d
+			y: 3.5d
+			dependencies: ["24BFFED4E87775AF"]
+			id: "6332B99C94766D65"
+			tasks: [
+				{
+					id: "2EF327D731CA2B3F"
+					type: "item"
+					item: {
+						id: "ars_nouveau:archmage_boots"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "275D91B7D6BCFBD8"
+					type: "item"
+					item: {
+						id: "ars_nouveau:archmage_leggings"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "75D868D90842713D"
+					type: "item"
+					item: {
+						id: "ars_nouveau:archmage_robes"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "4F89B928332AD3BA"
+					type: "item"
+					item: {
+						id: "ars_nouveau:archmage_hood"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+			]
+			rewards: [
+				{
+					id: "7B3D4DAF7943AC1C"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 3s
+								id: "ars_nouveau:mana_regen"
+							}]
+						}
+					}
+					count: 4
+				}
+				{
+					id: "65D4FA3C0F5FF2E1"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 3s
+								id: "ars_nouveau:mana_boost"
+							}]
+						}
+					}
+					count: 4
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: 5.0d
+			description: ["The only way to get your first source berries."]
+			hide_dependency_lines: true
+			dependencies: ["000000000000021A"]
+			id: "6D433ED72EAAEBC2"
+			tasks: [
+				{
+					id: "5738E1C3C56F6A03"
+					type: "item"
+					item: "ars_nouveau:carbuncle_charm"
+				}
+				{
+					id: "2DF1640CBA812B46"
+					type: "item"
+					item: "ars_nouveau:sylph_charm"
+				}
+				{
+					id: "03334A985CF0F014"
+					type: "item"
+					item: "ars_nouveau:drygmy_charm"
+				}
+			]
+			rewards: [{
+				id: "6B2965157420D599"
+				type: "item"
+				item: "ars_nouveau:mana_berry"
+				count: 5
+			}]
+		}
+	]
+}

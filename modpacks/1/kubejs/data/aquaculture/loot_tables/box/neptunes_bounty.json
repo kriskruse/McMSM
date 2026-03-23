@@ -1,0 +1,131 @@
+{
+    "pools": [
+        {
+            "name": "aquaculture:neptunes_bounty_junk_first",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "loot_table",
+                    "name": "aquaculture:box/neptunes_bounty_junk",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "name": "aquaculture:neptunes_bounty_loot",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_ingot",
+                    "entryName": "neptunium_ingot",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ],
+                    "weight": 4
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_axe",
+                    "entryName": "neptunium_axe",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_pickaxe",
+                    "entryName": "neptunium_pickaxe",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_shovel",
+                    "entryName": "neptunium_shovel",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_hoe",
+                    "entryName": "neptunium_hoe",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_sword",
+                    "entryName": "neptunium_sword",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_helmet",
+                    "entryName": "neptunium_helmet",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_chestplate",
+                    "entryName": "neptunium_chestplate",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_leggings",
+                    "entryName": "neptunium_leggings",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_boots",
+                    "entryName": "neptunium_boots",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_fishing_rod",
+                    "entryName": "neptunium_fishing_rod",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_fillet_knife",
+                    "entryName": "neptunium_fillet_knife",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "aquaculture:neptunium_bow",
+                    "entryName": "neptunium_bow",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "productivebees:spawn_egg_configurable_bee",
+                    "entryName": "spawn_egg_configurable_bee",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function" : "set_nbt",
+                            "tag": "{EntityTag:{type:\"productivebees:prismarine\"}}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "aquaculture:neptunes_bounty_junk_last",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "loot_table",
+                    "name": "aquaculture:box/neptunes_bounty_junk",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

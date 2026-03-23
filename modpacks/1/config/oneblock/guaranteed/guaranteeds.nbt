@@ -1,0 +1,467 @@
+{
+	tile: [
+		{
+			weight: 5600,
+			content: {
+				randomlib: "quark:purpur_chest",
+				Items: [
+					{
+						Slot: 3b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					},
+					{
+						Slot: 4b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					},
+					{
+						Slot: 5b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					},
+					{
+						Slot: 11b,
+						id: "minecraft:ender_eye",
+						Count: 1b
+					},
+					{
+						Slot: 12b,
+						id: "minecraft:ender_eye",
+						Count: 1b
+					},
+					{
+						Slot: 13b,
+						id: "minecraft:ender_eye",
+						Count: 1b
+					},
+					{
+						Slot: 14b,
+						id: "minecraft:ender_eye",
+						Count: 1b
+					},
+					{
+						Slot: 15b,
+						id: "minecraft:ender_eye",
+						Count: 1b
+					},
+					{
+						Slot: 21b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					},
+					{
+						Slot: 22b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					},
+					{
+						Slot: 23b,
+						id: "minecraft:end_portal_frame",
+						Count: 1b
+					}
+				],
+				id: "quark:variant_chest"
+			}
+		},
+		{
+			weight: 4900,
+			content: {
+				randomlib: "quark:nether_brick_chest",
+				Items: [
+					{
+						Slot: 2b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 3b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 4b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 5b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 6b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 11b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 13b,
+						id: "minecraft:flint_and_steel",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{
+						Slot: 15b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 20b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 21b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 22b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 23b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					},
+					{
+						Slot: 24b,
+						id: "minecraft:obsidian",
+						Count: 1b
+					}
+				],
+				id: "quark:variant_chest"
+			}
+		},
+		{
+			weight: 199,
+			content: {
+				randomlib: "minecraft:chest",
+				Items: [
+					{
+						Slot: 2b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					},
+					{
+						Slot: 3b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 4b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 5b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 6b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					},
+					{
+						Slot: 11b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					},
+					{
+						Slot: 12b,
+						id: "minecraft:water_bucket",
+						Count: 1b
+					},
+					{
+						Slot: 13b,
+						id: "minecraft:water_bucket",
+						Count: 1b
+					},
+					{
+						Slot: 14b,
+						id: "minecraft:water_bucket",
+						Count: 1b
+					},
+					{
+						Slot: 15b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					},
+					{
+						Slot: 20b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					},
+					{
+						Slot: 21b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 22b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 23b,
+						id: "minecraft:oak_sapling",
+						Count: 1b
+					},
+					{
+						Slot: 24b,
+						id: "minecraft:oak_log",
+						Count: 1b
+					}
+				],
+				id: "minecraft:chest"
+			}
+		},
+		{
+			weight: 3799,
+			content: {
+				randomlib: "quark:prismarine_chest",
+				Items: [
+					{
+						Slot: 0b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 1b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 2b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 3b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 4b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 5b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 6b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 7b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 8b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 9b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 10b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 11b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 12b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 13b,
+						id: "minecraft:heart_of_the_sea",
+						Count: 1b
+					},
+					{
+						Slot: 14b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 15b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 16b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 17b,
+						id: "minecraft:prismarine_shard",
+						Count: 1b
+					},
+					{
+						Slot: 18b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 19b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 20b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 21b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 22b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 23b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 24b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 25b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					},
+					{
+						Slot: 26b,
+						id: "minecraft:prismarine_crystals",
+						Count: 1b
+					}
+				],
+				id: "quark:variant_chest"
+			}
+		},
+		{
+			weight: 1900,
+			content: {
+				randomlib: "minecraft:chest",
+				Items: [
+					{
+						Slot: 3b,
+						id: "astralsorcery:marble_chiseled",
+						Count: 1b
+					},
+					{
+						Slot: 4b,
+						id: "astralsorcery:linking_tool",
+						Count: 1b
+					},
+					{
+						Slot: 5b,
+						id: "astralsorcery:marble_chiseled",
+						Count: 1b
+					},
+					{
+						Slot: 12b,
+						id: "astralsorcery:marble_pillar",
+						Count: 1b
+					},
+					{
+						Slot: 13b,
+						id: "astralsorcery:rock_collector_crystal",
+						Count: 1b,
+						tag: {
+							astralsorcery: {
+								constellation: "astralsorcery:discidia",
+								crystalProperties: {
+									attributes: [
+										{
+											discovered: 0b,
+											property: "astralsorcery:collector.rate",
+											pLevel: 1
+										},
+										{
+											discovered: 0b,
+											property: "astralsorcery:size",
+											pLevel: 1
+										},
+										{
+											discovered: 0b,
+											property: "astralsorcery:shape",
+											pLevel: 1
+										},
+										{
+											discovered: 0b,
+											property: "astralsorcery:purity",
+											pLevel: 1
+										},
+										{
+											discovered: 0b,
+											property: "astralsorcery:constellation.discidia",
+											pLevel: 1
+										}
+									]
+								}
+							}
+						}
+					},
+					{
+						Slot: 14b,
+						id: "astralsorcery:marble_pillar",
+						Count: 1b
+					},
+					{
+						Slot: 21b,
+						id: "astralsorcery:marble_runed",
+						Count: 1b
+					},
+					{
+						Slot: 22b,
+						id: "minecraft:paper",
+						Count: 1b,
+						tag: {
+							RepairCost: 0,
+							display: {
+								Name: '{"text":"A small gift to the one alone in the sky", "bold":true}'
+							}
+						}
+					},
+					{
+						Slot: 23b,
+						id: "astralsorcery:marble_runed",
+						Count: 1b
+					}
+				],
+				id: "minecraft:chest"
+			}
+		}
+	]
+}

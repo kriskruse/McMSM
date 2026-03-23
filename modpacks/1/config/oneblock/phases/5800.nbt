@@ -1,0 +1,36 @@
+{
+	phase: [
+		{
+			weight: 7,
+			content: "-1"
+		}
+	],
+	"controlled_random:gamestages": [
+		{ 
+			weight: 4,
+            content: {
+
+                 default: "-1",
+                 controlled: {
+					"unlock_flatland": "0",
+					"unlock_farmland": "200",
+					"unlock_underground": "300",
+					"unlock_overworld": "900",
+					"unlock_astral": "1800",
+					"unlock_magicka": "2000",
+					"unlock_abyss": "3000",
+					"unlock_bumblezone": "3800",
+					"unlock_nether": "4200",
+					"unlock_end": "5000"
+				}
+			}
+		}
+	],
+	extra: {
+		texture: "mysticalagriculture:supremium_block",
+		name: "§9All in one",
+		power: 600000,
+		cooldown: 2,
+		level:5800
+	}
+}

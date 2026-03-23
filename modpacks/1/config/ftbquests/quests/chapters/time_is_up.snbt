@@ -1,0 +1,198 @@
+{
+	id: "0000000000003AEE"
+	group: ""
+	order_index: 16
+	filename: "time_is_up"
+	title: "Time is Up"
+	icon: "minecraft:clock"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			description: [
+				"Your exploration is limited in time."
+				"You will need tricks to quickly explore each dimension."
+			]
+			min_required_dependencies: 1
+			dependencies: [
+				"0000000000000347"
+				"0000000000000349"
+				"0000000000000248"
+			]
+			hide: true
+			id: "0000000000003AEF"
+			tasks: [{
+				id: "0000000000003AF0"
+				type: "checkmark"
+				title: "Time is Up"
+				icon: "minecraft:clock"
+			}]
+		}
+		{
+			icon: "silentgems:teleporter_anchor"
+			x: -2.0d
+			y: 1.5d
+			description: [
+				"A teleporter anchor can teleport to another one."
+				"Use the teleporter linker to connect pairs."
+				"WARNING : Only one-way connections"
+			]
+			dependencies: ["0000000000003AEF"]
+			hide: true
+			id: "0000000000003AF1"
+			tasks: [
+				{
+					id: "0000000000003AF2"
+					type: "item"
+					item: "silentgems:teleporter_anchor"
+					count: 4L
+				}
+				{
+					id: "0000000000003AF3"
+					type: "item"
+					item: {
+						id: "silentgems:teleporter_linker"
+						Count: 1b
+						tag: { }
+					}
+				}
+			]
+		}
+		{
+			x: -2.0d
+			y: 3.5d
+			description: [
+				"More expensive but better."
+				"A Return Home Charm can be linked to a teleporter"
+			]
+			dependencies: ["0000000000003AF1"]
+			id: "0000000000003AF4"
+			tasks: [{
+				id: "0000000000003AF5"
+				type: "item"
+				item: "silentgems:ruby_teleporter"
+				count: 2L
+			}]
+			rewards: [{
+				id: "0000000000003AF6"
+				type: "item"
+				item: {
+					id: "silentgems:ruby_return_home_charm"
+					Count: 1b
+					tag: { }
+				}
+			}]
+		}
+		{
+			icon: "portality:controller"
+			x: 2.0d
+			y: 1.5d
+			description: [
+				"Multi block teleporter from Portality mod."
+				"Need energy."
+			]
+			dependencies: ["0000000000003AEF"]
+			hide: true
+			id: "0000000000003AF7"
+			tasks: [
+				{
+					id: "0000000000003AF8"
+					type: "item"
+					item: "portality:controller"
+				}
+				{
+					id: "0000000000003AF9"
+					type: "item"
+					item: "portality:frame"
+					count: 46L
+				}
+				{
+					id: "0000000000003AFA"
+					type: "item"
+					item: "portality:module_energy"
+				}
+			]
+			rewards: [{
+				id: "0000000000003AFB"
+				type: "item"
+				item: "portality:frame"
+				count: 30
+			}]
+		}
+		{
+			x: 2.0d
+			y: -1.5d
+			dependencies: ["0000000000003AEF"]
+			hide: true
+			id: "19AA007B1940F811"
+			tasks: [{
+				id: "6090C084D5137D02"
+				type: "item"
+				item: "timeisup:timer_bonus"
+			}]
+			rewards: [{
+				id: "679120FDD7EB3DFA"
+				type: "item"
+				item: "timeisup:timer_bonus"
+			}]
+		}
+		{
+			x: 2.0d
+			y: -3.5d
+			description: ["Refill with Ender Pearls"]
+			dependencies: ["19AA007B1940F811"]
+			id: "2E2A7BA7F1091A15"
+			tasks: [{
+				id: "2319D09190F6BDA8"
+				type: "item"
+				item: {
+					id: "timeisup:timer_anchor"
+					Count: 1b
+					tag: {
+						Damage: 0
+					}
+				}
+			}]
+			rewards: [{
+				id: "5C75EE9C2B575DB7"
+				type: "item"
+				item: "minecraft:ender_pearl"
+				count: 2
+			}]
+		}
+		{
+			icon: {
+				id: "timeisup:timer_ward"
+				Count: 1b
+				tag: { }
+			}
+			x: 0.0d
+			y: -3.5d
+			description: [
+				"This block creates a safe area in the dimension."
+				"(single use)"
+			]
+			dependencies: ["2E2A7BA7F1091A15"]
+			id: "466A63C7BDDD6DBD"
+			tasks: [
+				{
+					id: "49650F0B576DFDE1"
+					type: "item"
+					item: "timeisup:timer_ward"
+				}
+				{
+					id: "787A93CB94F76DC8"
+					type: "item"
+					item: "timeisup:timer_ward_head"
+				}
+			]
+			rewards: [{
+				id: "7638CF49A5772861"
+				type: "item"
+				item: "timeisup:timer_ward"
+			}]
+		}
+	]
+}

@@ -1,0 +1,49 @@
+{
+	id: "0000000000000002"
+	group: ""
+	order_index: 0
+	filename: "getting_started"
+	title: "Getting started"
+	icon: "oneblock:obmaker"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: -0.5d
+			description: [
+				"You have to create a party (/ftbteams) in order to use ftbquests."
+				""
+				"Don't forget to do quests if you get stuck. The quests book isn't meant to be a complete guide but it can contain some tips. Some mods also have a guide book which can be very helpful !"
+			]
+			id: "0000000000000005"
+			tasks: [{
+				id: "0000000000000006"
+				type: "checkmark"
+				title: "Let's start"
+				icon: "oneblock:obmaker"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.0d
+			description: [
+				"Dimensions are generated as in a vanilla world in this skyblock. That doesn't mean you are free to get all of their resources! Your time is limited by a timer displayed at the bottom left of the screen."
+				"Please note that this timer (and the potion effects it gives) isn't added by any dimension mod. This timer is added by the \"Time is up\" mod."
+			]
+			id: "332EB87858AADD18"
+			tasks: [{
+				id: "134991CA449E877C"
+				type: "checkmark"
+				title: "Timer in dimensions"
+				icon: {
+					id: "timeisup:timer_anchor"
+					Count: 1b
+					tag: {
+						Damage: 0
+					}
+				}
+			}]
+		}
+	]
+}

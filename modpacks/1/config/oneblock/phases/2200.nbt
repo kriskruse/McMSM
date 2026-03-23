@@ -1,0 +1,109 @@
+{
+	phase: [
+		{
+			weight: 5,
+			content: "800"
+		},
+		{
+			weight: 4,
+			content: "0"
+		},
+		{
+			weight: 15,
+			content: "1800"
+		},
+		{
+			weight: 12,
+			content: "2000"
+		}
+	],
+	extra: {
+		texture: "botania:livingrock",
+		name: "§5MagicBundle",
+		power: 8000,
+		cooldown: 55,
+		level:2200
+	},
+	block: [
+		{
+			weight: 1,
+			content: "botania:green_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:blue_petal_block"
+		},
+		{
+			weight: 7,
+			content: "botania:livingwood"
+		},
+		{
+			weight: 1,
+			content: "botania:purple_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:black_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:red_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:cyan_petal_block"
+		},
+		{
+			weight: 7,
+			content: "botania:livingrock"
+		},
+		{
+			weight: 1,
+			content: "botania:light_blue_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:magenta_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:orange_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:gray_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:lime_petal_block"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:black_marble_raw"
+		},
+		{
+			weight: 1,
+			content: "botania:brown_petal_block"
+		},
+		{
+			weight: 8,
+			content: "astralsorcery:infused_wood"
+		},
+		{
+			weight: 1,
+			content: "botania:yellow_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:light_gray_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:white_petal_block"
+		},
+		{
+			weight: 1,
+			content: "botania:pink_petal_block"
+		}
+	]
+}

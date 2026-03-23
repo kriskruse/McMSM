@@ -1,0 +1,313 @@
+{
+	id: "00000000000002E7"
+	group: ""
+	order_index: 11
+	filename: "nether"
+	title: "Nether"
+	icon: "minecraft:netherrack"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			dependencies: ["00000000000001E3"]
+			hide: true
+			id: "000000000000032C"
+			tasks: [{
+				id: "000000000000032D"
+				type: "item"
+				item: "minecraft:netherrack"
+				count: 128L
+			}]
+			rewards: [{
+				id: "000000000000032E"
+				type: "item"
+				item: "silentgems:hardened_netherrack"
+				count: 64
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.5d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "000000000000032F"
+			tasks: [{
+				id: "0000000000000330"
+				type: "item"
+				item: "minecraft:soul_sand"
+				count: 64L
+			}]
+			rewards: [{
+				id: "0000000000000331"
+				type: "item"
+				item: "minecraft:soul_soil"
+				count: 15
+			}]
+		}
+		{
+			x: 0.0d
+			y: -1.5d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "0000000000000332"
+			tasks: [{
+				id: "0000000000000333"
+				type: "item"
+				item: "minecraft:crimson_nylium"
+				count: 20L
+			}]
+			rewards: [{
+				id: "0000000000000334"
+				type: "item"
+				item: "minecraft:crimson_fungus"
+			}]
+		}
+		{
+			x: 1.0d
+			y: -1.5d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "0000000000000335"
+			tasks: [{
+				id: "0000000000000336"
+				type: "item"
+				item: "minecraft:warped_nylium"
+				count: 20L
+			}]
+			rewards: [{
+				id: "0000000000000337"
+				type: "item"
+				item: "minecraft:warped_fungus"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 1.5d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "0000000000000338"
+			tasks: [{
+				id: "0000000000000339"
+				type: "item"
+				item: "minecraft:quartz_block"
+				count: 32L
+			}]
+			rewards: [{
+				id: "000000000000033A"
+				type: "item"
+				item: "minecraft:quartz"
+				count: 32
+			}]
+		}
+		{
+			x: -2.0d
+			y: -1.0d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "000000000000033B"
+			tasks: [{
+				id: "000000000000033C"
+				type: "item"
+				item: "minecraft:blaze_rod"
+				count: 10L
+			}]
+			rewards: [{
+				id: "000000000000033D"
+				type: "item"
+				item: "minecraft:blaze_rod"
+				count: 2
+			}]
+		}
+		{
+			x: -2.0d
+			y: 1.0d
+			dependencies: ["000000000000032C"]
+			hide: true
+			id: "000000000000033E"
+			tasks: [{
+				id: "000000000000033F"
+				type: "item"
+				item: "minecraft:magma_cream"
+				count: 10L
+			}]
+			rewards: [{
+				id: "0000000000000340"
+				type: "item"
+				item: "minecraft:magma_cream"
+				count: 2
+			}]
+		}
+		{
+			x: -3.5d
+			y: 0.0d
+			dependencies: [
+				"000000000000033B"
+				"000000000000033E"
+			]
+			hide: true
+			id: "0000000000000343"
+			tasks: [{
+				id: "0000000000000344"
+				type: "checkmark"
+				title: "Lava"
+				icon: "minecraft:lava_bucket"
+			}]
+			rewards: [{
+				id: "0000000000000345"
+				type: "item"
+				item: "minecraft:lava_bucket"
+				count: 3
+			}]
+		}
+		{
+			x: 3.5d
+			y: 0.0d
+			dependencies: ["0000000000000347"]
+			hide: true
+			id: "000000000000034B"
+			tasks: [{
+				id: "000000000000034C"
+				type: "item"
+				item: "minecraft:wither_skeleton_skull"
+				count: 3L
+			}]
+			rewards: [{
+				id: "000000000000034F"
+				type: "item"
+				item: "mysticalagriculture:witherproof_block"
+				count: 6
+			}]
+		}
+		{
+			x: 3.5d
+			y: 1.5d
+			dependencies: ["000000000000034B"]
+			hide: true
+			id: "000000000000034D"
+			tasks: [{
+				id: "000000000000034E"
+				type: "item"
+				item: "minecraft:nether_star"
+			}]
+			rewards: [{
+				id: "0000000000000350"
+				type: "item"
+				item: "minecraft:wither_rose"
+			}]
+		}
+		{
+			title: "Netherite Armor"
+			icon: {
+				id: "minecraft:netherite_helmet"
+				Count: 1b
+				tag: {
+					Damage: 0
+				}
+			}
+			x: 3.5d
+			y: -1.5d
+			dependencies: ["0000000000000347"]
+			hide: true
+			id: "09CBB8C9348407AC"
+			tasks: [
+				{
+					id: "1481A21D7ADA6340"
+					type: "item"
+					item: {
+						id: "minecraft:netherite_boots"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "3D23BB4F14DF5BDD"
+					type: "item"
+					item: {
+						id: "minecraft:netherite_leggings"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "65826FBF4F63397B"
+					type: "item"
+					item: {
+						id: "minecraft:netherite_chestplate"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+				{
+					id: "608A7889EEA3ED22"
+					type: "item"
+					item: {
+						id: "minecraft:netherite_helmet"
+						Count: 1b
+						tag: {
+							Damage: 0
+						}
+					}
+				}
+			]
+			rewards: [
+				{
+					id: "24D3BCF138E4C8CD"
+					type: "item"
+					item: "minecraft:netherite_ingot"
+					count: 4
+				}
+				{
+					id: "1DE186918AE2A9B4"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 3s
+								id: "minecraft:unbreaking"
+							}]
+						}
+					}
+					count: 2
+				}
+				{
+					id: "3DB93EFC91453654"
+					type: "item"
+					item: {
+						id: "minecraft:enchanted_book"
+						Count: 1b
+						tag: {
+							StoredEnchantments: [{
+								lvl: 4s
+								id: "minecraft:protection"
+							}]
+						}
+					}
+					count: 2
+				}
+			]
+		}
+		{
+			x: 5.0d
+			y: 0.0d
+			description: ["Nether have spawners. I've spawn eggs..."]
+			dependencies: ["3DE38F4BC476FB31"]
+			id: "01B488C0C53B6B67"
+			tasks: [{
+				id: "395563E3690BA247"
+				type: "checkmark"
+				title: "Spawners"
+				icon: "minecraft:spawner"
+			}]
+		}
+	]
+}

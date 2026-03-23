@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BackendStatusIndicator from '../components/BackendStatusIndicator.tsx';
 import ModpackCard from '../components/ModpackCard.tsx';
 import ModpackExpandedPanel from '../components/ModpackExpandedPanel.tsx';
@@ -11,6 +11,18 @@ const appVersion = import.meta.env.VITE_APP_VERSION ?? '1.0.0';
 const apiVersion = import.meta.env.VITE_API_VERSION ?? 'v1';
 const DASHBOARD_REFRESH_MS = 15_000;
 const BACKEND_RECOVERY_HEALTH_POLL_MS = 5_000;
+
+function isZipFile(file: File): boolean {
+    return file.name.toLowerCase().endsWith('.zip');
+}
+
+function isFileDragEvent(event: DragEvent): boolean {
+    return event.dataTransfer?.types?.includes('Files') ?? false;
+}
+
+function getDroppedFile(event: DragEvent): File | null {
+    return event.dataTransfer?.files?.[0] ?? null;
+}
 
 function isConnectionError(error: unknown): boolean {
     if (error instanceof TypeError) {
@@ -41,6 +53,9 @@ const Home = () => {
     const [activePackActions, setActivePackActions] = useState<number[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
+    const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
+    const [isGlobalFileDragActive, setIsGlobalFileDragActive] = useState(false);
+    const globalFileDragDepth = useRef(0);
 
     const refreshAllPacks = useCallback(async () => {
         try {
@@ -223,9 +238,15 @@ const Home = () => {
     };
 
     const handleUploadCompleted = (uploadResult: ModPackUploadResponseDto) => {
+        setPendingUploadFile(null);
         setPendingUploadResult(uploadResult);
         setIsUploadModalOpen(false);
         setIsMetadataModalOpen(true);
+    };
+
+    const handleCloseUploadModal = () => {
+        setIsUploadModalOpen(false);
+        setPendingUploadFile(null);
     };
 
     const handleMetadataSaved = (response: ModPackMetadataResponseDto) => {
@@ -238,6 +259,77 @@ const Home = () => {
         }
         void refreshAllPacks();
     };
+
+    const handleGlobalDragOver = useCallback((event: DragEvent) => {
+        if (!isFileDragEvent(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'copy';
+        }
+    }, []);
+
+    const handleGlobalDragEnter = useCallback((event: DragEvent) => {
+        if (!isFileDragEvent(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        globalFileDragDepth.current += 1;
+        setIsGlobalFileDragActive(true);
+    }, []);
+
+    const handleGlobalDragLeave = useCallback((event: DragEvent) => {
+        if (!isFileDragEvent(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        globalFileDragDepth.current = Math.max(0, globalFileDragDepth.current - 1);
+        if (globalFileDragDepth.current === 0) {
+            setIsGlobalFileDragActive(false);
+        }
+    }, []);
+
+    const handleGlobalDrop = useCallback((event: DragEvent) => {
+        if (!isFileDragEvent(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        globalFileDragDepth.current = 0;
+        setIsGlobalFileDragActive(false);
+
+        const droppedFile = getDroppedFile(event);
+        if (!droppedFile) {
+            return;
+        }
+
+        if (!isZipFile(droppedFile)) {
+            setLoadError('Only .zip files are supported for upload.');
+            return;
+        }
+
+        setLoadError('');
+        setPendingUploadFile(droppedFile);
+        setIsUploadModalOpen(true);
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener('dragenter', handleGlobalDragEnter);
+        window.addEventListener('dragover', handleGlobalDragOver);
+        window.addEventListener('dragleave', handleGlobalDragLeave);
+        window.addEventListener('drop', handleGlobalDrop);
+
+        return () => {
+            window.removeEventListener('dragenter', handleGlobalDragEnter);
+            window.removeEventListener('dragover', handleGlobalDragOver);
+            window.removeEventListener('dragleave', handleGlobalDragLeave);
+            window.removeEventListener('drop', handleGlobalDrop);
+        };
+    }, [handleGlobalDragEnter, handleGlobalDragLeave, handleGlobalDragOver, handleGlobalDrop]);
 
     return (
         <main className="w-full max-w-6xl px-4 py-6 text-slate-100 md:px-6">
@@ -276,7 +368,10 @@ const Home = () => {
                 </button>
                 <button
                     type="button"
-                    onClick={() => setIsUploadModalOpen(true)}
+                    onClick={() => {
+                        setPendingUploadFile(null);
+                        setIsUploadModalOpen(true);
+                    }}
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
                     aria-label="Upload new modpack"
                 >
@@ -329,8 +424,9 @@ const Home = () => {
 
             <UploadModpackModal
                 isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
+                onClose={handleCloseUploadModal}
                 onUploaded={handleUploadCompleted}
+                initialFile={pendingUploadFile}
             />
 
             <ModpackMetadataModal
@@ -342,6 +438,15 @@ const Home = () => {
                 }}
                 onSaved={handleMetadataSaved}
             />
+
+            {isGlobalFileDragActive && !isUploadModalOpen && !isMetadataModalOpen && (
+                <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-slate-950/45 backdrop-blur-sm">
+                    <div className="mx-4 w-full max-w-3xl rounded-2xl border-2 border-dashed border-emerald-300/80 bg-emerald-500/10 px-10 py-16 text-center shadow-2xl">
+                        <p className="text-2xl font-semibold text-emerald-200">Drop .zip to upload</p>
+                        <p className="mt-2 text-sm text-emerald-100/90">Release anywhere to open upload with the file preselected.</p>
+                    </div>
+                </div>
+            )}
 
             {expandedPack && (
                 <div

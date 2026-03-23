@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import type { ModPackUploadResponseDto } from '../dto';
 import { uploadModpack } from '../util/modpackApi';
@@ -7,13 +7,14 @@ type UploadModpackModalProps = {
     isOpen: boolean;
     onClose: () => void;
     onUploaded: (response: ModPackUploadResponseDto) => void;
+    initialFile?: File | null;
 };
 
 function isZipFile(file: File): boolean {
     return file.name.toLowerCase().endsWith('.zip');
 }
 
-const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalProps) => {
+const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }: UploadModpackModalProps) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [error, setError] = useState('');
@@ -23,10 +24,6 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
     const [isBackendProcessing, setIsBackendProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const smallPackSizeThreshold = 52428800; // 50mB threshold forfiles
-
-    if (!isOpen) {
-        return null;
-    }
 
     const chooseFile = () => {
         fileInputRef.current?.click();
@@ -53,6 +50,31 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
 
     function isFileSizeTooLow(size: number) {
         return size < smallPackSizeThreshold;
+    }
+
+    useEffect(() => {
+        if (!initialFile) {
+            return;
+        }
+
+        if (!isZipFile(initialFile)) {
+            setSelectedFile(null);
+            setError('Only .zip files are supported.');
+            return;
+        }
+
+        if (isFileSizeTooLow(initialFile.size)) {
+            setSelectedFile(null);
+            setError('The size of the file is too small for a modpack. Please make sure that it is a valid modpack');
+            return;
+        }
+
+        setSelectedFile(initialFile);
+        setError('');
+    }, [initialFile]);
+
+    if (!isOpen) {
+        return null;
     }
 
     const handleFile = (file: File | null) => {
@@ -256,5 +278,3 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
 };
 
 export default UploadModpackModal;
-
-

@@ -1,0 +1,136 @@
+{
+  "availability": {
+    "tier": 4,
+    "categories": [
+      "metal"
+    ],
+    "visible": true,
+    "gear_blacklist": [],
+    "can_salvage": true
+  },
+  "crafting_items": {
+    "main": {
+      "item": "botania:gaia_ingot"
+    }
+  },
+  "name": {
+    "translate": "Gaia Spirit"
+  },
+  "stats": {
+    "main": {
+      "durability": 4200.0,
+      "armor_durability": 35.0,
+      "enchantability": 32.0,
+      "harvest_level": 4.0,
+      "harvest_speed": 12.0,
+      "melee_damage": 7.0,
+      "attack_speed": 0.05,
+      "armor": 24.0,
+      "armor_toughness": 11.0,
+      "ranged_damage": 2.3,
+      "ranged_speed": 0.14,
+      "rarity": 100.0,
+      "silentgems:chargeability": 1.52,
+      "projectile_speed": 1.1,
+      "projectile_accuracy": 1.2,
+      "magic_armor": 10.0
+    },
+    "tip": {
+      "durability": {
+        "add": 350.0
+      },
+      "harvest_level": {
+        "max": 3.0
+      },
+      "armor_durability": {
+        "add": 20.0
+      },
+      "harvest_speed": {
+        "add": 2.0
+      },
+      "melee_damage": {
+        "add": 2.5
+      },
+      "rarity": {
+        "add": 25.0
+      }
+    }
+  },
+  "traits": {
+    "main": [
+      {
+        "name": "silentgear:malleable",
+        "level": 2
+      },
+      {
+        "name": "silentgear:synergistic",
+        "level": 4
+      },
+      {
+        "name": "managear:mana",
+        "level": 2
+      },
+      {
+        "name": "silentgear:brilliant",
+        "level": 1,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.5
+          },
+          {
+            "type": "silentgear:gear_type",
+            "gear_type": "armor"
+          }
+        ]
+      },
+      {
+        "name": "managear:manaburst",
+        "level": 1,
+        "conditions": [
+          {
+            "type": "silentgear:gear_type",
+            "gear_type": "weapon"
+          }
+        ]
+
+      },
+      {
+        "name": "silentgear:ancient",
+        "level": 2,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.2
+          }
+        ]
+      },
+      {
+        "name": "silentgear:cure_poison",
+        "level": 1,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.65
+          },
+          {
+            "type": "silentgear:gear_type",
+            "gear_type": "armor"
+          }
+        ]
+      }
+    ],
+    "tip": [
+      {
+        "name": "managear:manaburst",
+        "level": 1,
+        "conditions": [
+          {
+            "type": "silentgear:gear_type",
+            "gear_type": "weapon"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,285 @@
+{
+	extra: {
+		texture: "minecraft:honeycomb_block",
+		name: "§6Bumblezone",
+		power: 1600,
+		cooldown: 70,
+		level:3800
+	},
+	tile: [
+		{
+			weight: 1,
+			content: {
+				randomlib: "minecraft:bee_nest",
+				id: "minecraft:beehive",
+				Bees: [
+					{
+						MinOccupationTicks: 600,
+						TicksInHive: 370,
+						EntityData: {
+							NoGravity: 1b,
+							Brain: {
+								memories: {}
+							},
+							HurtByTimestamp: 0,
+							ForgeData: {},
+							HasStung: 0b,
+							Attributes: [
+								{
+									Base: 48.0d,
+									Modifiers: [
+										{
+											Amount: -0.04597336689139978d,
+											Operation: 1,
+											UUID: [I; 490573174, -954185173, -1201576870, 1208204524],
+											Name: "Random spawn bonus"
+										}
+									],
+									Name: "minecraft:generic.follow_range"
+								},
+								{
+									Base: 0.08d,
+									Name: "forge:entity_gravity"
+								}
+							],
+							Invulnerable: 0b,
+							FallFlying: 0b,
+							ForcedAge: 0,
+							PortalCooldown: 0,
+							AbsorptionAmount: 0.0f,
+							FallDistance: 0.0f,
+							InLove: 0,
+							CanUpdate: 1b,
+							DeathTime: 0s,
+							HandDropChances: [0.085f, 0.085f],
+							CannotEnterHiveTicks: 0,
+							PersistenceRequired: 0b,
+							id: "minecraft:bee",
+							Age: 0,
+							TicksSincePollination: 24,
+							AngerTime: 0,
+							Motion: [-0.06275519843218302d, 0.08796540999955309d, -0.024859242018241624d],
+							Health: 10.0f,
+							HasNectar: 0b,
+							LeftHanded: 0b,
+							Air: 300s,
+							OnGround: 0b,
+							Rotation: [84.876816f, 0.0f],
+							HandItems: [
+								{},
+								{}
+							],
+							ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+							Pos: [245.0065385373161d, 64.589971131427d, 222.33143165959294d],
+							Fire: 0s,
+							ArmorItems: [
+								{},
+								{},
+								{},
+								{}
+							],
+							CropsGrownSincePollination: 0,
+							CanPickUpLoot: 0b,
+							HurtTime: 0s,
+							HivePos: {
+								X: 243,
+								Y: 64,
+								Z: 223
+							}
+						}
+					},
+					{
+						MinOccupationTicks: 600,
+						TicksInHive: 359,
+						EntityData: {
+							NoGravity: 1b,
+							Brain: {
+								memories: {}
+							},
+							HurtByTimestamp: 0,
+							ForgeData: {},
+							HasStung: 0b,
+							Attributes: [
+								{
+									Base: 48.0d,
+									Modifiers: [
+										{
+											Amount: 0.027554836928591495d,
+											Operation: 1,
+											UUID: [I; -808896156, 507595828, -1710752569, 2128321504],
+											Name: "Random spawn bonus"
+										}
+									],
+									Name: "minecraft:generic.follow_range"
+								},
+								{
+									Base: 0.08d,
+									Name: "forge:entity_gravity"
+								}
+							],
+							Invulnerable: 0b,
+							FallFlying: 0b,
+							ForcedAge: 0,
+							PortalCooldown: 0,
+							AbsorptionAmount: 0.0f,
+							FallDistance: 0.0f,
+							InLove: 0,
+							CanUpdate: 1b,
+							DeathTime: 0s,
+							HandDropChances: [0.085f, 0.085f],
+							CannotEnterHiveTicks: 0,
+							PersistenceRequired: 0b,
+							id: "minecraft:bee",
+							Age: 0,
+							TicksSincePollination: 12,
+							AngerTime: 0,
+							Motion: [0.0d, 0.12658658406624293d, 0.0536034748812484d],
+							Health: 10.0f,
+							HasNectar: 0b,
+							LeftHanded: 0b,
+							Air: 300s,
+							OnGround: 0b,
+							Rotation: [55.643127f, 0.0f],
+							HandItems: [
+								{},
+								{}
+							],
+							ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+							Pos: [244.34999999403954d, 63.870671752194895d, 221.97783557940335d],
+							Fire: 0s,
+							ArmorItems: [
+								{},
+								{},
+								{},
+								{}
+							],
+							CropsGrownSincePollination: 0,
+							CanPickUpLoot: 0b,
+							HurtTime: 0s,
+							HivePos: {
+								X: 243,
+								Y: 64,
+								Z: 223
+							}
+						}
+					},
+					{
+						MinOccupationTicks: 600,
+						TicksInHive: 340,
+						EntityData: {
+							NoGravity: 1b,
+							Brain: {
+								memories: {}
+							},
+							HurtByTimestamp: 0,
+							ForgeData: {},
+							HasStung: 0b,
+							Attributes: [
+								{
+									Base: 48.0d,
+									Modifiers: [
+										{
+											Amount: -0.027747477261606292d,
+											Operation: 1,
+											UUID: [I; -1275715001, -1344779820, -1248286989, -1414157447],
+											Name: "Random spawn bonus"
+										}
+									],
+									Name: "minecraft:generic.follow_range"
+								},
+								{
+									Base: 0.08d,
+									Name: "forge:entity_gravity"
+								}
+							],
+							Invulnerable: 0b,
+							FallFlying: 0b,
+							ForcedAge: 0,
+							PortalCooldown: 0,
+							AbsorptionAmount: 0.0f,
+							FallDistance: 0.0f,
+							InLove: 0,
+							CanUpdate: 1b,
+							DeathTime: 0s,
+							HandDropChances: [0.085f, 0.085f],
+							CannotEnterHiveTicks: 0,
+							PersistenceRequired: 0b,
+							id: "minecraft:bee",
+							Age: 0,
+							TicksSincePollination: 24,
+							AngerTime: 0,
+							Motion: [0.0d, 0.07298209664716682d, 0.07716070555437836d],
+							Health: 10.0f,
+							HasNectar: 0b,
+							LeftHanded: 0b,
+							Air: 300s,
+							OnGround: 0b,
+							Rotation: [0.7505722f, 0.0f],
+							HandItems: [
+								{},
+								{}
+							],
+							ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+							Pos: [244.50657454167754d, 63.539135765599156d, 222.37937418067202d],
+							Fire: 0s,
+							ArmorItems: [
+								{},
+								{},
+								{},
+								{}
+							],
+							CropsGrownSincePollination: 0,
+							CanPickUpLoot: 0b,
+							HurtTime: 0s,
+							HivePos: {
+								X: 243,
+								Y: 64,
+								Z: 223
+							}
+						}
+					}
+				]
+			}
+		}
+	],
+	block: [
+		{
+			weight: 2,
+			content: "minecraft:bee_nest"
+		},
+		{
+			weight: 10,
+			content: "minecraft:honey_block"
+		},
+		{
+			weight: 32,
+			content: "the_bumblezone:filled_porous_honeycomb_block"
+		},
+		{
+			weight: 16,
+			content: "buzzier_bees:crystallized_honey_block"
+		},
+		{
+			weight: 48,
+			content: "minecraft:honeycomb_block"
+		},
+		{
+			weight: 5,
+			content: "the_bumblezone:honey_crystal"
+		}
+	],
+	entity: [
+		{
+			weight: 3,
+			content: {
+				id: "minecraft:bee"
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "the_bumblezone:honey_slime"
+			}
+		}
+	]
+}

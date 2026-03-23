@@ -1,0 +1,125 @@
+{
+	phase: [
+		{
+			weight: 20,
+			content: "800"
+		}
+	],
+	extra: {
+		texture: "minecraft:dark_prismarine",
+		name: "§3Abyss",
+		cooldown: 70,
+		power: 1500,
+		level:3000
+	},
+	block: [
+		{
+			weight: 8,
+			content: "minecraft:wet_sponge"
+		},
+		{
+			weight: 72,
+			content: "minecraft:dark_prismarine"
+		},
+		{
+			weight: 4,
+			content: "minecraft:bubble_coral_fan"
+		},
+		{
+			weight: 32,
+			content: "minecraft:brain_coral_block"
+		},
+		{
+			weight: 32,
+			content: "minecraft:tube_coral_block"
+		},
+		{
+			weight: 12,
+			content: "quark:elder_prismarine_bricks"
+		},
+		{
+			weight: 4,
+			content: "minecraft:brain_coral"
+		},
+		{
+			weight: 4,
+			content: "minecraft:horn_coral_fan"
+		},
+		{
+			weight: 4,
+			content: "minecraft:tube_coral_fan"
+		},
+		{
+			weight: 8,
+			content: "quark:elder_sea_lantern"
+		},
+		{
+			weight: 4,
+			content: "minecraft:tube_coral"
+		},
+		{
+			weight: 32,
+			content: "minecraft:sea_lantern"
+		},
+		{
+			weight: 60,
+			content: "minecraft:prismarine_bricks"
+		},
+		{
+			weight: 32,
+			content: "minecraft:bubble_coral_block"
+		},
+		{
+			weight: 32,
+			content: "minecraft:horn_coral_block"
+		},
+		{
+			weight: 4,
+			content: "minecraft:horn_coral"
+		},
+		{
+			weight: 4,
+			content: "minecraft:fire_coral"
+		},
+		{
+			weight: 16,
+			content: "quark:dark_elder_prismarine"
+		},
+		{
+			weight: 4,
+			content: "minecraft:brain_coral_fan"
+		},
+		{
+			weight: 24,
+			content: "quark:elder_prismarine"
+		},
+		{
+			weight: 4,
+			content: "minecraft:fire_coral_fan"
+		},
+		{
+			weight: 32,
+			content: "minecraft:fire_coral_block"
+		},
+		{
+			weight: 200,
+			content: "minecraft:prismarine"
+		},
+		{
+			weight: 4,
+			content: "minecraft:bubble_coral"
+		}
+	],
+	entity: [
+		{
+			weight: 1,
+			content: {
+				Item: {
+					id: "aquaculture:neptunium_nugget",
+					Count: 1b
+				},
+				id: "minecraft:item"
+			}
+		}
+	]
+}

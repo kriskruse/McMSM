@@ -1,0 +1,366 @@
+{
+	extra: {
+		texture: "minecraft:dirt",
+		name: "§2Flatland",
+		power: 40,
+		cooldown: 90,
+		level: 0
+	},
+	tile: [
+		{
+			weight: 4,
+			content: {
+				randomlib: "ironchest:dirt_chest",
+				Items: [
+					{
+						Slot: 0b,
+						id: "minecraft:dirt",
+						Count: 64b
+					}
+				],
+				id: "ironchest:dirt_chest"
+			}
+		}
+	],
+	block: [
+		{
+			weight: 8,
+			content: "quark:lavender_blossom_leaves"
+		},
+		{
+			weight: 8,
+			content: "quark:orange_blossom_leaves"
+		},
+		{
+			weight: 8,
+			content: "minecraft:dark_oak_leaves"
+		},
+		{
+			weight: 8,
+			content: "minecraft:jungle_leaves"
+		},
+		{
+			weight: 30,
+			content: "minecraft:podzol"
+		},
+		{
+			weight: 45,
+			content: "minecraft:grass_block"
+		},
+		{
+			weight: 8,
+			content: "minecraft:birch_leaves"
+		},
+		{
+			weight: 2,
+			content: "minecraft:dried_kelp_block"
+		},
+		{
+			weight: 8,
+			content: "quark:red_blossom_leaves"
+		},
+		{
+			weight: 20,
+			content: "minecraft:clay"
+		},
+		{
+			weight: 60,
+			content: "minecraft:dirt"
+		},
+		{
+			weight: 8,
+			content: "minecraft:acacia_leaves"
+		},
+		{
+			weight: 2,
+			content: "minecraft:bee_nest"
+		},
+		{
+			weight: 8,
+			content: "quark:blue_blossom_leaves"
+		},
+		{
+			weight: 8,
+			content: "minecraft:oak_leaves"
+		},
+		{
+			weight: 25,
+			content: "minecraft:sand"
+		},
+		{
+			weight: 8,
+			content: "minecraft:spruce_leaves"
+		},
+		{
+			weight: 8,
+			content: "quark:pink_blossom_leaves"
+		},
+		{
+			weight: 8,
+			content: "quark:yellow_blossom_leaves"
+		}
+	],
+	entity: [
+		{
+			weight: 3,
+			content: {
+				IsChickenJockey: 0b,
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.019542594339375247d,
+								Operation: 1,
+								UUID: [I; 962084216, 1612791865, -1552406218, 1681596457],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:chicken",
+				Age: 0,
+				Health: 4.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [120.32319f, -25.365656f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				EggLayTime: 11954,
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.20000000298023224d,
+						Name: "minecraft:generic.movement_speed"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.1096457112353702d,
+								Operation: 1,
+								UUID: [I; -1573905111, -330085477, -1527691363, -537161277],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:cow",
+				Age: 0,
+				Health: 10.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-150.17761f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.012411624056749442d,
+								Operation: 1,
+								UUID: [I; 808817069, -12762807, -2036188023, 1648305503],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				Saddle: 0b,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:pig",
+				Age: 0,
+				Health: 10.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-81.37503f, -25.762466f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.23000000417232513d,
+						Name: "minecraft:generic.movement_speed"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.05758094660699439d,
+								Operation: 1,
+								UUID: [I; 1389800516, -292466728, -1091866590, 289583391],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				ForcedAge: 0,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				InLove: 0,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:sheep",
+				Age: 0,
+				Health: 8.0f,
+				Color: 0b,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [49.141373f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				Sheared: 0b,
+				HurtTime: 0s
+			}
+		}
+	]
+}

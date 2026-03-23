@@ -1,0 +1,318 @@
+{
+	id: "0000000000000007"
+	group: ""
+	order_index: 1
+	filename: "flatland"
+	title: "Flatland"
+	icon: "minecraft:dirt"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: -2.5d
+			dependencies: ["0000000000000006"]
+			hide: true
+			id: "0000000000000008"
+			tasks: [{
+				id: "0000000000000009"
+				type: "item"
+				item: "minecraft:dirt"
+				count: 128L
+			}]
+			rewards: [
+				{
+					id: "000000000000000A"
+					type: "item"
+					item: "minecraft:grass_block"
+				}
+				{
+					id: "000000000000000B"
+					type: "item"
+					item: "minecraft:dirt"
+					count: 32
+				}
+			]
+		}
+		{
+			x: 0.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "000000000000000C"
+			tasks: [{
+				id: "000000000000000D"
+				type: "item"
+				item: "quark:blue_blossom_sapling"
+			}]
+			rewards: [{
+				id: "000000000000000E"
+				type: "item"
+				item: "quark:blue_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			x: 1.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "000000000000000F"
+			tasks: [{
+				id: "0000000000000010"
+				type: "item"
+				item: "quark:lavender_blossom_sapling"
+			}]
+			rewards: [{
+				id: "0000000000000011"
+				type: "item"
+				item: "quark:lavender_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			x: -0.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "0000000000000012"
+			tasks: [{
+				id: "0000000000000013"
+				type: "item"
+				item: "quark:orange_blossom_sapling"
+			}]
+			rewards: [{
+				id: "0000000000000014"
+				type: "item"
+				item: "quark:orange_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			x: -1.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "0000000000000015"
+			tasks: [{
+				id: "0000000000000016"
+				type: "item"
+				item: "quark:pink_blossom_sapling"
+			}]
+			rewards: [{
+				id: "0000000000000017"
+				type: "item"
+				item: "quark:pink_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			x: 2.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "0000000000000018"
+			tasks: [{
+				id: "0000000000000019"
+				type: "item"
+				item: "quark:yellow_blossom_sapling"
+			}]
+			rewards: [{
+				id: "000000000000001A"
+				type: "item"
+				item: "quark:yellow_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			x: -2.5d
+			y: -1.0d
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "000000000000001B"
+			tasks: [{
+				id: "000000000000001C"
+				type: "item"
+				item: "quark:red_blossom_sapling"
+			}]
+			rewards: [{
+				id: "000000000000001D"
+				type: "item"
+				item: "quark:red_blossom_sapling"
+				count: 2
+			}]
+		}
+		{
+			title: "A New Population"
+			icon: "minecraft:cow_spawn_egg"
+			x: 0.0d
+			y: 0.5d
+			description: ["Breeding"]
+			dependencies: ["0000000000000002"]
+			hide: true
+			id: "000000000000001E"
+			tasks: [{
+				id: "000000000000001F"
+				type: "stat"
+				stat: "minecraft:animals_bred"
+				value: 6
+			}]
+			rewards: [
+				{
+					id: "0000000000000020"
+					type: "item"
+					item: "minecraft:cow_spawn_egg"
+					count: 2
+				}
+				{
+					id: "0000000000000021"
+					type: "item"
+					item: "minecraft:chicken_spawn_egg"
+					count: 2
+				}
+				{
+					id: "0000000000000022"
+					type: "item"
+					item: "minecraft:pig_spawn_egg"
+					count: 2
+				}
+				{
+					id: "0000000000000023"
+					type: "item"
+					item: "minecraft:sheep_spawn_egg"
+					count: 2
+				}
+			]
+		}
+		{
+			x: -1.0d
+			y: 1.5d
+			dependencies: ["0000000000000002"]
+			hide: true
+			id: "0000000000000026"
+			tasks: [{
+				id: "0000000000000027"
+				type: "item"
+				item: "minecraft:sand"
+			}]
+			rewards: [{
+				id: "000000000000002E"
+				type: "item"
+				item: "minecraft:red_sand"
+			}]
+		}
+		{
+			x: 1.0d
+			y: 1.5d
+			dependencies: ["0000000000000002"]
+			hide: true
+			id: "0000000000000028"
+			tasks: [{
+				id: "0000000000000029"
+				type: "item"
+				item: "minecraft:clay"
+			}]
+			rewards: [{
+				id: "000000000000002A"
+				type: "item"
+				item: "minecraft:clay_ball"
+				count: 4
+			}]
+		}
+		{
+			x: 1.0d
+			y: 3.0d
+			dependencies: ["0000000000000028"]
+			hide: true
+			id: "000000000000002B"
+			tasks: [{
+				id: "000000000000002C"
+				type: "item"
+				item: "minecraft:clay_ball"
+				count: 32L
+			}]
+			rewards: [{
+				id: "000000000000002D"
+				type: "item"
+				item: "botanypots:botany_pot"
+			}]
+		}
+		{
+			x: -1.0d
+			y: 3.0d
+			dependencies: [
+				"0000000000000028"
+				"0000000000000026"
+			]
+			hide: true
+			id: "000000000000002F"
+			tasks: [
+				{
+					id: "0000000000000031"
+					type: "item"
+					item: "minecraft:sand"
+					count: 10L
+				}
+				{
+					id: "0000000000000032"
+					type: "item"
+					item: "minecraft:clay_ball"
+					count: 10L
+				}
+			]
+			rewards: [{
+				id: "0000000000000033"
+				type: "item"
+				item: "quark:sandy_bricks"
+				count: 32
+			}]
+		}
+		{
+			title: "Farming begins"
+			x: 0.0d
+			y: 4.0d
+			dependencies: ["000000000000002B"]
+			hide: true
+			id: "0000000000000034"
+			tasks: [{
+				id: "0000000000003AFC"
+				type: "item"
+				item: "botanypots:hopper_botany_pot"
+			}]
+			rewards: [
+				{
+					id: "000000000000003F"
+					type: "item"
+					item: "botanypots:botany_pot"
+				}
+				{
+					id: "0000000000000045"
+					type: "choice"
+					title: "Choice"
+					icon: "minecraft:wheat_seeds"
+					table_id: 67L
+				}
+				{
+					id: "7C0057A2C801C5B2"
+					type: "item"
+					item: "minecraft:beetroot_seeds"
+				}
+			]
+		}
+		{
+			title: "Cobblestone"
+			x: 0.0d
+			y: -4.0d
+			description: ["Shift + right click on grass to get pebbles"]
+			hide_dependency_lines: true
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "0000000000003B2A"
+			tasks: [{
+				id: "0000000000003B2B"
+				type: "item"
+				item: "botania:pebble"
+			}]
+		}
+	]
+}

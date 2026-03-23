@@ -1,0 +1,275 @@
+{
+	id: "000000000000021C"
+	group: ""
+	order_index: 8
+	filename: "abyss"
+	title: "Abyss"
+	icon: "minecraft:sea_lantern"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "000000000000021D"
+			tasks: [{
+				id: "000000000000021E"
+				type: "item"
+				item: "minecraft:tube_coral_block"
+				count: 24L
+			}]
+			rewards: [
+				{
+					id: "000000000000021F"
+					type: "item"
+					item: "minecraft:tube_coral"
+				}
+				{
+					id: "0000000000000220"
+					type: "item"
+					item: "minecraft:tube_coral_fan"
+				}
+			]
+		}
+		{
+			x: -1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000221"
+			tasks: [{
+				id: "0000000000000222"
+				type: "item"
+				item: "minecraft:brain_coral_block"
+				count: 24L
+			}]
+			rewards: [
+				{
+					id: "0000000000000223"
+					type: "item"
+					item: "minecraft:brain_coral"
+				}
+				{
+					id: "0000000000000224"
+					type: "item"
+					item: "minecraft:brain_coral_fan"
+				}
+			]
+		}
+		{
+			x: 1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000225"
+			tasks: [{
+				id: "0000000000000226"
+				type: "item"
+				item: "minecraft:bubble_coral_block"
+				count: 24L
+			}]
+			rewards: [
+				{
+					id: "0000000000000227"
+					type: "item"
+					item: "minecraft:bubble_coral"
+				}
+				{
+					id: "0000000000000228"
+					type: "item"
+					item: "minecraft:bubble_coral_fan"
+				}
+			]
+		}
+		{
+			x: -2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000229"
+			tasks: [{
+				id: "000000000000022A"
+				type: "item"
+				item: "minecraft:fire_coral_block"
+				count: 24L
+			}]
+			rewards: [
+				{
+					id: "000000000000022B"
+					type: "item"
+					item: "minecraft:fire_coral"
+				}
+				{
+					id: "000000000000022C"
+					type: "item"
+					item: "minecraft:fire_coral_fan"
+				}
+			]
+		}
+		{
+			x: 2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "000000000000022D"
+			tasks: [{
+				id: "000000000000022E"
+				type: "item"
+				item: "minecraft:horn_coral_block"
+				count: 24L
+			}]
+			rewards: [
+				{
+					id: "000000000000022F"
+					type: "item"
+					item: "minecraft:horn_coral"
+				}
+				{
+					id: "0000000000000230"
+					type: "item"
+					item: "minecraft:horn_coral_fan"
+				}
+			]
+		}
+		{
+			x: 0.0d
+			y: -4.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000233"
+			tasks: [{
+				id: "0000000000000234"
+				type: "item"
+				item: "minecraft:prismarine_crystals"
+				count: 20L
+			}]
+			rewards: [{
+				id: "0000000000000235"
+				type: "item"
+				item: "minecraft:sea_lantern"
+				count: 5
+			}]
+		}
+		{
+			x: -1.5d
+			y: -2.5d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000236"
+			tasks: [{
+				id: "0000000000000237"
+				type: "item"
+				item: "minecraft:prismarine"
+				count: 60L
+			}]
+			rewards: [{
+				id: "0000000000000238"
+				type: "item"
+				item: "minecraft:prismarine_shard"
+			}]
+		}
+		{
+			x: 0.0d
+			y: -2.5d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "0000000000000239"
+			tasks: [{
+				id: "000000000000023A"
+				type: "item"
+				item: "minecraft:prismarine_bricks"
+				count: 20L
+			}]
+			rewards: [{
+				id: "000000000000023E"
+				type: "item"
+				item: "minecraft:prismarine_shard"
+			}]
+		}
+		{
+			x: 1.5d
+			y: -2.5d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "000000000000023B"
+			tasks: [{
+				id: "000000000000023C"
+				type: "item"
+				item: "minecraft:dark_prismarine"
+				count: 25L
+			}]
+			rewards: [{
+				id: "000000000000023D"
+				type: "item"
+				item: "minecraft:prismarine_shard"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000245"]
+			hide: true
+			id: "000000000000023F"
+			tasks: [{
+				id: "0000000000000240"
+				type: "item"
+				item: "minecraft:wet_sponge"
+				count: 5L
+			}]
+			rewards: [{
+				id: "0000000000000241"
+				type: "item"
+				item: "minecraft:sponge"
+				count: 10
+			}]
+		}
+		{
+			title: "Get prismarine"
+			x: 0.0d
+			y: -1.5d
+			hide_dependency_lines: true
+			dependencies: [
+				"0000000000000236"
+				"0000000000000239"
+				"000000000000023B"
+			]
+			hide: true
+			id: "0000000000000242"
+			tasks: [{
+				id: "0000000000000243"
+				type: "checkmark"
+				icon: "minecraft:prismarine_shard"
+			}]
+			rewards: [{
+				id: "0000000000000244"
+				type: "item"
+				item: "minecraft:prismarine_shard"
+				count: 6
+			}]
+		}
+		{
+			x: 0.0d
+			y: -5.5d
+			dependencies: ["0000000000000002"]
+			hide: true
+			id: "0000000000000245"
+			tasks: [{
+				id: "0000000000000246"
+				type: "item"
+				item: "minecraft:water_bucket"
+			}]
+		}
+	]
+}

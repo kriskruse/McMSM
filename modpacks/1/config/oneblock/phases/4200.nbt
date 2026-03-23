@@ -1,0 +1,181 @@
+{
+	extra: {
+		texture: "minecraft:netherrack",
+		name: "§4Nether",
+		power: 6000,
+		cooldown: 70,
+		level:4200
+	},
+	tile: [
+		{
+			weight: 2,
+			content: {
+				Window: 1b,
+				LastKnownPos: {
+					X: 244,
+					Y: 64,
+					Z: 244
+				},
+				Size: 1,
+				randomlib: "create:fluid_tank",
+				Luminosity: 12,
+				Height: 1,
+				id: "create:fluid_tank",
+				TankContent: {
+					FluidName: "minecraft:lava",
+					Amount: 8000
+				}
+			}
+		}
+	],
+	block: [
+		{
+			weight: 45,
+			content: "minecraft:soul_sand"
+		},
+		{
+			weight: 8,
+			content: "silentgems:moldavite_ore"
+		},
+		{
+			weight: 6,
+			content: "minecraft:crimson_nylium"
+		},
+		{
+			weight: 22,
+			content: "minecraft:nether_gold_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:iolite_ore"
+		},
+		{
+			weight: 8,
+			content: "bigreactors:benitoite_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:turquoise_ore"
+		},
+		{
+			weight: 5,
+			content: "minecraft:quartz_block"
+		},
+		{
+			weight: 5,
+			content: "minecraft:soul_soil"
+		},
+		{
+			weight: 8,
+			content: "silentgems:citrine_ore"
+		},
+		{
+			weight: 64,
+			content: "minecraft:netherrack"
+		},
+		{
+			weight: 8,
+			content: "silentgems:moonstone_ore"
+		},
+		{
+			weight: 10,
+			content: "mysticalagriculture:soulium_ore"
+		},
+		{
+			weight: 24,
+			content: "minecraft:nether_bricks"
+		},
+		{
+			weight: 9,
+			content: "silentgear:netherwood_leaves"
+		},
+		{
+			weight: 8,
+			content: "silentgems:multi_ore_dark"
+		},
+		{
+			weight: 8,
+			content: "silentgems:carnelian_ore"
+		},
+		{
+			weight: 5,
+			content: "silentgems:hardened_netherrack"
+		},
+		{
+			weight: 8,
+			content: "silentgems:zircon_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:spinel_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:benitoite_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:black_diamond_ore"
+		},
+		{
+			weight: 6,
+			content: "minecraft:warped_nylium"
+		},
+		{
+			weight: 8,
+			content: "silentgems:malachite_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:ametrine_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:jasper_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:alexandrite_ore"
+		},
+		{
+			weight: 35,
+			content: "minecraft:nether_quartz_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:euclase_ore"
+		},
+		{
+			weight: 12,
+			content: "minecraft:obsidian"
+		},
+		{
+			weight: 8,
+			content: "silentgems:lepidolite_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgear:crimson_iron_ore"
+		}
+	],
+	entity: [
+		{
+			weight: 4,
+			content: {
+				id: "minecraft:magma_cube"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				id: "minecraft:blaze"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				id: "quark:foxhound"
+			}
+		}
+	]
+}

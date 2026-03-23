@@ -1,0 +1,676 @@
+{
+	id: "0000000000000040"
+	group: ""
+	order_index: 2
+	filename: "farmland"
+	title: "Farmland"
+	icon: "botania:enchanted_soil"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000046"
+			tasks: [{
+				id: "000000000000004A"
+				type: "item"
+				item: "botania:white_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000004B"
+				type: "item"
+				item: "botania:white_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -1.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000004C"
+			tasks: [{
+				id: "000000000000004D"
+				type: "item"
+				item: "botania:orange_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000004E"
+				type: "item"
+				item: "botania:orange_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 3.5d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000004F"
+			tasks: [{
+				id: "0000000000000050"
+				type: "item"
+				item: "botania:magenta_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000051"
+				type: "item"
+				item: "botania:magenta_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000052"
+			tasks: [{
+				id: "0000000000000053"
+				type: "item"
+				item: "botania:light_blue_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000054"
+				type: "item"
+				item: "botania:light_blue_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -1.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000055"
+			tasks: [{
+				id: "0000000000000056"
+				type: "item"
+				item: "botania:yellow_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000057"
+				type: "item"
+				item: "botania:yellow_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 1.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000058"
+			tasks: [{
+				id: "0000000000000059"
+				type: "item"
+				item: "botania:lime_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000005A"
+				type: "item"
+				item: "botania:lime_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -3.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000005B"
+			tasks: [{
+				id: "000000000000005C"
+				type: "item"
+				item: "botania:pink_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000005D"
+				type: "item"
+				item: "botania:pink_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -3.5d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000005E"
+			tasks: [{
+				id: "000000000000005F"
+				type: "item"
+				item: "botania:gray_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000060"
+				type: "item"
+				item: "botania:gray_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 3.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000061"
+			tasks: [{
+				id: "0000000000000062"
+				type: "item"
+				item: "botania:light_gray_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000063"
+				type: "item"
+				item: "botania:light_gray_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000064"
+			tasks: [{
+				id: "0000000000000065"
+				type: "item"
+				item: "botania:cyan_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000066"
+				type: "item"
+				item: "botania:cyan_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000067"
+			tasks: [{
+				id: "0000000000000068"
+				type: "item"
+				item: "botania:purple_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000069"
+				type: "item"
+				item: "botania:purple_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -2.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000006A"
+			tasks: [{
+				id: "000000000000006B"
+				type: "item"
+				item: "botania:blue_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000006C"
+				type: "item"
+				item: "botania:blue_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 3.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000006D"
+			tasks: [{
+				id: "000000000000006E"
+				type: "item"
+				item: "botania:brown_petal_block"
+			}]
+			rewards: [{
+				id: "000000000000006F"
+				type: "item"
+				item: "botania:brown_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -2.0d
+			y: 0.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000070"
+			tasks: [{
+				id: "0000000000000071"
+				type: "item"
+				item: "botania:green_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000072"
+				type: "item"
+				item: "botania:green_petal"
+				count: 5
+			}]
+		}
+		{
+			x: -3.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000073"
+			tasks: [{
+				id: "0000000000000074"
+				type: "item"
+				item: "botania:red_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000075"
+				type: "item"
+				item: "botania:red_petal"
+				count: 5
+			}]
+		}
+		{
+			x: 0.0d
+			y: 2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000076"
+			tasks: [{
+				id: "0000000000000077"
+				type: "item"
+				item: "botania:black_petal_block"
+			}]
+			rewards: [{
+				id: "0000000000000078"
+				type: "item"
+				item: "botania:black_petal"
+				count: 5
+			}]
+		}
+		{
+			title: "White petals"
+			icon: "botania:white_petal"
+			x: 0.0d
+			y: 1.0d
+			hide_dependency_lines: true
+			dependencies: [
+				"0000000000000076"
+				"000000000000006A"
+				"000000000000006D"
+				"0000000000000064"
+				"000000000000005E"
+				"0000000000000070"
+				"0000000000000052"
+				"0000000000000061"
+				"0000000000000058"
+				"000000000000004F"
+				"000000000000004C"
+				"000000000000005B"
+				"0000000000000067"
+				"0000000000000073"
+				"0000000000000046"
+				"0000000000000055"
+			]
+			hide: true
+			dependency_requirement: "one_completed"
+			id: "0000000000000079"
+			tasks: [{
+				id: "000000000000007A"
+				type: "checkmark"
+				icon: "botania:white_petal"
+			}]
+			rewards: [{
+				id: "000000000000007B"
+				type: "item"
+				item: "botania:white_petal"
+				count: 4
+			}]
+		}
+		{
+			x: 0.0d
+			y: -3.0d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000008"]
+			hide: true
+			id: "000000000000007C"
+			tasks: [{
+				id: "000000000000007D"
+				type: "checkmark"
+				title: "Farmland"
+			}]
+			rewards: [{
+				id: "0000000000003AFE"
+				type: "item"
+				item: "mysticalagriculture:inferium_growth_accelerator"
+				count: 4
+			}]
+		}
+		{
+			x: -2.0d
+			y: -3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000007E"
+			tasks: [{
+				id: "000000000000007F"
+				type: "item"
+				item: "minecraft:carrot"
+				count: 64L
+			}]
+		}
+		{
+			x: 2.0d
+			y: -3.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000080"
+			tasks: [{
+				id: "0000000000000081"
+				type: "item"
+				item: "minecraft:potato"
+				count: 64L
+			}]
+		}
+		{
+			x: -1.0d
+			y: -4.5d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000082"
+			tasks: [{
+				id: "0000000000000083"
+				type: "item"
+				item: "farmersdelight:tomato"
+				count: 64L
+			}]
+		}
+		{
+			x: 0.0d
+			y: -4.5d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000084"
+			tasks: [{
+				id: "0000000000000085"
+				type: "item"
+				item: "farmersdelight:cabbage"
+				count: 64L
+			}]
+		}
+		{
+			x: 1.0d
+			y: -4.5d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000086"
+			tasks: [{
+				id: "0000000000000087"
+				type: "item"
+				item: "minecraft:beetroot"
+				count: 64L
+			}]
+		}
+		{
+			x: 2.0d
+			y: -4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000088"
+			tasks: [{
+				id: "0000000000000089"
+				type: "item"
+				item: "farmersdelight:onion"
+				count: 64L
+			}]
+		}
+		{
+			x: -2.0d
+			y: -4.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000008A"
+			tasks: [{
+				id: "000000000000008B"
+				type: "item"
+				item: "farmersdelight:rice"
+				count: 64L
+			}]
+		}
+		{
+			x: 1.5d
+			y: -2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000008C"
+			tasks: [{
+				id: "000000000000008D"
+				type: "item"
+				item: "minecraft:pumpkin"
+				count: 16L
+			}]
+		}
+		{
+			x: -1.5d
+			y: -2.0d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "000000000000008E"
+			tasks: [{
+				id: "000000000000008F"
+				type: "item"
+				item: "minecraft:melon"
+				count: 16L
+			}]
+		}
+		{
+			x: -0.5d
+			y: -1.5d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000090"
+			tasks: [{
+				id: "0000000000000091"
+				type: "item"
+				item: "minecraft:bamboo"
+				count: 64L
+			}]
+		}
+		{
+			x: 0.5d
+			y: -1.5d
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000000092"
+			tasks: [{
+				id: "0000000000000093"
+				type: "item"
+				item: "minecraft:wheat"
+				count: 64L
+			}]
+		}
+		{
+			x: 0.0d
+			y: -6.0d
+			hide_dependency_lines: true
+			dependencies: [
+				"0000000000000092"
+				"000000000000008C"
+				"0000000000000080"
+				"0000000000000088"
+				"0000000000000086"
+				"0000000000000084"
+				"0000000000000082"
+				"000000000000008A"
+				"000000000000007E"
+				"000000000000008E"
+				"0000000000000090"
+			]
+			hide: true
+			id: "0000000000000096"
+			tasks: [{
+				id: "0000000000000097"
+				type: "checkmark"
+				title: "Farming Master"
+				icon: "mysticalagriculture:prudentium_growth_accelerator"
+			}]
+			rewards: [{
+				id: "0000000000003AFD"
+				type: "item"
+				item: "mysticalagriculture:prudentium_growth_accelerator"
+				count: 32
+			}]
+		}
+		{
+			title: "Bone meal with composter"
+			icon: "minecraft:bone_meal"
+			x: 0.0d
+			y: -7.0d
+			description: ["Fill composter with leaves"]
+			hide_dependency_lines: true
+			dependencies: ["000000000000007C"]
+			hide: true
+			id: "0000000000003AFF"
+			tasks: [
+				{
+					id: "0000000000003B00"
+					type: "item"
+					item: "minecraft:composter"
+				}
+				{
+					id: "0000000000003B01"
+					type: "item"
+					item: "minecraft:bone_meal"
+				}
+			]
+			rewards: [
+				{
+					id: "0000000000003B02"
+					type: "item"
+					item: "mysticalagriculture:inferium_growth_accelerator"
+				}
+				{
+					id: "0000000000003B2C"
+					type: "item"
+					item: "mysticalagriculture:dirt_seeds"
+				}
+			]
+		}
+		{
+			title: "Purifying"
+			x: -1.0d
+			y: 3.5d
+			hide_dependency_lines: true
+			dependencies: ["0000000000000079"]
+			hide: true
+			id: "0000000000003B19"
+			tasks: [{
+				id: "0000000000003B1A"
+				type: "item"
+				item: "botania:pure_daisy"
+			}]
+		}
+		{
+			title: "Mana storage"
+			x: 1.0d
+			y: 3.5d
+			dependencies: ["0000000000003B19"]
+			hide: true
+			id: "0000000000003B1B"
+			tasks: [{
+				id: "0000000000003B1C"
+				type: "item"
+				item: "botania:mana_pool"
+			}]
+			rewards: [{
+				id: "0000000000003B1D"
+				type: "item"
+				item: "botania:white_petal"
+				count: 2
+			}]
+		}
+		{
+			title: "Mana transport"
+			icon: "botania:mana_spreader"
+			x: -1.0d
+			y: 5.0d
+			dependencies: ["0000000000003B1B"]
+			hide: true
+			id: "0000000000003B1E"
+			tasks: [
+				{
+					id: "0000000000003B1F"
+					type: "item"
+					item: "botania:mana_spreader"
+				}
+				{
+					id: "0000000000003B20"
+					type: "item"
+					item: {
+						id: "botania:twig_wand"
+						Count: 1b
+						tag: { }
+					}
+				}
+			]
+			rewards: [{
+				id: "0000000000003B24"
+				type: "item"
+				item: "botania:black_lotus"
+			}]
+		}
+		{
+			title: "Early mana generation"
+			x: 1.0d
+			y: 5.0d
+			dependencies: ["0000000000003B1E"]
+			hide: true
+			id: "0000000000003B21"
+			tasks: [{
+				id: "0000000000003B22"
+				type: "item"
+				item: "botania:endoflame"
+			}]
+			rewards: [{
+				id: "0000000000003B23"
+				type: "item"
+				item: "botania:endoflame"
+			}]
+		}
+	]
+}

@@ -1,0 +1,39 @@
+{
+	phase: [
+		{
+			weight: 5,
+			content: "900"
+		},
+		{
+			weight: 3,
+			content: "4200"
+		},
+		{
+			weight: 3,
+			content: "2200"
+		},
+		{
+			weight: 1,
+			content: "3800"
+		},
+		{
+			weight: 3,
+			content: "5000"
+		},
+		{
+			weight: 3,
+			content: "3000"
+		},
+		{
+			weight: 1,
+			content: "300"
+		}
+	],	
+	extra: {
+		texture: "mysticalagriculture:supremium_block",
+		name: "§9All in one",
+		power: 600000,
+		cooldown: 2,
+		level:-1
+	}
+}

@@ -1,0 +1,16 @@
+{
+    "type": "tconstruct:modifier",
+    "inputs": [
+      {
+        "item": "botania:gaia_head"
+      }
+    ],
+    "tools": {
+      "tag": "tconstruct:modifiable"
+    },
+    "result": {
+      "name": "tconstruct:extra_ability",
+      "level": 1
+    },
+    "max_level": 1
+}

@@ -1,0 +1,588 @@
+{
+	phase: [
+		{
+			weight: 4,
+			content: "0"
+		},
+		{
+			weight: 2,
+			content: "200"
+		}
+	],
+	extra: {
+		texture: "minecraft:stone",
+		name: "§8Underground",
+		power: 400,
+		cooldown: 85,
+		level:300
+	},
+	block: [
+		{
+			weight: 30,
+			content: "minecraft:granite"
+		},
+		{
+			weight: 9,
+			content: "silentgems:peridot_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:phosphophyllite_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:sapphire_ore"
+		},
+		{
+			weight: 30,
+			content: "minecraft:diorite"
+		},
+		{
+			weight: 35,
+			content: "silentgems:silver_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgear:bort_ore"
+		},
+		{
+			weight: 45,
+			content: "minecraft:stone"
+		},
+		{
+			weight: 4,
+			content: "silentgems:hardened_stone"
+		},
+		{
+			weight: 9,
+			content: "silentgems:topaz_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:amber_ore"
+		},
+		{
+			weight: 14,
+			content: "mysticalagriculture:prosperity_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:agate_ore"
+		},
+		{
+			weight: 11,
+			content: "minecraft:diamond_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:green_sapphire_ore"
+		},
+		{
+			weight: 10,
+			content: "mekanism:uranium_ore"
+		},
+		{
+			weight: 78,
+			content: "minecraft:iron_ore"
+		},
+		{
+			weight: 8,
+			content: "minecraft:emerald_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:tanzanite_ore"
+		},
+		{
+			weight: 18,
+			content: "mysticalagriculture:inferium_ore"
+		},
+		{
+			weight: 26,
+			content: "minecraft:gold_ore"
+		},
+		{
+			weight: 35,
+			content: "mekanism:tin_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:ruby_ore"
+		},
+		{
+			weight: 25,
+			content: "bigreactors:yellorite_ore"
+		},
+		{
+			weight: 24,
+			content: "minecraft:cobblestone"
+		},
+		{
+			weight: 9,
+			content: "silentgems:opal_ore"
+		},
+		{
+			weight: 8,
+			content: "silentgems:chaos_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:onyx_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:morganite_ore"
+		},
+		{
+			weight: 12,
+			content: "astralsorcery:marble_raw"
+		},
+		{
+			weight: 34,
+			content: "minecraft:andesite"
+		},
+		{
+			weight: 30,
+			content: "create:zinc_ore"
+		},
+		{
+			weight: 16,
+			content: "minecraft:mossy_cobblestone"
+		},
+		{
+			weight: 25,
+			content: "minecraft:lapis_ore"
+		},
+		{
+			weight: 25,
+			content: "mekanism:lead_ore"
+		},
+		{
+			weight: 80,
+			content: "minecraft:coal_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:multi_ore_classic"
+		},
+		{
+			weight: 34,
+			content: "minecraft:gravel"
+		},
+		{
+			weight: 40,
+			content: "create:copper_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:aquamarine_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:heliodor_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:amethyst_ore"
+		},
+		{
+			weight: 9,
+			content: "silentgems:garnet_ore"
+		},
+		{
+			weight: 30,
+			content: "mekanism:osmium_ore"
+		},
+		{
+			weight: 30,
+			content: "minecraft:redstone_ore"
+		}
+	],
+	entity: [
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.11307871627074431d,
+								Operation: 1,
+								UUID: [I; -778310328, 350569081, -1082538629, 833664463],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:creeper",
+				Fuse: 40s,
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				ignited: 0b,
+				Rotation: [-49.654144f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s,
+				ExplosionRadius: 2b
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.03625841201691043d,
+								Operation: 1,
+								UUID: [I; 522591476, -450999756, -1605285798, -285726421],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:skeleton",
+				Health: 20.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-45.069885f, 0.0f],
+				HandItems: [
+					{
+						id: "minecraft:bow",
+						Count: 1b,
+						tag: {
+							Damage: 0
+						}
+					},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 2,
+			content: {
+				id: "quark:stoneling"
+			}
+		},
+		{
+			weight: 4,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:cave_spider",
+				Health: 12.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-65.418335f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 4,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.0012658082297154927d,
+								Operation: 1,
+								UUID: [I; -1340096439, 341461620, -1917846546, 1698682463],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.25d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:silverfish",
+				Health: 8.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-126.592514f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Attributes: [
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: 0.029653817844289804d,
+								Operation: 1,
+								UUID: [I; 1322632243, 61754341, -1326444561, -1730794673],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.30000001192092896d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 0.0f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:spider",
+				Health: 16.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 1b,
+				Rotation: [-123.06979f, -40.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "quark:toretoise"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				Brain: {
+					memories: {}
+				},
+				HurtByTimestamp: 0,
+				ForgeData: {},
+				Size: 3,
+				Attributes: [
+					{
+						Base: 16.0d,
+						Name: "minecraft:generic.max_health"
+					},
+					{
+						Base: 4.0d,
+						Name: "minecraft:generic.attack_damage"
+					},
+					{
+						Base: 0.08d,
+						Name: "forge:entity_gravity"
+					},
+					{
+						Base: 16.0d,
+						Modifiers: [
+							{
+								Amount: -0.08492474494397372d,
+								Operation: 1,
+								UUID: [I; 705343379, -1597880797, -1345190652, 519822558],
+								Name: "Random spawn bonus"
+							}
+						],
+						Name: "minecraft:generic.follow_range"
+					},
+					{
+						Base: 0.6000000238418579d,
+						Name: "minecraft:generic.movement_speed"
+					}
+				],
+				Invulnerable: 0b,
+				FallFlying: 0b,
+				PortalCooldown: 0,
+				AbsorptionAmount: 0.0f,
+				FallDistance: 4.036309f,
+				CanUpdate: 1b,
+				DeathTime: 0s,
+				HandDropChances: [0.085f, 0.085f],
+				PersistenceRequired: 0b,
+				id: "minecraft:slime",
+				wasOnGround: 0b,
+				Health: 16.0f,
+				LeftHanded: 0b,
+				Air: 300s,
+				OnGround: 0b,
+				Rotation: [285.0f, 0.0f],
+				HandItems: [
+					{},
+					{}
+				],
+				ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f],
+				Fire: -1s,
+				ArmorItems: [
+					{},
+					{},
+					{},
+					{}
+				],
+				CanPickUpLoot: 0b,
+				HurtTime: 0s
+			}
+		}
+	]
+}

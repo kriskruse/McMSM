@@ -1,0 +1,16 @@
+{
+    "type": "tconstruct:modifier",
+    "inputs": [
+      {
+        "item": "astralsorcery:shifting_star_evorsio"
+      }
+    ],
+    "tools": {
+      "tag": "tconstruct:modifiable"
+    },
+    "result": {
+      "name": "tconstruct:red_extra_upgrade",
+      "level": 1
+    },
+    "max_level": 1
+}

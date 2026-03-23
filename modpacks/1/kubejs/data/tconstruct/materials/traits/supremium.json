@@ -1,0 +1,12 @@
+{
+
+    "default": [],
+    "perStat": {
+        "tconstruct:head": [
+        {
+            "name": "tconstruct:unbreakable",
+            "level": 1
+        }
+        ]
+    }
+  }

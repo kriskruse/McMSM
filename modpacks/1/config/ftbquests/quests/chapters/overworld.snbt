@@ -1,0 +1,359 @@
+{
+	id: "00000000000001C6"
+	group: ""
+	order_index: 5
+	filename: "overworld"
+	title: "Overworld"
+	icon: "minecraft:grass_block"
+	default_quest_shape: ""
+	default_hide_dependency_lines: false
+	quests: [
+		{
+			x: 0.0d
+			y: 0.0d
+			dependencies: ["00000000000001BE"]
+			hide: true
+			id: "00000000000001C9"
+			tasks: [{
+				id: "00000000000001CA"
+				type: "stat"
+				stat: "minecraft:mob_kills"
+				value: 150
+			}]
+			rewards: [{
+				id: "00000000000001EE"
+				type: "item"
+				item: "tinymobfarm:diamond_farm"
+			}]
+		}
+		{
+			icon: "minecraft:wheat"
+			x: 0.0d
+			y: -1.5d
+			min_required_dependencies: 1
+			dependencies: [
+				"0000000000000092"
+				"000000000000001E"
+			]
+			hide: true
+			id: "00000000000001CB"
+			tasks: [{
+				id: "00000000000001CC"
+				type: "stat"
+				stat: "minecraft:animals_bred"
+				value: 40
+			}]
+			rewards: [{
+				id: "0000000000003AED"
+				type: "item"
+				item: "productivebees:spawn_egg_cupid_bee"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 1.5d
+			dependencies: ["00000000000001DF"]
+			hide: true
+			id: "00000000000001FF"
+			tasks: [{
+				id: "0000000000000200"
+				type: "item"
+				item: {
+					id: "minecraft:stone_axe"
+					Count: 1b
+					tag: {
+						Damage: 0
+					}
+				}
+			}]
+		}
+		{
+			x: 0.0d
+			y: 3.0d
+			description: ["Vanilla or Silent Gear axe."]
+			dependencies: ["00000000000001FF"]
+			hide: true
+			id: "0000000000000201"
+			tasks: [{
+				id: "70692A7AD16DBC20"
+				type: "item"
+				title: "Any iron level Axe"
+				item: {
+					id: "itemfilters:or"
+					Count: 1b
+					tag: {
+						items: [
+							{
+								id: "silentgear:axe"
+								Count: 1b
+								tag: {
+									SGear_UUID: [I;
+										1882713203
+										-1024505102
+										-1954659455
+										93009112
+									]
+									Damage: 0
+									SGear_Data: {
+										Construction: {
+											Parts: [
+												{
+													Item: {
+														id: "silentgear:axe_head"
+														Count: 1b
+														tag: {
+															Materials: [{
+																Item: {
+																	id: "minecraft:iron_ingot"
+																	Count: 1b
+																}
+																ID: "silentgear:iron"
+																Count: 3b
+															}]
+														}
+													}
+													ID: "silentgear:axe_head"
+												}
+												{
+													Item: {
+														id: "silentgear:rod"
+														Count: 1b
+														tag: {
+															Materials: [{
+																Item: {
+																	id: "minecraft:air"
+																	Count: 1b
+																	tag: { }
+																}
+																ID: "silentgear:wood/rough"
+															}]
+														}
+													}
+													ID: "silentgear:rod"
+												}
+											]
+										}
+										Properties: {
+											ModVersion: "2.6.30"
+											Stats: {
+												"silentgear:enchantability": 13.999999f
+												"silentgear:harvest_speed": 6.0f
+												"silentgems:chargeability": 0.6999999f
+												"silentgear:harvest_level": 2.0f
+												"silentgear:durability": 180.0f
+												"silentgear:melee_damage": 7.0f
+												"silentgear:magic_damage": 1.0f
+												"silentgear:rarity": 15.0f
+												"silentgear:attack_speed": -3.1f
+												"silentgear:repair_efficiency": 1.0f
+											}
+											LockStats: 0b
+											Traits: [
+												{
+													Level: 3b
+													Name: "silentgear:malleable"
+												}
+												{
+													Level: 1b
+													Name: "silentgear:magnetic"
+												}
+												{
+													Level: 3b
+													Name: "silentgear:crude"
+												}
+											]
+										}
+										Rendering: {
+											ModelKey: "axe:axe_head{iron,iron,iron},rod{wood/rough},"
+										}
+									}
+								}
+							}
+							{
+								id: "minecraft:iron_axe"
+								Count: 1b
+								tag: {
+									Damage: 0
+								}
+							}
+						]
+					}
+				}
+			}]
+			rewards: [{
+				id: "1241A7247EF7ADEB"
+				type: "item"
+				item: "minecraft:iron_ingot"
+			}]
+		}
+		{
+			title: "Rebuild the world"
+			icon: {
+				id: "buildinggadgets:gadget_building"
+				Count: 1b
+				tag: {
+					state: {
+						serializer: "buildinggadgets:dummy_serializer"
+						state: {
+							Name: "minecraft:air"
+						}
+						data: { }
+					}
+				}
+			}
+			x: -2.5d
+			y: 0.0d
+			dependencies: [
+				"00000000000000CC"
+				"00000000000001E1"
+			]
+			hide: true
+			id: "0000000000003B25"
+			tasks: [
+				{
+					id: "0000000000003B26"
+					type: "item"
+					item: {
+						id: "buildinggadgets:gadget_building"
+						Count: 1b
+						tag: { }
+					}
+				}
+				{
+					id: "0000000000003B27"
+					type: "item"
+					item: {
+						id: "charginggadgets:charging_station"
+						Count: 1b
+						tag: { }
+					}
+				}
+			]
+			rewards: [
+				{
+					id: "0000000000003B28"
+					type: "item"
+					item: "minecraft:diamond"
+					count: 2
+				}
+				{
+					id: "0000000000003B29"
+					type: "item"
+					item: "minecraft:iron_ingot"
+					count: 2
+				}
+			]
+		}
+		{
+			x: -2.5d
+			y: 1.5d
+			hide_dependency_lines: true
+			dependencies: ["00000000000001FF"]
+			hide: true
+			id: "54A1B05759EAA166"
+			tasks: [{
+				id: "0CC9FB4A509E6375"
+				type: "item"
+				item: "farmersdelight:cutting_board"
+			}]
+		}
+		{
+			x: -2.5d
+			y: 3.0d
+			description: ["An easy way to craft paper."]
+			dependencies: ["54A1B05759EAA166"]
+			id: "3582B04B1BA14695"
+			tasks: [{
+				id: "5EB923ECAD97693A"
+				type: "item"
+				item: "farmersdelight:tree_bark"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 3.0d
+			dependencies: ["3582B04B1BA14695"]
+			id: "21F3E8E76D7F2273"
+			tasks: [{
+				id: "33A8FE0BA46CD971"
+				type: "item"
+				item: "minecraft:paper"
+			}]
+			rewards: [{
+				id: "3722DCD0C64A6A63"
+				type: "item"
+				item: "minecraft:book"
+			}]
+		}
+		{
+			x: -4.0d
+			y: 1.5d
+			description: ["Some cutting board recipes allow you to get bone meal."]
+			dependencies: ["54A1B05759EAA166"]
+			id: "19583AB4A1B55219"
+			tasks: [{
+				id: "44062015C2CAEFAF"
+				type: "item"
+				item: "minecraft:bone_meal"
+			}]
+		}
+		{
+			x: 2.0d
+			y: 1.5d
+			min_required_dependencies: 1
+			dependencies: [
+				"00000000000001A4"
+				"0000000000000352"
+				"00000000000001A8"
+				"00000000000001A2"
+				"000000000000019E"
+				"00000000000001A6"
+				"00000000000001A0"
+			]
+			hide: true
+			id: "3DE38F4BC476FB31"
+			tasks: [{
+				id: "63E58D6125F1717B"
+				type: "item"
+				item: "minecraft:creeper_spawn_egg"
+			}]
+			rewards: [{
+				id: "7F5104279867894E"
+				type: "item"
+				item: "minecraft:creeper_head"
+			}]
+		}
+		{
+			x: 0.0d
+			y: 4.5d
+			description: ["Finish the Guardian of Gaia with bare hands"]
+			optional: true
+			secret: true
+			id: "460AD260BC410C6E"
+			tasks: [{
+				id: "12D4508D289BA82D"
+				type: "questsadditions:killnbt"
+				title: "Too easy"
+				icon: "minecraft:stick"
+				entity: "botania:doppleganger"
+				value: 1L
+				nbt: {
+					hardMode: 1b
+				}
+				checkItem: true
+				item: "minecraft:stick"
+			}]
+			rewards: [{
+				id: "7795EFA6246B7C0E"
+				type: "item"
+				item: {
+					id: "curios:crown"
+					Count: 1b
+					tag: {
+						Damage: 0
+					}
+				}
+			}]
+		}
+	]
+}

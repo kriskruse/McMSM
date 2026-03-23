@@ -1,0 +1,140 @@
+{
+  "availability": {
+    "tier": 4,
+    "categories": [
+      "metal"
+    ],
+    "visible": true,
+    "gear_blacklist": [],
+    "can_salvage": true
+  },
+  "crafting_items": {
+    "main": {
+      "tag": "forge:ingots/neptunium"
+    }
+  },
+  "name": {
+    "translate": "Neptunium"
+  },
+  "stats": {
+    "main": {
+      "durability": 2500.0,
+      "armor_durability": 75.0,
+      "enchantability": 20.0,
+      "harvest_level": 4.0,
+      "harvest_speed": 18.0,
+      "melee_damage": 5.0,
+      "magic_damage": 3.0,
+      "attack_speed": 0.0,
+      "armor": 20.0,
+      "armor/helmet": 3.0,
+      "armor/chestplate": 8.0,
+      "armor/leggings": 6.0,
+      "armor/boots": 3.0,
+      "armor_toughness": 8.0,
+      "magic_armor": 15.0,
+      "ranged_damage": 3.0,
+      "ranged_speed": 0.0,
+      "projectile_speed": 2.0,
+      "projectile_accuracy": 1.8,
+      "rarity": 125.0,
+      "silentgems:chargeability": 1.6
+    },
+    "rod": {
+      "durability": {
+        "mul2": 0.2
+      },
+      "harvest_speed": {
+        "mul2": 0.2
+      },
+      "rarity": 78.0
+    },
+    "tip": {
+      "durability": {
+        "add": 512.0
+      },
+      "armor_durability": {
+        "add": 18.0
+      },
+      "harvest_level": {
+        "max": 4.0
+      },
+      "harvest_speed": {
+        "add": 2.0
+      },
+      "melee_damage": {
+        "add": 4.0
+      },
+      "magic_damage": {
+        "add": 2.0
+      },
+      "ranged_damage": {
+        "add": 0.8
+      },
+      "rarity": {
+        "add": 38.0
+      }
+    },
+    "adornment": {}
+  },
+  "traits": {
+    "main": [
+      {
+        "name": "silentgear:aquatic",
+        "level": 5
+      },
+      {
+        "name": "silentgems:soul/aquatic",
+        "level": 5
+      },
+      {
+        "name": "silentgear:bastion",
+        "level": 2,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.8
+          }
+        ]
+      }
+    ],
+    "rod": [
+      {
+        "name": "silentgems:soul/aquatic",
+        "level": 2
+      },
+      {
+        "name": "silentgear:lustrous",
+        "level": 3,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.5
+          }
+        ]
+      }
+    ],
+    "tip": [
+      {
+        "name": "silentgems:soul/aquatic",
+        "level": 1
+      },
+      {
+        "name": "silentgear:lustrous",
+        "level": 1
+      }
+    ],
+    "adornment": [
+      {
+        "name": "silentgear:swift_swim",
+        "level": 3,
+        "conditions": [
+          {
+            "type": "silentgear:material_ratio",
+            "ratio": 0.67
+          }
+        ]
+      }
+    ]
+  }
+}

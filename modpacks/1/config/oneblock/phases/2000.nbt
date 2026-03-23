@@ -1,0 +1,121 @@
+{
+	phase: [
+		{
+			weight: 4,
+			content: "800"
+		}
+	],
+	extra: {
+		texture: "ars_nouveau:mana_gem_block",
+		name: "§dMagicka",
+		power: 1000,
+		cooldown: 80,
+		level:2000
+	},
+	block: [
+		{
+			weight: 10,
+			content: "ars_nouveau:purple_archwood_leaves"
+		},
+		{
+			weight: 6,
+			content: "ars_nouveau:purple_archwood_log"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_herring"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_mosaic"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:red_archwood_leaves"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_smooth"
+		},
+		{
+			weight: 8,
+			content: "ars_nouveau:arcane_ore"
+		},
+		{
+			weight: 6,
+			content: "ars_nouveau:green_archwood_log"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:arcane_stone"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_smooth_slab"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_clover"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:green_archwood_leaves"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:blue_archwood_leaves"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_alternating"
+		},
+		{
+			weight: 6,
+			content: "ars_nouveau:blue_archwood_log"
+		},
+		{
+			weight: 6,
+			content: "ars_nouveau:red_archwood_log"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:ab_basket"
+		},
+		{
+			weight: 10,
+			content: "ars_nouveau:arcane_bricks"
+		}
+	],
+	entity: [
+		{
+			weight: 4,
+			content: {
+				id: "ars_nouveau:carbuncle"
+			}
+		},
+		{
+			weight: 4,
+			content: {
+				id: "ars_nouveau:sylph"
+			}
+		},
+		{
+			weight: 3,
+			content: {
+				id: "ars_nouveau:drygmy"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "ars_nouveau:wilden_guardian"
+			}
+		},
+		{
+			weight: 1,
+			content: {
+				id: "ars_nouveau:wilden_hunter"
+			}
+		}
+	]
+}
