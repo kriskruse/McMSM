@@ -133,7 +133,6 @@ Manual trigger options:
 #### Medium
 - Add an indicator for the backend Docker connection status.
 - Add a flow that tries to extract the Modpack version from the uploaded zip name and pre-fills the version field in the metadata form.
-- Make the Dashboard do an upload when you drop a zip file on it, instead of just the upload view.
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
