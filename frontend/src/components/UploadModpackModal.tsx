@@ -22,6 +22,7 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isBackendProcessing, setIsBackendProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const smallPackSizeThreshold = 52428800; // 50mB threshold forfiles
 
     if (!isOpen) {
         return null;
@@ -50,6 +51,10 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
         onClose();
     };
 
+    function isFileSizeTooLow(size: number) {
+        return size < smallPackSizeThreshold;
+    }
+
     const handleFile = (file: File | null) => {
         if (!file) {
             return;
@@ -58,6 +63,12 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded }: UploadModpackModalP
         if (!isZipFile(file)) {
             setSelectedFile(null);
             setError('Only .zip files are supported.');
+            return;
+        }
+        
+        if (isFileSizeTooLow(file.size)) {
+            setSelectedFile(null);
+            setError('The size of the file is too small for a modpack. Please make sure that it is a valid modpack');
             return;
         }
 
