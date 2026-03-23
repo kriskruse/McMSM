@@ -43,4 +43,6 @@ node_modules/
 dist/
 *.local
 .env*.local
+
 /backend/modpacks/
+/backend/data/

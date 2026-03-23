@@ -117,9 +117,16 @@ Manual trigger options:
 
 
 ## TODO:
+### Fixes and Bugs:
+#### Small
 - Center align the X button on the modpack expanded view
 - Add an indicator to the upload view between the upload done and form creation steps.
 - Fix expanded modpack view auto-scroll when streaming logs to the console.
+
+#### Medium
+- Add an indicator for the backend Docker connection status.
+
+#### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
 - Create a flow for releases on github with a build pipeline that builds the backend and frontend, creates a release, and uploads the built artifacts to the release.
 
@@ -129,7 +136,7 @@ Manual trigger options:
 - Do proper authentication and authorization for the API endpoints, just basic user auth.
 - 
 
-## Feature Ideas:
+### Feature Ideas:
 - Backup worlds
 - Update modpacks by uploading a new zip and keeping the same metadata, world and optional configuration files.
 - Proper flow to ensure modpack servers are ran with proper java args
