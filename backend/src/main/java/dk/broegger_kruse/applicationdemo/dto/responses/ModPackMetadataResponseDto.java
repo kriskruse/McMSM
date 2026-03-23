@@ -10,12 +10,14 @@ public record ModPackMetadataResponseDto(
         String javaXmx,
         String port,
         String entryPoint,
+        String[] entryPointCandidates,
         Boolean isDeployed,
         String status,
         String message
 ) {
     public ModPackMetadataResponseDto(Long packId, String message) {
         this(packId,
+                null,
                 null,
                 null,
                 null,

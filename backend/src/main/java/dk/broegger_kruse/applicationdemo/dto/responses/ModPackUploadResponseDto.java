@@ -10,10 +10,12 @@ public record ModPackUploadResponseDto(
         String javaXmx,
         String port,
         String entryPoint,
+        String[] entryPointCandidates,
         String message
 ) {
     public ModPackUploadResponseDto(String message){
         this(null,
+                null,
                 null,
                 null,
                 null,

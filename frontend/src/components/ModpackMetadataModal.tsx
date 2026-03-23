@@ -85,12 +85,22 @@ function resolveGroupVersion(minecraftVersion: string | null): string {
     return minecraftVersionGroups[0]?.value ?? '1.21.11';
 }
 
+function resolveEntryPointCandidates(uploadResult: ModPackUploadResponseDto): string[] {
+    if (uploadResult.entryPointCandidates && uploadResult.entryPointCandidates.length > 0) {
+        return uploadResult.entryPointCandidates;
+    }
+    return ['startserver.sh'];
+}
+
 function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm {
     const minecraftVersion = resolveGroupVersion(
         uploadResult.minecraftVersion && uploadResult.minecraftVersion !== 'unknown'
             ? uploadResult.minecraftVersion
             : null,
     );
+
+    const entryPointCandidates = resolveEntryPointCandidates(uploadResult);
+    const detectedEntryPoint = uploadResult.entryPoint ?? entryPointCandidates[0] ?? 'startserver.sh';
 
     return {
         name: uploadResult.name ?? '',
@@ -99,7 +109,9 @@ function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm 
         javaVersion: mapJavaFromMinecraftVersion(minecraftVersion),
         javaXmx: uploadResult.javaXmx ?? '5G',
         port: uploadResult.port ?? '25565',
-        entryPoint: uploadResult.entryPoint ?? 'startserver.sh',
+        entryPoint: entryPointCandidates.includes(detectedEntryPoint)
+            ? detectedEntryPoint
+            : entryPointCandidates[0],
     };
 }
 
@@ -127,6 +139,13 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
         }
         return `Review Metadata: ${uploadResult.name}`;
     }, [uploadResult?.name]);
+
+    const entryPointCandidates = useMemo(() => {
+        if (!uploadResult) {
+            return ['startserver.sh'];
+        }
+        return resolveEntryPointCandidates(uploadResult);
+    }, [uploadResult]);
 
     if (!canRender) {
         return null;
@@ -243,7 +262,17 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
 
                     <label>
                         <span className="text-sm text-slate-300">Entry Point</span>
-                        <input className={inputClass} value={form.entryPoint} onChange={(event) => updateForm('entryPoint', event.target.value)} />
+                        <select
+                            className={inputClass}
+                            value={form.entryPoint}
+                            onChange={(event) => updateForm('entryPoint', event.target.value)}
+                        >
+                            {entryPointCandidates.map((entryPointCandidate) => (
+                                <option key={entryPointCandidate} value={entryPointCandidate} className="bg-slate-900 text-white">
+                                    {entryPointCandidate}
+                                </option>
+                            ))}
+                        </select>
                     </label>
                 </div>
 

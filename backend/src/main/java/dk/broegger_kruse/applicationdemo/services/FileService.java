@@ -9,6 +9,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import dk.broegger_kruse.applicationdemo.entities.ModPack;
 import dk.broegger_kruse.applicationdemo.entities.UserEntity;
+import dk.broegger_kruse.applicationdemo.util.ZipArchiveUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,8 +35,6 @@ import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -51,6 +50,7 @@ public class FileService {
     private static final String DEFAULT_JAVA_XMX = "5G";
     private static final String DEFAULT_PORT = "25565";
     private static final String DEFAULT_ENTRYPOINT = "startserver.sh";
+    private static final String[] DEFAULT_ENTRYPOINT_CANDIDATES = new String[]{DEFAULT_ENTRYPOINT};
     private static final int DEFAULT_XMX_MIB = 8192;
     private static final int XMX_OVERHEAD_MIB = 250;
     private static final Pattern XMX_PATTERN = Pattern.compile("(?i)^(?:-Xmx)?(\\d+)([mMgG])$");
@@ -239,11 +239,7 @@ public class FileService {
         var normalizedName = originalName.replace('\\', '/');
         var fileName = normalizedName.substring(normalizedName.lastIndexOf('/') + 1);
         var inferredName = sanitizePackName(stripExtension(fileName));
-        var packDirectory = modpacksRoot.resolve(inferredName).normalize();
-
-        if (Files.exists(packDirectory)) {
-            throw new IllegalStateException("A modpack with name '" + inferredName + "' already exists.");
-        }
+        var stagingDirectory = modpacksRoot.resolve("draft-" + UUID.randomUUID()).normalize();
 
         var archivePath = tempRoot.resolve(UUID.randomUUID() + "-" + fileName).normalize();
 
@@ -252,17 +248,17 @@ public class FileService {
         try {
             Files.createDirectories(modpacksRoot);
             Files.createDirectories(tempRoot);
-            Files.createDirectories(packDirectory);
+            Files.createDirectories(stagingDirectory);
 
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, archivePath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            unzipArchive(archivePath, packDirectory);
-            copyTemplateFile("eula.txt", packDirectory.resolve("eula.txt"));
-            copyTemplateFile("server.properties", packDirectory.resolve("server.properties"));
-            ensureJvmArgsExists(packDirectory);
-            logger.info("Archive extracted to '{}'.", packDirectory);
+            ZipArchiveUtil.extractArchiveToDirectory(archivePath, stagingDirectory);
+            copyTemplateFile("eula.txt", stagingDirectory.resolve("eula.txt"));
+            copyTemplateFile("server.properties", stagingDirectory.resolve("server.properties"));
+            ensureJvmArgsExists(stagingDirectory);
+            logger.info("Archive extracted to staging directory '{}'.", stagingDirectory);
         } catch (IOException e) {
             logger.error("Failed processing uploaded archive originalName='{}'.", originalName, e);
             throw new IllegalStateException("Failed to process uploaded modpack archive.", e);
@@ -275,19 +271,21 @@ public class FileService {
             }
         }
 
-        var entryPoint = resolveEntryPoint(packDirectory);
-        var javaXmx = resolveJavaXmx(packDirectory.resolve("user_jvm_args.txt"));
+        var entryPointCandidates = resolveEntryPointCandidates(stagingDirectory);
+        var entryPoint = resolveEntryPoint(entryPointCandidates);
+        var javaXmx = resolveJavaXmx(stagingDirectory.resolve("user_jvm_args.txt"));
         var now = Instant.now();
 
         return new ModPack(
                 inferredName,
-                packDirectory.toString(),
+                stagingDirectory.toString(),
                 DEFAULT_PACK_VERSION,
                 DEFAULT_MINECRAFT_VERSION,
                 DEFAULT_JAVA_VERSION,
                 javaXmx,
                 DEFAULT_PORT,
                 entryPoint,
+                entryPointCandidates,
                 null,
                 null,
                 DEFAULT_STATUS,
@@ -367,19 +365,18 @@ public class FileService {
         }
     }
 
-    public void renamePackDirectoryToManagedName(ModPack modPack) {
+    public void assignImmutablePackDirectoryPath(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         if (modPack.getPackId() == null) {
-            throw new IllegalStateException("Pack ID is required before assigning managed directory name.");
+            throw new IllegalStateException("Pack ID is required before assigning immutable directory path.");
         }
 
         var currentPath = resolvePackPath(modPack);
-        var targetName = buildManagedDirectoryName(modPack);
-        var targetPath = modpacksRoot.resolve(targetName).normalize();
+        var targetPath = modpacksRoot.resolve(String.valueOf(modPack.getPackId())).normalize();
 
         if (currentPath.equals(targetPath)) {
             modPack.setPath(targetPath.toString());
-            logger.debug("Pack directory already matches managed name for packId={}: {}", modPack.getPackId(), targetPath);
+            logger.debug("Pack directory already matches immutable path for packId={}: {}", modPack.getPackId(), targetPath);
             return;
         }
 
@@ -390,14 +387,14 @@ public class FileService {
         try {
             Files.createDirectories(Objects.requireNonNullElse(targetPath.getParent(), modpacksRoot));
             Files.move(currentPath, targetPath, StandardCopyOption.ATOMIC_MOVE);
-            logger.info("Renamed modpack directory for packId={} from '{}' to '{}'.", modPack.getPackId(), currentPath, targetPath);
+            logger.info("Moved modpack directory for packId={} from '{}' to immutable path '{}'.", modPack.getPackId(), currentPath, targetPath);
         } catch (IOException atomicMoveException) {
             try {
                 Files.move(currentPath, targetPath);
-                logger.info("Renamed modpack directory without atomic move for packId={} from '{}' to '{}'.", modPack.getPackId(), currentPath, targetPath);
+                logger.info("Moved modpack directory without atomic move for packId={} from '{}' to immutable path '{}'.", modPack.getPackId(), currentPath, targetPath);
             } catch (IOException moveException) {
-                logger.error("Failed renaming modpack directory for packId={} from '{}' to '{}'.", modPack.getPackId(), currentPath, targetPath, moveException);
-                throw new IllegalStateException("Failed to rename modpack directory to managed name.", moveException);
+                logger.error("Failed moving modpack directory to immutable path for packId={} from '{}' to '{}'.", modPack.getPackId(), currentPath, targetPath, moveException);
+                throw new IllegalStateException("Failed to assign immutable modpack directory path.", moveException);
             }
         }
 
@@ -451,7 +448,6 @@ public class FileService {
                 return new ArrayList<>();
             }
 
-            @SuppressWarnings("unchecked")
             List<T> parsed = gson.fromJson(raw, listType);
             return parsed == null ? new ArrayList<>() : new ArrayList<>(parsed);
         } catch (IOException e) {
@@ -498,27 +494,6 @@ public class FileService {
                 .orElse(0L) + 1;
     }
 
-    private void unzipArchive(Path archivePath, Path outputDir) throws IOException {
-        try (InputStream inputStream = Files.newInputStream(archivePath);
-             ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
-                var entryPath = outputDir.resolve(entry.getName()).normalize();
-                if (!entryPath.startsWith(outputDir)) {
-                    throw new IllegalStateException("Blocked zip entry outside target directory: " + entry.getName());
-                }
-
-                if (entry.isDirectory()) {
-                    Files.createDirectories(entryPath);
-                } else {
-                    Files.createDirectories(Objects.requireNonNullElse(entryPath.getParent(), outputDir));
-                    Files.copy(zipInputStream, entryPath, StandardCopyOption.REPLACE_EXISTING);
-                }
-
-                zipInputStream.closeEntry();
-            }
-        }
-    }
 
     private void copyTemplateFile(String templateName, Path targetPath) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:templates/" + templateName);
@@ -598,15 +573,40 @@ public class FileService {
         return cleaned.isBlank() ? "modpack" : cleaned;
     }
 
-    private String resolveEntryPoint(Path packDirectory) {
-        var supportedCandidates = List.of("startserver.sh", "run.sh", "start.sh", DEFAULT_ENTRYPOINT);
-        for (var candidate : supportedCandidates) {
-            if (Files.exists(packDirectory.resolve(candidate))) {
-                return candidate;
-            }
+    private String[] resolveEntryPointCandidates(Path packDirectory) {
+        if (!Files.isDirectory(packDirectory)) {
+            logger.warn("Pack directory does not exist or is not a directory: {}", packDirectory);
+            return DEFAULT_ENTRYPOINT_CANDIDATES;
         }
-        return DEFAULT_ENTRYPOINT;
+
+        try (Stream<Path> entries = Files.list(packDirectory)) {
+            var candidates = entries
+                    .filter(Files::isRegularFile)
+                    .map(path -> path.getFileName().toString())
+                    .filter(name -> name.toLowerCase(java.util.Locale.ROOT).endsWith(".sh"))
+                    .sorted()
+                    .toList();
+
+            if (candidates.isEmpty()) {
+                logger.warn("Did not find any .sh entry points in {}", packDirectory);
+                return DEFAULT_ENTRYPOINT_CANDIDATES;
+            }
+
+            return candidates.toArray(String[]::new);
+        } catch (IOException e) {
+            logger.warn("Failed reading modpack root directory '{}', using default entrypoint.", packDirectory, e);
+            return DEFAULT_ENTRYPOINT_CANDIDATES;
+        }
     }
+
+    private String resolveEntryPoint(String[] entryPointCandidates) {
+        if (entryPointCandidates == null || entryPointCandidates.length == 0) {
+            return DEFAULT_ENTRYPOINT;
+        }
+
+        return entryPointCandidates[0];
+    }
+
 
     private String stripExtension(String fileName) {
         var extensionIndex = fileName.lastIndexOf('.');
@@ -616,10 +616,5 @@ public class FileService {
         return fileName.substring(0, extensionIndex);
     }
 
-    private String buildManagedDirectoryName(ModPack modPack) {
-        var safeName = sanitizePackName(modPack.getName()).toLowerCase();
-        var safeVersion = sanitizePackName(Objects.requireNonNullElse(modPack.getPackVersion(), DEFAULT_PACK_VERSION)).toLowerCase();
-        return modPack.getPackId() + "-" + safeName + "-" + safeVersion;
-    }
 }
 

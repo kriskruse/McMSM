@@ -28,25 +28,19 @@ public class ModPackController {
 
     @GetMapping("/")
     public ResponseEntity<List<ModPack>> getAllPacks() {
-        logger.info("Fetching all modpacks.");
         List<ModPack> allPacks = mcModPackService.getAllPacks();
-        logger.info("Fetched {} modpacks.", allPacks.size());
         return ResponseEntity.ok(allPacks);
     }
 
     @GetMapping("/saved")
     public ResponseEntity<List<ModPack>> getSavedPacks() {
-        logger.info("Fetching saved modpacks.");
         List<ModPack> savedPacks = mcModPackService.getSavedPacks();
-        logger.info("Fetched {} saved modpacks.", savedPacks.size());
         return ResponseEntity.ok(savedPacks);
     }
 
     @GetMapping("/deployed")
     public ResponseEntity<List<ModPack>> getDeployedPacks() {
-        logger.info("Fetching deployed modpacks.");
         List<ModPack> deployedPacks = mcModPackService.getDeployedPacks();
-        logger.info("Fetched {} deployed modpacks.", deployedPacks.size());
         return ResponseEntity.ok(deployedPacks);
     }
 

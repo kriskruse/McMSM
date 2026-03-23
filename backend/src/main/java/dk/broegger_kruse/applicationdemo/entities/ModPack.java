@@ -14,6 +14,7 @@ public class ModPack implements IModPack {
     private String javaXmx;
     private String port;
     private String entryPoint;
+    private String[] entryPointCandidates;
     private String containerName;
     private String containerId;
     private Boolean isDeployed;
@@ -31,6 +32,7 @@ public class ModPack implements IModPack {
                    String javaXmx,
                    String port,
                    String entryPoint,
+                   String[] entryPointCandidates,
                    String containerName,
                    String containerId,
                    String status,
@@ -45,6 +47,7 @@ public class ModPack implements IModPack {
         this.javaXmx = javaXmx;
         this.port = port;
         this.entryPoint = entryPoint;
+        this.entryPointCandidates = entryPointCandidates;
         this.containerName = containerName;
         this.containerId = containerId;
         this.isDeployed = Boolean.FALSE;
@@ -67,6 +70,7 @@ public class ModPack implements IModPack {
     public String getJavaXmx() { return javaXmx; }
     public String getPort() { return port; }
     public String getEntryPoint() { return entryPoint; }
+    public String[] getEntryPointCandidates() { return entryPointCandidates; }
     public String getContainerName() { return containerName; }
     public String getContainerId() { return containerId; }
     public Boolean getIsDeployed() {return isDeployed;}
@@ -84,6 +88,7 @@ public class ModPack implements IModPack {
     public void setJavaXmx(String javaXmx) { this.javaXmx = javaXmx; }
     public void setPort(String port) { this.port = port; }
     public void setEntryPoint(String entryPoint) { this.entryPoint = entryPoint; }
+    public void setEntryPointCandidates(String[] entryPointCandidates) { this.entryPointCandidates = entryPointCandidates; }
     public void setContainerName(String containerName) { this.containerName = containerName; }
     public void setContainerId(String containerId) { this.containerId = containerId; }
     public void setIsDeployed(boolean isDeployed) {this.isDeployed = isDeployed;}

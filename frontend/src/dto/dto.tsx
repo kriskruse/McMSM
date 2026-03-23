@@ -29,6 +29,7 @@ export type ModPackCardDto = {
     javaXmx: string;
     port: string;
     entryPoint: string;
+    entryPointCandidates: string[];
     containerName: string | null;
     containerId: string | null;
     status: ModPackStatus;
@@ -47,6 +48,7 @@ export type ModPackUploadResponseDto = {
     javaXmx: string | null;
     port: string | null;
     entryPoint: string | null;
+    entryPointCandidates: string[] | null;
     message: string;
 };
 
@@ -70,6 +72,7 @@ export type ModPackMetadataResponseDto = {
     javaXmx: string | null;
     port: string | null;
     entryPoint: string | null;
+    entryPointCandidates: string[] | null;
     isDeployed: boolean | null;
     status: string | null;
     message: string;

@@ -58,7 +58,7 @@ public class McModPackService {
         logger.info("Saving uploaded modpack file='{}' ({} bytes).", file.getOriginalFilename(), file.getSize());
         var createdModPack = fileService.createDraftModPackFromFile(file);
         var savedModPack = modPackRepository.save(createdModPack);
-        fileService.renamePackDirectoryToManagedName(savedModPack);
+        fileService.assignImmutablePackDirectoryPath(savedModPack);
         savedModPack = modPackRepository.save(savedModPack);
         logger.info("Saved modpack packId={}, name='{}', path='{}'.", savedModPack.getPackId(), savedModPack.getName(), savedModPack.getPath());
         return toUploadResponse(savedModPack);
@@ -76,7 +76,6 @@ public class McModPackService {
 
         applyMetadataUpdate(modPack, metadataRequest);
         modPack.setUpdatedAt(Instant.now());
-        fileService.renamePackDirectoryToManagedName(modPack);
 
         var savedModPack = modPackRepository.save(modPack);
         logger.info("Metadata updated for modpack packId={}, name='{}', port='{}'.", savedModPack.getPackId(), savedModPack.getName(), savedModPack.getPort());
@@ -287,6 +286,7 @@ public class McModPackService {
                 Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX),
                 modPack.getPort(),
                 modPack.getEntryPoint(),
+                modPack.getEntryPointCandidates(),
                 UPLOAD_SUCCESS_MESSAGE
         );
     }
@@ -302,6 +302,7 @@ public class McModPackService {
                 Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX),
                 modPack.getPort(),
                 modPack.getEntryPoint(),
+                modPack.getEntryPointCandidates(),
                 modPack.getIsDeployed(),
                 modPack.getStatus(),
                 METADATA_SUCCESS_MESSAGE

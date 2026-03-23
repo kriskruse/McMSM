@@ -11,6 +11,7 @@ public interface IModPack {
     Integer getJavaVersion();
     String getPort();
     String getEntryPoint();
+    String[] getEntryPointCandidates();
     String getContainerName();
     String getContainerId();
     Boolean getIsDeployed();
@@ -27,6 +28,7 @@ public interface IModPack {
     void setJavaVersion(Integer javaVersion);
     void setPort(String port);
     void setEntryPoint(String entryPoint);
+    void setEntryPointCandidates(String[] entryPointCandidates);
     void setContainerName(String containerName);
     void setContainerId(String containerId);
     void setIsDeployed(boolean isDeployed);

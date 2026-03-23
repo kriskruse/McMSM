@@ -16,6 +16,7 @@ type BackendModPackDto = {
     javaXmx: string | null;
     port: string;
     entryPoint: string | null;
+    entryPointCandidates: string[] | null;
     containerName: string | null;
     containerId: string | null;
     lastDeployError: string | null;
@@ -63,6 +64,7 @@ function mapToCardDto(pack: BackendModPackDto): ModPackCardDto {
         javaXmx: pack.javaXmx ?? '5G',
         port: pack.port,
         entryPoint: pack.entryPoint ?? 'startserver.sh',
+        entryPointCandidates: pack.entryPointCandidates?.length ? pack.entryPointCandidates : ['startserver.sh'],
         containerName: pack.containerName,
         containerId: pack.containerId,
         lastDeployError: pack.lastDeployError,
@@ -146,6 +148,7 @@ function parseUploadResponse(xhr: XMLHttpRequest): ModPackUploadResponseDto {
         javaXmx: '5G',
         port: null,
         entryPoint: null,
+        entryPointCandidates: null,
         message: 'Upload completed.',
     };
 }
