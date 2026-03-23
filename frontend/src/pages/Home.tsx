@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BackendStatusIndicator from '../components/BackendStatusIndicator.tsx';
 import ModpackCard from '../components/ModpackCard.tsx';
-import ModpackExpandedPanel from '../components/ModpackExpandedPanel.tsx';
+import ModpackConsole from '../components/ModpackConsole.tsx';
 import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
 import UploadModpackModal from '../components/UploadModpackModal.tsx';
 import type { ModPackCardDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
@@ -22,6 +22,22 @@ function isFileDragEvent(event: DragEvent): boolean {
 
 function getDroppedFile(event: DragEvent): File | null {
     return event.dataTransfer?.files?.[0] ?? null;
+}
+
+function toUploadResultFromPack(pack: ModPackCardDto): ModPackUploadResponseDto {
+    return {
+        packId: pack.packId,
+        name: pack.name,
+        path: pack.path,
+        packVersion: pack.packVersion,
+        minecraftVersion: pack.minecraftVersion,
+        javaVersion: pack.javaVersion,
+        javaXmx: pack.javaXmx,
+        port: pack.port,
+        entryPoint: pack.entryPoint,
+        entryPointCandidates: pack.entryPointCandidates,
+        message: '',
+    };
 }
 
 function isConnectionError(error: unknown): boolean {
@@ -182,11 +198,19 @@ const Home = () => {
     };
 
     const toggleExpandedPack = (packId: number) => {
-        setExpandedPackId((previous) => (previous === packId ? null : packId));
-    };
+        const targetPack = modpacks.find((pack) => pack.packId === packId);
+        if (!targetPack) {
+            return;
+        }
 
-    const handleInlineMetadataSaved = () => {
-        void refreshAllPacks();
+        if (!targetPack.isDeployed) {
+            setExpandedPackId(null);
+            setPendingUploadResult(toUploadResultFromPack(targetPack));
+            setIsMetadataModalOpen(true);
+            return;
+        }
+
+        setExpandedPackId((previous) => (previous === packId ? null : packId));
     };
 
     const runPackAction = async (packId: number, action: () => Promise<void>) => {
@@ -448,7 +472,7 @@ const Home = () => {
                 </div>
             )}
 
-            {expandedPack && (
+            {expandedPack && expandedPack.isDeployed && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-4"
                     onClick={() => setExpandedPackId(null)}
@@ -465,10 +489,7 @@ const Home = () => {
                         >
                             <span className="-translate-y-px">x</span>
                         </button>
-                        <ModpackExpandedPanel
-                            modpack={expandedPack}
-                            onMetadataSaved={handleInlineMetadataSaved}
-                        />
+                        <ModpackConsole modpack={expandedPack} />
                     </div>
                 </div>
             )}
