@@ -136,7 +136,6 @@ Manual trigger options:
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
-- Create a flow for releases on github with a build pipeline that builds the backend and frontend, creates a release, and uploads the built artifacts to the release.
 
 
 ### Security Considerations:
@@ -149,5 +148,5 @@ Manual trigger options:
 - Update modpacks by uploading a new zip and keeping the same metadata, world and optional configuration files.
 - Proper flow to ensure modpack servers are ran with proper java args
 - Create an update functionality for the manager application itself.
-- Automated modpack downloading from CurseForge or Modrinth APIs.
+- Automated modpack downloading from CurseForge, Modrinth and FTB APIs.
 - Modpack explorer to view possible modpacks to download and manage from the app itself.
