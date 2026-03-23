@@ -117,6 +117,10 @@ Manual trigger options:
 
 
 ## TODO:
+### Notes
+- FTB uses install scripts to get modpack data instead of uploading everything as a zip. How do we manage that?
+
+
 ### Fixes and Bugs:
 #### Small
 - Center align the X button on the modpack expanded view

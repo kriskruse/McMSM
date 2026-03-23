@@ -14,5 +14,20 @@ public record ModPackMetadataResponseDto(
         String status,
         String message
 ) {
+    public ModPackMetadataResponseDto(Long packId, String message) {
+        this(packId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                message
+        );
+    }
 }
 

@@ -75,15 +75,6 @@ public class ModPackController {
         } catch (Exception e) {
             logger.error("Upload failed for archive originalName='{}'.", file.getOriginalFilename(), e);
             return ResponseEntity.status(500).body(new ModPackUploadResponseDto(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "Failed to save mod pack: " + e.getMessage()
             ));
         }
@@ -103,16 +94,6 @@ public class ModPackController {
             logger.error("Metadata update failed for modpack packId={}", packId, e);
             return ResponseEntity.status(500).body(new ModPackMetadataResponseDto(
                     packId,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "Failed to update metadata: " + e.getMessage()
             ));
         }
@@ -129,11 +110,6 @@ public class ModPackController {
             logger.error("Deployment failed for modpack packId={}", packId, e);
             return ResponseEntity.status(500).body(new ModPackDeployResponseDto(
                     packId,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "deploy_failed",
                     "Failed to deploy mod pack: " + e.getMessage()
             ));
@@ -151,11 +127,6 @@ public class ModPackController {
             logger.error("Start failed for modpack packId={}", packId, e);
             return ResponseEntity.status(500).body(new ModPackDeployResponseDto(
                     packId,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "error",
                     "Failed to start mod pack: " + e.getMessage()
             ));
@@ -173,11 +144,6 @@ public class ModPackController {
             logger.error("Stop failed for modpack packId={}", packId, e);
             return ResponseEntity.status(500).body(new ModPackDeployResponseDto(
                     packId,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "error",
                     "Failed to stop mod pack: " + e.getMessage()
             ));
@@ -195,11 +161,6 @@ public class ModPackController {
             logger.error("Archive failed for modpack packId={}", packId, e);
             return ResponseEntity.status(500).body(new ModPackDeployResponseDto(
                     packId,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
                     "error",
                     "Failed to archive mod pack: " + e.getMessage()
             ));

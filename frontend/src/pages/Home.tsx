@@ -358,7 +358,7 @@ const Home = () => {
                             className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-slate-800 text-xl leading-none text-slate-200 transition hover:bg-slate-700 hover:text-white"
                             aria-label="Close modpack details"
                         >
-                            <span className="translate-y-[-1px]">x</span>
+                            <span className="-translate-y-px">x</span>
                         </button>
                         <ModpackExpandedPanel
                             modpack={expandedPack}

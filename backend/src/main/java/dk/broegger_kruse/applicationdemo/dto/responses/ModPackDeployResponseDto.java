@@ -10,5 +10,17 @@ public record ModPackDeployResponseDto(
         String status,
         String message
 ) {
+    public ModPackDeployResponseDto(Long packId, String status , String message){
+        this(
+                packId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                status,
+                message
+        );
+    }
 }
 

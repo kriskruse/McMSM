@@ -12,5 +12,18 @@ public record ModPackUploadResponseDto(
         String entryPoint,
         String message
 ) {
+    public ModPackUploadResponseDto(String message){
+        this(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                message
+        );
+    }
 }
 
