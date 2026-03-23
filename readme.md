@@ -5,7 +5,7 @@
 
 McMSM (Minecraft Modpack Server Manager) is a full-stack application designed to simplify the management of Minecraft modpack servers. 
 It patches a personal need for a lightweight, self-hosted solution to manage modpacks without relying on third-party services or complex server setups.
-The application allows users to upload modpacks, configure server settings, and manage the lifecycle of modpack instances (deploy, start, stop, delete) through an intuitive web interface. 
+The application allows users to upload modpacks, configure server settings, and manage the lifecycle of modpack instances through an intuitive web interface. 
 
 The project is meant to solve a untouch pain point for people who host multiple modpack servers for themselves and their friends.
 The project is open to contributions and feedback, and I hope it can grow into a robust tool.
@@ -28,7 +28,6 @@ Currently, the following features are implemented, but hoping to expand in the f
 - Java 25 (Temurin)
 - Spring Boot (Web + JPA)
 - Maven
-- Docker Java client for container lifecycle operations
 
 ### Data + Infrastructure
 - File-based metadata storage (`backend/data` by default)
@@ -41,12 +40,10 @@ Currently, the following features are implemented, but hoping to expand in the f
 - Java 25 JDK
 - Maven 3.9+
 - Node.js 20+ and npm
-- PowerShell 5.1+ (Windows) or PowerShell 7+ (for `devBuildAndRun.ps1`)
-- Bash (for `devBuildAndRun.sh` on Linux/macOS)
 
 ### 1) Clone repository
 ```powershell
-git clone <your-repo-url>
+git clone <repo-url>
 cd "McMSM"
 ```
 
@@ -68,19 +65,6 @@ What this script does:
 - During backend packaging, runs frontend `npm ci` + `npm run build`
 - Copies frontend build output into backend static resources
 - Starts backend with `mvn spring-boot:run`
-
-Optional script parameters:
-```powershell
-.\devBuildAndRun.ps1 -BackendPom backend/pom.xml
-```
-
-```bash
-./devBuildAndRun.sh --backend-pom backend/pom.xml
-```
-
-Process behavior note:
-- The app runs as a single backend process.
-- Frontend assets are served by Spring Boot from the bundled static build.
 
 Application runs on `http://localhost:8080` and exposes API under `/api`.
 
@@ -130,11 +114,6 @@ Manual trigger options:
 2. Use tags when you want release creation to be part of your normal Git flow.
 3. Use both: create tags for stable versions, manual dispatch for hotfix/prerelease control.
 
-## Modpack Lifecycle Notes
-- **Saved instance**: files + metadata exist, but no active deployment container
-- **Deployed instance**: container exists and can be started/stopped
-- **Archive**: removes deployed container and marks pack as saved while retaining modpack files
-- Backend now removes stale DB entries if modpack folders are missing on refresh/update flows
 
 
 ## TODO:
