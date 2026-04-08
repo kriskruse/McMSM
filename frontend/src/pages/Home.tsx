@@ -5,7 +5,7 @@ import ModpackConsole from '../components/ModpackConsole.tsx';
 import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
 import UploadModpackModal from '../components/UploadModpackModal.tsx';
 import type { ModPackCardDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
-import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack } from '../util/modpackApi';
+import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack, updateModpack } from '../util/modpackApi';
 
 const appVersion = import.meta.env.VITE_APP_VERSION ?? '1.0.0';
 const apiVersion = import.meta.env.VITE_API_VERSION ?? 'v1';
@@ -70,6 +70,8 @@ const Home = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
     const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
+    const [uploadMode, setUploadMode] = useState<'upload' | 'update'>('upload');
+    const [updateTargetPackId, setUpdateTargetPackId] = useState<number | null>(null);
     const [isGlobalFileDragActive, setIsGlobalFileDragActive] = useState(false);
     const globalFileDragDepth = useRef(0);
 
@@ -263,6 +265,8 @@ const Home = () => {
 
     const handleUploadCompleted = (uploadResult: ModPackUploadResponseDto) => {
         setPendingUploadFile(null);
+        setUploadMode('upload');
+        setUpdateTargetPackId(null);
         setPendingUploadResult(uploadResult);
         setIsUploadModalOpen(false);
         setIsMetadataModalOpen(true);
@@ -271,6 +275,16 @@ const Home = () => {
     const handleCloseUploadModal = () => {
         setIsUploadModalOpen(false);
         setPendingUploadFile(null);
+        setUploadMode('upload');
+        setUpdateTargetPackId(null);
+    };
+
+    const handleUpdatePack = (packId: number) => {
+        setLoadError('');
+        setPendingUploadFile(null);
+        setUploadMode('update');
+        setUpdateTargetPackId(packId);
+        setIsUploadModalOpen(true);
     };
 
     const handleMetadataSaved = (response: ModPackMetadataResponseDto) => {
@@ -338,6 +352,8 @@ const Home = () => {
 
         setLoadError('');
         setPendingUploadFile(droppedFile);
+        setUploadMode('upload');
+        setUpdateTargetPackId(null);
         setIsUploadModalOpen(true);
     }, []);
 
@@ -394,6 +410,8 @@ const Home = () => {
                     type="button"
                     onClick={() => {
                         setPendingUploadFile(null);
+                        setUploadMode('upload');
+                        setUpdateTargetPackId(null);
                         setIsUploadModalOpen(true);
                     }}
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
@@ -416,6 +434,7 @@ const Home = () => {
                             isBusy={activePackActions.includes(pack.packId)}
                             isExpanded={expandedPackId === pack.packId}
                             onToggleExpand={toggleExpandedPack}
+                            onUpdate={handleUpdatePack}
                             onDelete={handleDeletePack}
                             onDeploy={handleDeployPack}
                             onArchive={handleArchivePack}
@@ -436,6 +455,7 @@ const Home = () => {
                             isBusy={activePackActions.includes(pack.packId)}
                             isExpanded={expandedPackId === pack.packId}
                             onToggleExpand={toggleExpandedPack}
+                            onUpdate={handleUpdatePack}
                             onDelete={handleDeletePack}
                             onDeploy={handleDeployPack}
                             onArchive={handleArchivePack}
@@ -451,6 +471,25 @@ const Home = () => {
                 onClose={handleCloseUploadModal}
                 onUploaded={handleUploadCompleted}
                 initialFile={pendingUploadFile}
+                mode={uploadMode}
+                submitUpload={uploadMode === 'update'
+                    ? async (file, onProgress) => {
+                        if (updateTargetPackId == null) {
+                            throw new Error('No modpack selected for update.');
+                        }
+
+                        const response = await updateModpack(updateTargetPackId, file, onProgress);
+                        if (response.packId == null) {
+                            throw new Error('Update did not return a pack ID.');
+                        }
+
+                        if (response.packId === updateTargetPackId) {
+                            throw new Error('Update returned the same pack ID as the source modpack. A new pack ID is required for migration-based updates.');
+                        }
+
+                        return response;
+                    }
+                    : undefined}
             />
 
             <ModpackMetadataModal

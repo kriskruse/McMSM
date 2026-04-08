@@ -171,7 +171,8 @@ export async function updatePackMetadata(
     throw new Error(payload.message || `Metadata update failed (${response.status}).`);
 }
 
-export function uploadModpack(
+function sendModpackArchive(
+    url: string,
     file: File,
     onProgress?: (progressPercent: number) => void,
 ): Promise<ModPackUploadResponseDto> {
@@ -180,7 +181,7 @@ export function uploadModpack(
         formData.append('file', file);
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', `${API_BASE}/upload`);
+        xhr.open('POST', url);
         xhr.responseType = 'json';
 
         xhr.upload.onprogress = (event) => {
@@ -212,5 +213,20 @@ export function uploadModpack(
 
         xhr.send(formData);
     });
+}
+
+export function uploadModpack(
+    file: File,
+    onProgress?: (progressPercent: number) => void,
+): Promise<ModPackUploadResponseDto> {
+    return sendModpackArchive(`${API_BASE}/upload`, file, onProgress);
+}
+
+export function updateModpack(
+    packId: number,
+    file: File,
+    onProgress?: (progressPercent: number) => void,
+): Promise<ModPackUploadResponseDto> {
+    return sendModpackArchive(`${API_BASE}/${packId}/update`, file, onProgress);
 }
 

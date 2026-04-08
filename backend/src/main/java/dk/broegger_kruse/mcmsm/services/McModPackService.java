@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class McModPackService {
@@ -63,7 +64,7 @@ public class McModPackService {
         fileService.assignImmutablePackDirectoryPath(savedModPack);
         savedModPack = modPackRepository.save(savedModPack);
         logger.info("Saved modpack packId={}, name='{}', path='{}'.", savedModPack.getPackId(), savedModPack.getName(), savedModPack.getPath());
-        return toUploadResponse(savedModPack);
+        return new ModPackUploadResponseDto(savedModPack, UPLOAD_SUCCESS_MESSAGE);
     }
 
     public ModPackMetadataResponseDto updateMetadata(Long packId, ModPackMetadataRequestDto metadataRequest) {
@@ -81,7 +82,7 @@ public class McModPackService {
 
         ModPack savedModPack = modPackRepository.save(modPack);
         logger.info("Metadata updated for modpack packId={}, name='{}', port='{}'.", savedModPack.getPackId(), savedModPack.getName(), savedModPack.getPort());
-        return toMetadataResponse(savedModPack);
+        return new ModPackMetadataResponseDto(savedModPack, METADATA_SUCCESS_MESSAGE);
     }
 
     public ModPackDeployResponseDto deployPack(Long packId) {
@@ -147,7 +148,7 @@ public class McModPackService {
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Start succeeded for modpack packId={}, containerId='{}'", savedModPack.getPackId(), savedModPack.getContainerId());
-            return toRuntimeResponse(savedModPack, "Mod pack started successfully.");
+            return new ModPackDeployResponseDto(savedModPack, "Mod pack started successfully.");
         } catch (Exception e) {
             modPack.setStatus("error");
             modPack.setUpdatedAt(Instant.now());
@@ -157,7 +158,13 @@ public class McModPackService {
         }
     }
 
+    /**
+     * Stops a modpack that is currently deployed and running in docker using the packId provided
+     * @param packId Long pack id
+     * @return ModPackDeployResponseDto
+     */
     public ModPackDeployResponseDto stopPack(Long packId) {
+
         logger.info("Stopping modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
                 .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
@@ -172,7 +179,7 @@ public class McModPackService {
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Stop succeeded for modpack packId={}, containerId='{}'", savedModPack.getPackId(), savedModPack.getContainerId());
-            return toRuntimeResponse(savedModPack, "Mod pack stopped successfully.");
+            return new ModPackDeployResponseDto(savedModPack, "Mod pack stopped successfully.");
         } catch (Exception e) {
             modPack.setStatus("error");
             modPack.setUpdatedAt(Instant.now());
@@ -213,7 +220,7 @@ public class McModPackService {
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Archived runtime for modpack packId={}. Files retained at '{}'.", savedModPack.getPackId(), savedModPack.getPath());
-            return toRuntimeResponse(savedModPack, "Mod pack archived. Container removed and files retained.");
+            return new ModPackDeployResponseDto(savedModPack, "Mod pack archived. Container removed and files retained.");
         } catch (Exception e) {
             modPack.setStatus("error");
             modPack.setUpdatedAt(Instant.now());
@@ -251,7 +258,42 @@ public class McModPackService {
         }
     }
 
+    public ModPackUploadResponseDto updatePack(Long packId, MultipartFile file) {
+        ModPack modPack = modPackRepository.findByPackId(packId)
+                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+        if (modPack.getIsDeployed() == true) {
+            stopPack(packId);
+        }
+
+        try {
+            stopPack(packId);
+            archivePack(packId);
+
+            ModPackUploadResponseDto savePackResponse = savePack(file);
+            Optional<ModPack> optNewPack = fileService.findModPackById(savePackResponse.packId());
+
+            if (optNewPack.isEmpty()) {
+                logger.error("Failed to find newly saved mod pack with ID: {} after saving. This should not happen.", savePackResponse.packId());
+                throw new RuntimeException("Failed to find newly saved mod pack with ID: " + savePackResponse.packId());
+            }
+            ModPack newPack = optNewPack.get(); // unpack
+
+            fileService.copyAndOverwriteFileFromTo("world", modPack.getPath(), newPack.getPath());
+            fileService.copyAndOverwriteFileFromTo("server.properties", modPack.getPath(), newPack.getPath());
+            fileService.copyAndOverwriteFileFromTo("whitelist.txt", modPack.getPath(), newPack.getPath());
+
+            deployPack(newPack.getPackId());
+
+            return new ModPackUploadResponseDto(modPack, UPLOAD_SUCCESS_MESSAGE);
+
+        } catch (Exception e) {
+            logger.error("Update failed for modpack packId={}", packId, e);
+            return new ModPackUploadResponseDto(e.getMessage());
+        }
+    }
+
     private void applyMetadataUpdate(ModPack modPack, ModPackMetadataRequestDto metadataRequest) {
+        //TODO: this should be handled in the modpack class not here
         Objects.requireNonNull(metadataRequest, "metadataRequest must not be null");
 
         if (StringUtils.hasText(metadataRequest.name())) {
@@ -277,50 +319,4 @@ public class McModPackService {
         }
     }
 
-    private ModPackUploadResponseDto toUploadResponse(ModPack modPack) {
-        return new ModPackUploadResponseDto(
-                modPack.getPackId(),
-                modPack.getName(),
-                modPack.getPath(),
-                modPack.getPackVersion(),
-                modPack.getMinecraftVersion(),
-                modPack.getJavaVersion(),
-                Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX),
-                modPack.getPort(),
-                modPack.getEntryPoint(),
-                modPack.getEntryPointCandidates(),
-                UPLOAD_SUCCESS_MESSAGE
-        );
-    }
-
-    private ModPackMetadataResponseDto toMetadataResponse(ModPack modPack) {
-        return new ModPackMetadataResponseDto(
-                modPack.getPackId(),
-                modPack.getName(),
-                modPack.getPath(),
-                modPack.getPackVersion(),
-                modPack.getMinecraftVersion(),
-                modPack.getJavaVersion(),
-                Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX),
-                modPack.getPort(),
-                modPack.getEntryPoint(),
-                modPack.getEntryPointCandidates(),
-                modPack.getIsDeployed(),
-                modPack.getStatus(),
-                METADATA_SUCCESS_MESSAGE
-        );
-    }
-
-    private ModPackDeployResponseDto toRuntimeResponse(ModPack modPack, String message) {
-        return new ModPackDeployResponseDto(
-                modPack.getPackId(),
-                modPack.getName(),
-                modPack.getContainerId(),
-                modPack.getContainerName(),
-                null,
-                null,
-                modPack.getStatus(),
-                message
-        );
-    }
 }

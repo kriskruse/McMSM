@@ -133,6 +133,7 @@ Manual trigger options:
 #### Medium
 - Add an indicator for the backend Docker connection status.
 - Add a flow that tries to extract the Modpack version from the uploaded zip name and pre-fills the version field in the metadata form.
+- Split FileService into separate services for modpack files and database metadata to improve readability and separation of concerns.
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.

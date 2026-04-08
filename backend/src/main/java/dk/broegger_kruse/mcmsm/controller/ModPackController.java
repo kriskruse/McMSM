@@ -161,6 +161,22 @@ public class ModPackController {
         }
     }
 
+    @PostMapping(path = "/{packId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ModPackUploadResponseDto> updatePack(@PathVariable Long packId, @RequestPart("file") MultipartFile file) {
+        logger.info("Update requested for modpack packId={}", packId);
+        try{
+            ModPackUploadResponseDto response = mcModPackService.updatePack(packId, file);
+            logger.info("Update completed for modpack packId={}", packId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Update failed for modpack packId={}", packId, e);
+            return ResponseEntity.status(500).body(new ModPackUploadResponseDto(
+                    "Failed to update mod pack: " + e.getMessage()
+            ));
+        }
+    }
+
+
     @DeleteMapping("/delete")
     public ResponseEntity<String> deletePack(@RequestParam Long packId) {
         logger.info("Delete requested for modpack packId={}", packId);

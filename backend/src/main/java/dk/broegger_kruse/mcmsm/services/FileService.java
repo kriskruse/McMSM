@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import dk.broegger_kruse.mcmsm.entities.ModPack;
 import dk.broegger_kruse.mcmsm.entities.UserEntity;
 import dk.broegger_kruse.mcmsm.util.ZipArchiveUtil;
+import jdk.jshell.spi.ExecutionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,7 +51,7 @@ public class FileService {
     private static final String DEFAULT_PACK_VERSION = "unknown";
     private static final String DEFAULT_MINECRAFT_VERSION = "unknown";
     private static final Integer DEFAULT_JAVA_VERSION = 21;
-    private static final String DEFAULT_JAVA_XMX = "5G";
+    public static final String DEFAULT_JAVA_XMX = "5G";
     private static final String DEFAULT_PORT = "25565";
     private static final String DEFAULT_ENTRYPOINT = "startserver.sh";
     private static final String[] DEFAULT_ENTRYPOINT_CANDIDATES = new String[]{DEFAULT_ENTRYPOINT};
@@ -634,5 +638,99 @@ public class FileService {
         return fileName.substring(0, extensionIndex);
     }
 
+    public void copyAndOverwriteFileFromTo(String item, String from, String to) {
+        if (!hasText(item) || !hasText(from) || !hasText(to)) {
+            throw new IllegalArgumentException("item, from and to must contain text.");
+        }
+
+        var sourceRoot = Path.of(from).toAbsolutePath().normalize();
+        var targetRoot = Path.of(to).toAbsolutePath().normalize();
+        var sourcePath = sourceRoot.resolve(item).normalize();
+        var targetPath = targetRoot.resolve(item).normalize();
+
+        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
+        ensurePathWithinRoot(targetPath, targetRoot, "target");
+
+        if (!Files.exists(sourcePath)) {
+            throw new IllegalStateException("Source path does not exist: " + sourcePath);
+        }
+
+        try {
+            Files.createDirectories(targetRoot);
+            copyRecursivelyWithOverwrite(sourcePath, targetPath);
+            logger.info("Copied '{}' from '{}' to '{}' with overwrite enabled.", item, sourceRoot, targetRoot);
+        } catch (IOException e) {
+            logger.error("Failed copying '{}' from '{}' to '{}'.", item, sourceRoot, targetRoot, e);
+            throw new IllegalStateException("Failed copying item from source to target.", e);
+        }
+    }
+
+    private void copyRecursivelyWithOverwrite(Path sourcePath, Path targetPath) throws IOException {
+        var sourceIsDirectory = Files.isDirectory(sourcePath);
+        if (!sourceIsDirectory) {
+            deletePathIfTypeConflicts(targetPath, false);
+            Files.createDirectories(Objects.requireNonNullElse(targetPath.getParent(), targetPath));
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+            return;
+        }
+
+        deletePathIfTypeConflicts(targetPath, true);
+        Files.walkFileTree(sourcePath, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                var relative = sourcePath.relativize(dir);
+                var destination = targetPath.resolve(relative);
+                Files.createDirectories(destination);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                var relative = sourcePath.relativize(file);
+                var destination = targetPath.resolve(relative);
+                Files.createDirectories(Objects.requireNonNullElse(destination.getParent(), targetPath));
+                Files.copy(file, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private void deletePathIfTypeConflicts(Path candidate, boolean expectedDirectory) throws IOException {
+        if (!Files.exists(candidate)) {
+            return;
+        }
+
+        var isDirectory = Files.isDirectory(candidate);
+        if (isDirectory == expectedDirectory) {
+            return;
+        }
+
+        deleteRecursively(candidate);
+    }
+
+    private void deleteRecursively(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return;
+        }
+
+        try (Stream<Path> stream = Files.walk(path)) {
+            stream.sorted((left, right) -> right.getNameCount() - left.getNameCount())
+                    .forEach(current -> {
+                        try {
+                            Files.deleteIfExists(current);
+                        } catch (IOException e) {
+                            throw new IllegalStateException("Failed deleting path: " + current, e);
+                        }
+                    });
+        }
+    }
+
+    private void ensurePathWithinRoot(Path candidate, Path root, String label) {
+        if (candidate.startsWith(root)) {
+            return;
+        }
+
+        throw new IllegalArgumentException("Resolved " + label + " path escaped its root: " + candidate);
+    }
 }
 

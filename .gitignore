@@ -47,3 +47,6 @@ dist/
 /backend/modpacks/
 /backend/data/
 /TestingPacks/
+/modpacks
+/data
+/backend/examples

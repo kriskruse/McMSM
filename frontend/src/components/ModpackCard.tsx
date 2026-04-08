@@ -5,6 +5,7 @@ type ModpackCardProps = {
     isBusy?: boolean;
     isExpanded: boolean;
     onToggleExpand: (packId: number) => void;
+    onUpdate: (packId: number) => void;
     onDelete: (packId: number) => void;
     onDeploy: (packId: number) => void;
     onArchive: (packId: number) => void;
@@ -96,6 +97,7 @@ const ModpackCard = ({
     isBusy = false,
     isExpanded,
     onToggleExpand,
+    onUpdate,
     onDelete,
     onDeploy,
     onArchive,
@@ -212,7 +214,20 @@ const ModpackCard = ({
                 )}
                 <button
                     type="button"
-                    className={`${modpack.isDeployed ? '' : 'ml-auto'} inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-600 text-white transition hover:bg-red-500 disabled:opacity-50`}
+                    className={`${modpack.isDeployed ? '' : 'ml-auto'} inline-flex h-8 w-8 items-center justify-center rounded-md bg-slate-600 text-white transition hover:bg-slate-500 disabled:opacity-50`}
+                    onClick={() => onUpdate(modpack.packId)}
+                    disabled={isBusy}
+                    aria-label={`Update ${modpack.name}`}
+                >
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M12 3v12" />
+                        <path d="m7 10 5 5 5-5" />
+                        <path d="M4 18h16" />
+                    </svg>
+                </button>
+                <button
+                    type="button"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-600 text-white transition hover:bg-red-500 disabled:opacity-50"
                     onClick={() => onDelete(modpack.packId)}
                     disabled={isBusy}
                     aria-label={`Delete ${modpack.name}`}

@@ -8,13 +8,25 @@ type UploadModpackModalProps = {
     onClose: () => void;
     onUploaded: (response: ModPackUploadResponseDto) => void;
     initialFile?: File | null;
+    mode?: 'upload' | 'update';
+    submitUpload?: (
+        file: File,
+        onProgress?: (progressPercent: number) => void,
+    ) => Promise<ModPackUploadResponseDto>;
 };
 
 function isZipFile(file: File): boolean {
     return file.name.toLowerCase().endsWith('.zip');
 }
 
-const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }: UploadModpackModalProps) => {
+const UploadModpackModal = ({
+    isOpen,
+    onClose,
+    onUploaded,
+    initialFile = null,
+    mode = 'upload',
+    submitUpload = uploadModpack,
+}: UploadModpackModalProps) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [error, setError] = useState('');
@@ -132,7 +144,7 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }:
         setUploadProgress(0);
 
         try {
-            const response = await uploadModpack(selectedFile, (progress) => {
+            const response = await submitUpload(selectedFile, (progress) => {
                 setUploadProgress(progress);
                 if (progress >= 100) {
                     setIsBackendProcessing(true);
@@ -146,8 +158,12 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }:
                 onUploaded(response);
                 clearState();
             }, 900);
-        } catch {
-            setError('Upload failed. Please try again.');
+        } catch (uploadError) {
+            if (uploadError instanceof Error && uploadError.message) {
+                setError(uploadError.message);
+            } else {
+                setError('Upload failed. Please try again.');
+            }
             setIsBackendProcessing(false);
             setIsUploading(false);
             setIsSuccess(false);
@@ -159,8 +175,14 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }:
             <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
                 <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
-                        <h2 className="text-xl font-semibold text-white">Upload Modpack</h2>
-                        <p className="mt-1 text-sm text-slate-400">Drag and drop a .zip file or choose one manually.</p>
+                        <h2 className="text-xl font-semibold text-white">
+                            {mode === 'update' ? 'Update Modpack' : 'Upload Modpack'}
+                        </h2>
+                        <p className="mt-1 text-sm text-slate-400">
+                            {mode === 'update'
+                                ? 'Upload a replacement .zip for this existing modpack.'
+                                : 'Drag and drop a .zip file or choose one manually.'}
+                        </p>
                     </div>
                     <button
                         type="button"
@@ -215,7 +237,7 @@ const UploadModpackModal = ({ isOpen, onClose, onUploaded, initialFile = null }:
                         disabled={isUploading || !selectedFile}
                         aria-label="Start uploading selected modpack"
                     >
-                        {isUploading ? 'Uploading...' : 'Start Upload'}
+                        {isUploading ? 'Uploading...' : mode === 'update' ? 'Start Update' : 'Start Upload'}
                     </button>
                 </div>
 
