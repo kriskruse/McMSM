@@ -1,9 +1,8 @@
 package dk.mcmsm.entities;
 
-import dk.mcmsm.interfaces.IModPack;
 import java.time.Instant;
 
-public class ModPack implements IModPack {
+public class ModPack {
 
     private Long packId;
     private String name;
@@ -18,7 +17,7 @@ public class ModPack implements IModPack {
     private String containerName;
     private String containerId;
     private Boolean isDeployed;
-    private String status;
+    private PackStatus status;
     private Instant lastDeployAt;
     private String lastDeployError;
     private Instant updatedAt;
@@ -35,7 +34,7 @@ public class ModPack implements IModPack {
                    String[] entryPointCandidates,
                    String containerName,
                    String containerId,
-                   String status,
+                   PackStatus status,
                    Instant lastDeployAt,
                    String lastDeployError,
                    Instant updatedAt) {
@@ -74,7 +73,7 @@ public class ModPack implements IModPack {
     public String getContainerName() { return containerName; }
     public String getContainerId() { return containerId; }
     public Boolean getIsDeployed() {return isDeployed;}
-    public String getStatus() { return status; }
+    public PackStatus getStatus() { return status; }
     public Instant getLastDeployAt() { return lastDeployAt; }
     public String getLastDeployError() { return lastDeployError; }
     public Instant getUpdatedAt() { return updatedAt; }
@@ -92,7 +91,7 @@ public class ModPack implements IModPack {
     public void setContainerName(String containerName) { this.containerName = containerName; }
     public void setContainerId(String containerId) { this.containerId = containerId; }
     public void setIsDeployed(boolean isDeployed) {this.isDeployed = isDeployed;}
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(PackStatus status) { this.status = status; }
     public void setLastDeployAt(Instant lastDeployAt) { this.lastDeployAt = lastDeployAt; }
     public void setLastDeployError(String lastDeployError) { this.lastDeployError = lastDeployError; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }

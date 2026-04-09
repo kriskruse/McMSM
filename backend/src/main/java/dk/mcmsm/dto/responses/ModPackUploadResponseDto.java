@@ -4,7 +4,7 @@ import dk.mcmsm.entities.ModPack;
 
 import java.util.Objects;
 
-import static dk.mcmsm.services.FileService.DEFAULT_JAVA_XMX;
+import static dk.mcmsm.services.ModPackFileService.DEFAULT_JAVA_XMX;
 
 public record ModPackUploadResponseDto(
         Long packId,

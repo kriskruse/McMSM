@@ -5,6 +5,9 @@ import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackMetadataResponseDto;
 import dk.mcmsm.dto.responses.ModPackUploadResponseDto;
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.entities.PackStatus;
+import dk.mcmsm.exception.ModPackNotFoundException;
+import dk.mcmsm.exception.ModPackOperationException;
 import dk.mcmsm.repository.ModPackRepository;
 import dk.mcmsm.services.ContainerService.DeploymentResult;
 import dk.mcmsm.services.ContainerService.RuntimeState;
@@ -19,6 +22,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Core business logic for modpack lifecycle operations.
+ */
 @Service
 public class McModPackService {
     private static final Logger logger = LoggerFactory.getLogger(McModPackService.class);
@@ -28,14 +34,19 @@ public class McModPackService {
 
     private final ContainerService containerService;
     private final ModPackRepository modPackRepository;
-    private final FileService fileService;
+    private final ModPackFileService fileService;
 
-    public McModPackService(ContainerService containerService, ModPackRepository modPackRepository, FileService fileService) {
+    public McModPackService(ContainerService containerService, ModPackRepository modPackRepository, ModPackFileService fileService) {
         this.containerService = containerService;
         this.modPackRepository = modPackRepository;
         this.fileService = fileService;
     }
 
+    /**
+     * Returns all modpacks after pruning stale entries.
+     *
+     * @return list of all modpacks
+     */
     public List<ModPack> getAllPacks() {
         removeMissingPackEntries();
         List<ModPack> packs = modPackRepository.findAll();
@@ -43,6 +54,11 @@ public class McModPackService {
         return packs;
     }
 
+    /**
+     * Returns modpacks that are saved but not deployed.
+     *
+     * @return list of non-deployed modpacks
+     */
     public List<ModPack> getSavedPacks() {
         removeMissingPackEntries();
         List<ModPack> packs = modPackRepository.getAllByIsDeployed(false);
@@ -50,6 +66,11 @@ public class McModPackService {
         return packs;
     }
 
+    /**
+     * Returns modpacks that are currently deployed.
+     *
+     * @return list of deployed modpacks
+     */
     public List<ModPack> getDeployedPacks() {
         removeMissingPackEntries();
         List<ModPack> packs = modPackRepository.getAllByIsDeployed(true);
@@ -57,6 +78,12 @@ public class McModPackService {
         return packs;
     }
 
+    /**
+     * Processes an uploaded modpack archive: extracts, saves metadata, and assigns storage.
+     *
+     * @param file the uploaded archive
+     * @return upload response with inferred metadata
+     */
     public ModPackUploadResponseDto savePack(MultipartFile file) {
         logger.info("Saving uploaded modpack file='{}' ({} bytes).", file.getOriginalFilename(), file.getSize());
         ModPack createdModPack = fileService.createDraftModPackFromFile(file);
@@ -67,10 +94,18 @@ public class McModPackService {
         return new ModPackUploadResponseDto(savedModPack, UPLOAD_SUCCESS_MESSAGE);
     }
 
+    /**
+     * Updates modpack metadata fields.
+     *
+     * @param packId          the modpack ID
+     * @param metadataRequest the new metadata values
+     * @return updated metadata response
+     * @throws ModPackNotFoundException if the modpack does not exist
+     */
     public ModPackMetadataResponseDto updateMetadata(Long packId, ModPackMetadataRequestDto metadataRequest) {
         logger.info("Updating metadata for modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         if (!fileService.packDirectoryExists(modPack)) {
             modPackRepository.delete(modPack);
@@ -85,10 +120,18 @@ public class McModPackService {
         return new ModPackMetadataResponseDto(savedModPack, METADATA_SUCCESS_MESSAGE);
     }
 
+    /**
+     * Deploys a modpack to a Docker container.
+     *
+     * @param packId the modpack ID
+     * @return deployment response with container details
+     * @throws ModPackNotFoundException   if the modpack does not exist
+     * @throws ModPackOperationException if the deployment fails
+     */
     public ModPackDeployResponseDto deployPack(Long packId) {
         logger.info("Deploying modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         try {
             fileService.syncServerPortWithMetadata(modPack);
@@ -98,7 +141,7 @@ public class McModPackService {
             modPack.setContainerId(deploymentResult.containerId());
             modPack.setContainerName(deploymentResult.containerName());
             modPack.setIsDeployed(true);
-            modPack.setStatus("running");
+            modPack.setStatus(PackStatus.RUNNING);
             modPack.setLastDeployAt(Instant.now());
             modPack.setLastDeployError(null);
             modPack.setUpdatedAt(Instant.now());
@@ -123,76 +166,93 @@ public class McModPackService {
             );
         } catch (Exception e) {
             modPack.setIsDeployed(false);
-            modPack.setStatus("deploy_failed");
+            modPack.setStatus(PackStatus.DEPLOY_FAILED);
             modPack.setLastDeployError(e.getMessage());
             modPack.setLastDeployAt(Instant.now());
             modPack.setUpdatedAt(Instant.now());
             modPackRepository.save(modPack);
             logger.error("Deployment failed for modpack packId={}", packId, e);
-            throw new RuntimeException("Failed to deploy mod pack with ID: " + packId, e);
+            throw new ModPackOperationException(packId, "deploy", e);
         }
     }
 
+    /**
+     * Starts a deployed modpack's Docker container.
+     *
+     * @param packId the modpack ID
+     * @return deployment response with updated state
+     * @throws ModPackNotFoundException   if the modpack does not exist
+     * @throws ModPackOperationException if the start fails
+     */
     public ModPackDeployResponseDto startPack(Long packId) {
         logger.info("Starting modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         try {
             RuntimeState runtimeState = containerService.startContainer(modPack);
             modPack.setContainerId(runtimeState.containerId());
             modPack.setContainerName(runtimeState.containerName());
             modPack.setIsDeployed(true);
-            modPack.setStatus("running");
+            modPack.setStatus(PackStatus.RUNNING);
             modPack.setUpdatedAt(Instant.now());
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Start succeeded for modpack packId={}, containerId='{}'", savedModPack.getPackId(), savedModPack.getContainerId());
             return new ModPackDeployResponseDto(savedModPack, "Mod pack started successfully.");
         } catch (Exception e) {
-            modPack.setStatus("error");
+            modPack.setStatus(PackStatus.ERROR);
             modPack.setUpdatedAt(Instant.now());
             modPackRepository.save(modPack);
             logger.error("Start failed for modpack packId={}", packId, e);
-            throw new RuntimeException("Failed to start mod pack with ID: " + packId, e);
+            throw new ModPackOperationException(packId, "start", e);
         }
     }
 
     /**
-     * Stops a modpack that is currently deployed and running in docker using the packId provided
-     * @param packId Long pack id
-     * @return ModPackDeployResponseDto
+     * Stops a modpack that is currently deployed and running in Docker.
+     *
+     * @param packId the modpack ID
+     * @return deployment response with updated state
+     * @throws ModPackNotFoundException   if the modpack does not exist
+     * @throws ModPackOperationException if the stop fails
      */
     public ModPackDeployResponseDto stopPack(Long packId) {
-
         logger.info("Stopping modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         try {
             RuntimeState runtimeState = containerService.stopContainer(modPack);
             modPack.setContainerId(runtimeState.containerId());
             modPack.setContainerName(runtimeState.containerName());
             modPack.setIsDeployed(true);
-            modPack.setStatus("stopped");
+            modPack.setStatus(PackStatus.STOPPED);
             modPack.setUpdatedAt(Instant.now());
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Stop succeeded for modpack packId={}, containerId='{}'", savedModPack.getPackId(), savedModPack.getContainerId());
             return new ModPackDeployResponseDto(savedModPack, "Mod pack stopped successfully.");
         } catch (Exception e) {
-            modPack.setStatus("error");
+            modPack.setStatus(PackStatus.ERROR);
             modPack.setUpdatedAt(Instant.now());
             modPackRepository.save(modPack);
             logger.error("Stop failed for modpack packId={}", packId, e);
-            throw new RuntimeException("Failed to stop mod pack with ID: " + packId, e);
+            throw new ModPackOperationException(packId, "stop", e);
         }
     }
 
+    /**
+     * Deletes a modpack: removes the container, files, and metadata.
+     *
+     * @param packId the modpack ID
+     * @throws ModPackNotFoundException   if the modpack does not exist
+     * @throws ModPackOperationException if the deletion fails
+     */
     public void deletePack(Long packId) {
         logger.info("Deleting modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         try {
             containerService.deleteContainer(modPack);
@@ -201,41 +261,96 @@ public class McModPackService {
             logger.info("Deleted modpack packId={} and associated resources.", packId);
         } catch (Exception e) {
             logger.error("Delete failed for modpack packId={}", packId, e);
-            throw new RuntimeException("Failed to delete mod pack with ID: " + packId, e);
+            throw new ModPackOperationException(packId, "delete", e);
         }
     }
 
+    /**
+     * Archives a deployed modpack: removes the container but retains files on disk.
+     *
+     * @param packId the modpack ID
+     * @return deployment response with archived state
+     * @throws ModPackNotFoundException   if the modpack does not exist
+     * @throws ModPackOperationException if the archive fails
+     */
     public ModPackDeployResponseDto archivePack(Long packId) {
         logger.info("Archiving deployed runtime for modpack packId={}", packId);
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         try {
             containerService.deleteContainer(modPack);
             modPack.setContainerId(null);
             modPack.setContainerName(null);
             modPack.setIsDeployed(false);
-            modPack.setStatus("not_deployed");
+            modPack.setStatus(PackStatus.NOT_DEPLOYED);
             modPack.setUpdatedAt(Instant.now());
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info("Archived runtime for modpack packId={}. Files retained at '{}'.", savedModPack.getPackId(), savedModPack.getPath());
             return new ModPackDeployResponseDto(savedModPack, "Mod pack archived. Container removed and files retained.");
         } catch (Exception e) {
-            modPack.setStatus("error");
+            modPack.setStatus(PackStatus.ERROR);
             modPack.setUpdatedAt(Instant.now());
             modPackRepository.save(modPack);
             logger.error("Archive failed for modpack packId={}", packId, e);
-            throw new RuntimeException("Failed to archive mod pack with ID: " + packId, e);
+            throw new ModPackOperationException(packId, "archive", e);
         }
     }
 
+    /**
+     * Reads Docker container logs for a modpack.
+     *
+     * @param packId    the modpack ID
+     * @param tailLines number of trailing log lines to fetch
+     * @return the container log output
+     * @throws ModPackNotFoundException if the modpack does not exist
+     */
     public String getPackLogs(Long packId, Integer tailLines) {
         ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         int effectiveTail = tailLines == null ? 200 : tailLines;
         return containerService.readContainerLogs(modPack, effectiveTail);
+    }
+
+    /**
+     * Updates a modpack with a new archive: stops the running instance, uploads new files,
+     * preserves world/properties/whitelist, and redeploys.
+     *
+     * @param packId the modpack ID to update
+     * @param file   the new modpack archive
+     * @return upload response with result
+     * @throws ModPackNotFoundException if the modpack does not exist
+     */
+    public ModPackUploadResponseDto updatePack(Long packId, MultipartFile file) {
+        ModPack modPack = modPackRepository.findByPackId(packId)
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
+
+        if (Boolean.TRUE.equals(modPack.getIsDeployed())) {
+            stopPack(packId);
+        }
+
+        try {
+            stopPack(packId);
+            archivePack(packId);
+
+            ModPackUploadResponseDto savePackResponse = savePack(file);
+            ModPack newPack = modPackRepository.findByPackId(savePackResponse.packId())
+                    .orElseThrow(() -> new ModPackOperationException(packId, "update",
+                            new IllegalStateException("Failed to find newly saved mod pack with ID: " + savePackResponse.packId())));
+
+            fileService.copyAndOverwriteFileFromTo("world", modPack.getPath(), newPack.getPath());
+            fileService.copyAndOverwriteFileFromTo("server.properties", modPack.getPath(), newPack.getPath());
+            fileService.copyAndOverwriteFileFromTo("whitelist.txt", modPack.getPath(), newPack.getPath());
+
+            deployPack(newPack.getPackId());
+
+            return new ModPackUploadResponseDto(modPack, UPLOAD_SUCCESS_MESSAGE);
+        } catch (Exception e) {
+            logger.error("Update failed for modpack packId={}", packId, e);
+            return new ModPackUploadResponseDto(e.getMessage());
+        }
     }
 
     private void removeMissingPackEntries() {
@@ -258,42 +373,7 @@ public class McModPackService {
         }
     }
 
-    public ModPackUploadResponseDto updatePack(Long packId, MultipartFile file) {
-        ModPack modPack = modPackRepository.findByPackId(packId)
-                .orElseThrow(() -> new RuntimeException("Mod pack not found with ID: " + packId));
-        if (modPack.getIsDeployed() == true) {
-            stopPack(packId);
-        }
-
-        try {
-            stopPack(packId);
-            archivePack(packId);
-
-            ModPackUploadResponseDto savePackResponse = savePack(file);
-            Optional<ModPack> optNewPack = fileService.findModPackById(savePackResponse.packId());
-
-            if (optNewPack.isEmpty()) {
-                logger.error("Failed to find newly saved mod pack with ID: {} after saving. This should not happen.", savePackResponse.packId());
-                throw new RuntimeException("Failed to find newly saved mod pack with ID: " + savePackResponse.packId());
-            }
-            ModPack newPack = optNewPack.get(); // unpack
-
-            fileService.copyAndOverwriteFileFromTo("world", modPack.getPath(), newPack.getPath());
-            fileService.copyAndOverwriteFileFromTo("server.properties", modPack.getPath(), newPack.getPath());
-            fileService.copyAndOverwriteFileFromTo("whitelist.txt", modPack.getPath(), newPack.getPath());
-
-            deployPack(newPack.getPackId());
-
-            return new ModPackUploadResponseDto(modPack, UPLOAD_SUCCESS_MESSAGE);
-
-        } catch (Exception e) {
-            logger.error("Update failed for modpack packId={}", packId, e);
-            return new ModPackUploadResponseDto(e.getMessage());
-        }
-    }
-
     private void applyMetadataUpdate(ModPack modPack, ModPackMetadataRequestDto metadataRequest) {
-        //TODO: this should be handled in the modpack class not here
         Objects.requireNonNull(metadataRequest, "metadataRequest must not be null");
 
         if (StringUtils.hasText(metadataRequest.name())) {
@@ -318,5 +398,4 @@ public class McModPackService {
             modPack.setEntryPoint(metadataRequest.entryPoint());
         }
     }
-
 }

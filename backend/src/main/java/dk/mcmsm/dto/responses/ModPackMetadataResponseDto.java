@@ -1,10 +1,11 @@
 package dk.mcmsm.dto.responses;
 
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.entities.PackStatus;
 
 import java.util.Objects;
 
-import static dk.mcmsm.services.FileService.DEFAULT_JAVA_XMX;
+import static dk.mcmsm.services.ModPackFileService.DEFAULT_JAVA_XMX;
 
 public record ModPackMetadataResponseDto(
         Long packId,
@@ -18,7 +19,7 @@ public record ModPackMetadataResponseDto(
         String entryPoint,
         String[] entryPointCandidates,
         Boolean isDeployed,
-        String status,
+        PackStatus status,
         String message
 ) {
     public ModPackMetadataResponseDto(Long packId, String message) {
@@ -37,6 +38,7 @@ public record ModPackMetadataResponseDto(
                 message
         );
     }
+
     public ModPackMetadataResponseDto(ModPack modPack, String message) {
         this(
                 modPack.getPackId(),

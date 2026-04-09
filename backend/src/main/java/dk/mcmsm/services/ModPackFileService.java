@@ -1,14 +1,7 @@
 package dk.mcmsm.services;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
 import dk.mcmsm.entities.ModPack;
-import dk.mcmsm.entities.UserEntity;
+import dk.mcmsm.entities.PackStatus;
 import dk.mcmsm.util.ZipArchiveUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,24 +20,25 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.UUID;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+/**
+ * Handles modpack file operations: archive extraction, directory management,
+ * server configuration sync, and file copy/delete operations.
+ */
 @Service
-public class FileService {
-    private static final Logger logger = LoggerFactory.getLogger(FileService.class);
-    private static final String DEFAULT_STATUS = "not_deployed";
+public class ModPackFileService {
+    private static final Logger logger = LoggerFactory.getLogger(ModPackFileService.class);
+    private static final PackStatus DEFAULT_STATUS = PackStatus.NOT_DEPLOYED;
     private static final String DEFAULT_PACK_VERSION = "unknown";
     private static final String DEFAULT_MINECRAFT_VERSION = "unknown";
     private static final Integer DEFAULT_JAVA_VERSION = 21;
@@ -58,195 +50,38 @@ public class FileService {
     private static final int XMX_OVERHEAD_MIB = 250;
     private static final Pattern XMX_PATTERN = Pattern.compile("(?i)^(?:-Xmx)?(\\d+)([mMgG])$");
     private static final Pattern PACK_VERSION_PATTERN = Pattern.compile("(?:^|[-_])(\\d+(?:[.-]\\d+){2,})");
-    private static final Type USER_LIST_TYPE = new TypeToken<List<UserEntity>>() { }.getType();
-    private static final Type MODPACK_LIST_TYPE = new TypeToken<List<ModPack>>() { }.getType();
 
     private final Path modpacksRoot;
     private final Path tempRoot;
-    private final Path metadataRoot;
-    private final Path usersFile;
-    private final Path modpacksMetadataFile;
     private final ResourceLoader resourceLoader;
-    private final Gson gson;
-    private final ReentrantReadWriteLock usersLock = new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock modpacksLock = new ReentrantReadWriteLock();
 
-    public FileService(
+    public ModPackFileService(
             @Value("${app.storage.modpacks-root:modpacks}") String modpacksRootPath,
             @Value("${app.storage.temp-root:${java.io.tmpdir}/application-demo}") String tempRootPath,
-            @Value("${app.storage.metadata-root:data}") String metadataRootPath,
             ResourceLoader resourceLoader
     ) {
         this.modpacksRoot = Path.of(modpacksRootPath).toAbsolutePath().normalize();
         this.tempRoot = Path.of(tempRootPath).toAbsolutePath().normalize();
-        this.metadataRoot = Path.of(metadataRootPath).toAbsolutePath().normalize();
-        this.usersFile = this.metadataRoot.resolve("users.json");
-        this.modpacksMetadataFile = this.metadataRoot.resolve("modpacks.json");
         this.resourceLoader = resourceLoader;
-        JsonSerializer<Instant> instantSerializer = (src, typeOfSrc, context) -> new JsonPrimitive(src.toString());
-        JsonDeserializer<Instant> instantDeserializer = (json, typeOfT, context) -> {
-            try {
-                return Instant.parse(json.getAsString());
-            } catch (Exception ex) {
-                throw new JsonParseException("Invalid Instant value: " + json, ex);
-            }
-        };
-
-        this.gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Instant.class, instantSerializer)
-                .registerTypeAdapter(Instant.class, instantDeserializer)
-                .create();
-
-        initializeMetadataStore();
     }
 
-    public List<UserEntity> getAllUsers() {
-        return readUsers();
-    }
-
-    public Optional<UserEntity> findUserByUsername(String username) {
-        return readUsers().stream()
-                .filter(user -> Objects.equals(user.getUsername(), username))
-                .findFirst();
-    }
-
-    public Optional<UserEntity> findUserByUsernameAndPassword(String username, String password) {
-        return readUsers().stream()
-                .filter(user -> Objects.equals(user.getUsername(), username) && Objects.equals(user.getPassword(), password))
-                .findFirst();
-    }
-
-    public boolean existsByUsername(String username) {
-        return findUserByUsername(username).isPresent();
-    }
-
-    public UserEntity saveUser(UserEntity userEntity) {
-        Objects.requireNonNull(userEntity, "userEntity must not be null");
-
-        var lock = usersLock.writeLock();
-        lock.lock();
-        try {
-            List<UserEntity> users = this.readJsonList(usersFile, USER_LIST_TYPE);
-            if (userEntity.getId() == null) {
-                userEntity.setId(nextUserId(users));
-                users.add(userEntity);
-            } else {
-                var replaced = false;
-                for (var index = 0; index < users.size(); index++) {
-                    if (Objects.equals(users.get(index).getId(), userEntity.getId())) {
-                        users.set(index, userEntity);
-                        replaced = true;
-                        break;
-                    }
-                }
-
-                if (!replaced) {
-                    users.add(userEntity);
-                }
-            }
-
-            writeJsonList(usersFile, users);
-            return userEntity;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public List<ModPack> getAllModPacks() {
-        return readModPacks();
-    }
-
-    public List<ModPack> getAllModPacksByDeployment(boolean isDeployed) {
-        return readModPacks().stream()
-                .filter(pack -> Objects.equals(Boolean.TRUE.equals(pack.getIsDeployed()), isDeployed))
-                .toList();
-    }
-
-    public Optional<ModPack> findModPackById(Long packId) {
-        return readModPacks().stream()
-                .filter(pack -> Objects.equals(pack.getPackId(), packId))
-                .findFirst();
-    }
-
-    public boolean existsModPackByName(String name) {
-        return readModPacks().stream().anyMatch(pack -> Objects.equals(pack.getName(), name));
-    }
-
-    public ModPack saveModPack(ModPack modPack) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-
-        var lock = modpacksLock.writeLock();
-        lock.lock();
-        try {
-            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
-            if (modPack.getPackId() == null) {
-                modPack.setPackId(nextModPackId(modPacks));
-                modPacks.add(modPack);
-            } else {
-                var replaced = false;
-                for (var index = 0; index < modPacks.size(); index++) {
-                    if (Objects.equals(modPacks.get(index).getPackId(), modPack.getPackId())) {
-                        modPacks.set(index, modPack);
-                        replaced = true;
-                        break;
-                    }
-                }
-
-                if (!replaced) {
-                    modPacks.add(modPack);
-                }
-            }
-
-            writeJsonList(modpacksMetadataFile, modPacks);
-            return modPack;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void deleteModPack(ModPack modPack) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-        deleteModPackById(modPack.getPackId());
-    }
-
-    public void deleteModPackById(Long packId) {
-        var lock = modpacksLock.writeLock();
-        lock.lock();
-        try {
-            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
-            modPacks.removeIf(pack -> Objects.equals(pack.getPackId(), packId));
-            writeJsonList(modpacksMetadataFile, modPacks);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void deleteAllModPacks(List<ModPack> stalePacks) {
-        var staleIds = stalePacks.stream().map(ModPack::getPackId).toList();
-
-        var lock = modpacksLock.writeLock();
-        lock.lock();
-        try {
-            List<ModPack> modPacks = this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
-            modPacks.removeIf(pack -> staleIds.contains(pack.getPackId()));
-            writeJsonList(modpacksMetadataFile, modPacks);
-        } finally {
-            lock.unlock();
-        }
-    }
-
+    /**
+     * Creates a draft modpack from an uploaded archive file.
+     * Extracts the archive, copies template files, and infers metadata.
+     *
+     * @param file the uploaded modpack archive
+     * @return a new unsaved {@link ModPack} with inferred metadata
+     */
     public ModPack createDraftModPackFromFile(MultipartFile file) {
         Objects.requireNonNull(file, "file must not be null");
 
-        String originalName = Objects.requireNonNullElse(file.getOriginalFilename(), "unknown-modpack.zip");
-        String normalizedName = originalName.replace('\\', '/');
-        String fileName = normalizedName.substring(normalizedName.lastIndexOf('/') + 1);
-        String packVersion = inferPackVersion(fileName);
-        String inferredName = sanitizePackName(stripExtension(fileName), packVersion);
-        Path stagingDirectory = modpacksRoot.resolve("draft-" + UUID.randomUUID()).normalize();
-
-        Path archivePath = tempRoot.resolve(UUID.randomUUID() + "-" + fileName).normalize();
+        var originalName = Objects.requireNonNullElse(file.getOriginalFilename(), "unknown-modpack.zip");
+        var normalizedName = originalName.replace('\\', '/');
+        var fileName = normalizedName.substring(normalizedName.lastIndexOf('/') + 1);
+        var packVersion = inferPackVersion(fileName);
+        var inferredName = sanitizePackName(stripExtension(fileName), packVersion);
+        var stagingDirectory = modpacksRoot.resolve("draft-" + UUID.randomUUID()).normalize();
+        var archivePath = tempRoot.resolve(UUID.randomUUID() + "-" + fileName).normalize();
 
         logger.info("Preparing draft modpack from archive originalName='{}', inferredName='{}'.", originalName, inferredName);
 
@@ -271,7 +106,6 @@ public class FileService {
             try {
                 Files.deleteIfExists(archivePath);
             } catch (IOException ignored) {
-                // Non-fatal cleanup failure for temporary archive.
                 logger.warn("Failed to clean temporary archive '{}'.", archivePath);
             }
         }
@@ -300,6 +134,11 @@ public class FileService {
         );
     }
 
+    /**
+     * Synchronizes the server-port entry in server.properties with the modpack's configured port.
+     *
+     * @param modPack the modpack whose port should be written
+     */
     public void syncServerPortWithMetadata(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
 
@@ -323,6 +162,12 @@ public class FileService {
         }
     }
 
+    /**
+     * Calculates the Docker container memory limit from the modpack's JVM Xmx setting.
+     *
+     * @param modPack the modpack to resolve memory for
+     * @return memory limit in MiB (Xmx + overhead)
+     */
     public int resolveContainerMemoryLimitMiB(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         var xmxMiB = parseXmxMiB(Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX)).orElse(DEFAULT_XMX_MIB);
@@ -331,6 +176,12 @@ public class FileService {
         return limitMiB;
     }
 
+    /**
+     * Checks whether the modpack's directory exists on disk.
+     *
+     * @param modPack the modpack to check
+     * @return true if the directory exists
+     */
     public boolean packDirectoryExists(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         if (!hasText(modPack.getPath())) {
@@ -345,6 +196,11 @@ public class FileService {
         }
     }
 
+    /**
+     * Recursively deletes the modpack's directory from disk.
+     *
+     * @param modPack the modpack whose directory should be deleted
+     */
     public void deletePackDirectory(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         var packPath = resolvePackPath(modPack);
@@ -370,6 +226,11 @@ public class FileService {
         }
     }
 
+    /**
+     * Moves the modpack directory from its staging path to a permanent path based on pack ID.
+     *
+     * @param modPack the modpack to relocate (must have a non-null pack ID)
+     */
     public void assignImmutablePackDirectoryPath(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         if (modPack.getPackId() == null) {
@@ -406,99 +267,39 @@ public class FileService {
         modPack.setPath(targetPath.toString());
     }
 
-    private void initializeMetadataStore() {
+    /**
+     * Copies a file or directory from one modpack root to another, overwriting existing content.
+     *
+     * @param item the relative path of the item to copy
+     * @param from the source root directory
+     * @param to   the target root directory
+     */
+    public void copyAndOverwriteFileFromTo(String item, String from, String to) {
+        if (!hasText(item) || !hasText(from) || !hasText(to)) {
+            throw new IllegalArgumentException("item, from and to must contain text.");
+        }
+
+        var sourceRoot = Path.of(from).toAbsolutePath().normalize();
+        var targetRoot = Path.of(to).toAbsolutePath().normalize();
+        var sourcePath = sourceRoot.resolve(item).normalize();
+        var targetPath = targetRoot.resolve(item).normalize();
+
+        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
+        ensurePathWithinRoot(targetPath, targetRoot, "target");
+
+        if (!Files.exists(sourcePath)) {
+            throw new IllegalStateException("Source path does not exist: " + sourcePath);
+        }
+
         try {
-            Files.createDirectories(metadataRoot);
-            ensureJsonFileInitialized(usersFile);
-            ensureJsonFileInitialized(modpacksMetadataFile);
+            Files.createDirectories(targetRoot);
+            copyRecursivelyWithOverwrite(sourcePath, targetPath);
+            logger.info("Copied '{}' from '{}' to '{}' with overwrite enabled.", item, sourceRoot, targetRoot);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed initializing file metadata store.", e);
+            logger.error("Failed copying '{}' from '{}' to '{}'.", item, sourceRoot, targetRoot, e);
+            throw new IllegalStateException("Failed copying item from source to target.", e);
         }
     }
-
-    private void ensureJsonFileInitialized(Path filePath) throws IOException {
-        if (Files.exists(filePath)) {
-            return;
-        }
-
-        Files.createDirectories(Objects.requireNonNullElse(filePath.getParent(), metadataRoot));
-        Files.writeString(filePath, "[]", CREATE, TRUNCATE_EXISTING);
-    }
-
-    private List<UserEntity> readUsers() {
-        var lock = usersLock.readLock();
-        lock.lock();
-        try {
-            return this.<UserEntity>readJsonList(usersFile, USER_LIST_TYPE);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private List<ModPack> readModPacks() {
-        var lock = modpacksLock.readLock();
-        lock.lock();
-        try {
-            return this.<ModPack>readJsonList(modpacksMetadataFile, MODPACK_LIST_TYPE);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private <T> List<T> readJsonList(Path filePath, Type listType) {
-        try {
-            ensureJsonFileInitialized(filePath);
-            var raw = Files.readString(filePath, StandardCharsets.UTF_8);
-            if (raw.isBlank()) {
-                return new ArrayList<>();
-            }
-
-            List<T> parsed = gson.fromJson(raw, listType);
-            return parsed == null ? new ArrayList<>() : new ArrayList<>(parsed);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed reading metadata file: " + filePath, e);
-        }
-    }
-
-    private <T> void writeJsonList(Path filePath, List<T> entries) {
-        try {
-            Files.createDirectories(Objects.requireNonNullElse(filePath.getParent(), metadataRoot));
-            var tempFile = Files.createTempFile(metadataRoot, "store-", ".tmp");
-            try {
-                Files.writeString(tempFile, gson.toJson(entries), StandardCharsets.UTF_8, CREATE, TRUNCATE_EXISTING);
-                moveAtomicallyOrReplace(tempFile, filePath);
-            } finally {
-                Files.deleteIfExists(tempFile);
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed writing metadata file: " + filePath, e);
-        }
-    }
-
-    private void moveAtomicallyOrReplace(Path source, Path target) throws IOException {
-        try {
-            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException atomicMoveException) {
-            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-
-    private Long nextUserId(List<UserEntity> users) {
-        return users.stream()
-                .map(UserEntity::getId)
-                .filter(Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElse(0L) + 1;
-    }
-
-    private Long nextModPackId(List<ModPack> modPacks) {
-        return modPacks.stream()
-                .map(ModPack::getPackId)
-                .filter(Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElse(0L) + 1;
-    }
-
 
     private void copyTemplateFile(String templateName, Path targetPath) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:templates/" + templateName);
@@ -555,7 +356,7 @@ public class FileService {
     }
 
     private Optional<String> parseXmxToken(List<String> lines) {
-        for (String line : lines) {
+        for (var line : lines) {
             var trimmed = line.trim();
             if (trimmed.isEmpty() || trimmed.startsWith("#")) {
                 continue;
@@ -574,10 +375,10 @@ public class FileService {
 
     private String sanitizePackName(String name, String packVersion) {
         if (name.isEmpty()) name = "";
-        String noPackVersion = name.replace(packVersion, " ");
-        String cleaned = noPackVersion.replaceAll("[^a-zA-Z]", " ");
-        String cleaned2 = cleaned.replaceAll("\s{2,}", " ");
-        return cleaned2.isBlank() ? "modpack" : cleaned2.trim();
+        var noPackVersion = name.replace(packVersion, " ");
+        var cleaned = noPackVersion.replaceAll("[^a-zA-Z]", " ");
+        var collapsed = cleaned.replaceAll("\\s{2,}", " ");
+        return collapsed.isBlank() ? "modpack" : collapsed.trim();
     }
 
     private String inferPackVersion(String fileName) {
@@ -590,7 +391,6 @@ public class FileService {
             return DEFAULT_PACK_VERSION;
         }
 
-        // Normalize separators so versions are stored consistently.
         return matcher.group(1).replace('-', '.');
     }
 
@@ -624,10 +424,8 @@ public class FileService {
         if (entryPointCandidates == null || entryPointCandidates.length == 0) {
             return DEFAULT_ENTRYPOINT;
         }
-
         return entryPointCandidates[0];
     }
-
 
     private String stripExtension(String fileName) {
         var extensionIndex = fileName.lastIndexOf('.');
@@ -635,33 +433,6 @@ public class FileService {
             return fileName;
         }
         return fileName.substring(0, extensionIndex);
-    }
-
-    public void copyAndOverwriteFileFromTo(String item, String from, String to) {
-        if (!hasText(item) || !hasText(from) || !hasText(to)) {
-            throw new IllegalArgumentException("item, from and to must contain text.");
-        }
-
-        var sourceRoot = Path.of(from).toAbsolutePath().normalize();
-        var targetRoot = Path.of(to).toAbsolutePath().normalize();
-        var sourcePath = sourceRoot.resolve(item).normalize();
-        var targetPath = targetRoot.resolve(item).normalize();
-
-        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
-        ensurePathWithinRoot(targetPath, targetRoot, "target");
-
-        if (!Files.exists(sourcePath)) {
-            throw new IllegalStateException("Source path does not exist: " + sourcePath);
-        }
-
-        try {
-            Files.createDirectories(targetRoot);
-            copyRecursivelyWithOverwrite(sourcePath, targetPath);
-            logger.info("Copied '{}' from '{}' to '{}' with overwrite enabled.", item, sourceRoot, targetRoot);
-        } catch (IOException e) {
-            logger.error("Failed copying '{}' from '{}' to '{}'.", item, sourceRoot, targetRoot, e);
-            throw new IllegalStateException("Failed copying item from source to target.", e);
-        }
     }
 
     private void copyRecursivelyWithOverwrite(Path sourcePath, Path targetPath) throws IOException {
@@ -732,4 +503,3 @@ public class FileService {
         throw new IllegalArgumentException("Resolved " + label + " path escaped its root: " + candidate);
     }
 }
-

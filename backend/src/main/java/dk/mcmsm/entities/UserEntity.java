@@ -1,8 +1,6 @@
 package dk.mcmsm.entities;
 
-import dk.mcmsm.interfaces.IUserEntity;
-
-public class UserEntity implements IUserEntity {
+public class UserEntity {
 
     private Long id;
     private String username;

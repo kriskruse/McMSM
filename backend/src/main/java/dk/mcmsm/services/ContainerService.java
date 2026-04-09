@@ -15,6 +15,7 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.entities.PackStatus;
 import dk.mcmsm.repository.ModPackRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,8 +305,8 @@ public class ContainerService {
     private boolean applyNotDeployedState(ModPack modPack) {
         var changed = false;
 
-        if (!"not_deployed".equals(modPack.getStatus())) {
-            modPack.setStatus("not_deployed");
+        if (modPack.getStatus() != PackStatus.NOT_DEPLOYED) {
+            modPack.setStatus(PackStatus.NOT_DEPLOYED);
             changed = true;
         }
         if (Boolean.TRUE.equals(modPack.getIsDeployed())) {
@@ -326,9 +327,9 @@ public class ContainerService {
 
     private boolean applyRuntimeState(ModPack modPack, RuntimeState runtimeState) {
         var changed = false;
-        var expectedStatus = runtimeState.running() ? "running" : "stopped";
+        var expectedStatus = runtimeState.running() ? PackStatus.RUNNING : PackStatus.STOPPED;
 
-        if (!expectedStatus.equals(modPack.getStatus())) {
+        if (expectedStatus != modPack.getStatus()) {
             modPack.setStatus(expectedStatus);
             changed = true;
         }

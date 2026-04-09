@@ -1,6 +1,7 @@
 package dk.mcmsm.dto.responses;
 
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.entities.PackStatus;
 
 public record ModPackDeployResponseDto(
         Long packId,
@@ -9,10 +10,10 @@ public record ModPackDeployResponseDto(
         String containerName,
         String image,
         Integer memoryLimitMiB,
-        String status,
+        PackStatus status,
         String message
 ) {
-    public ModPackDeployResponseDto(Long packId, String status , String message){
+    public ModPackDeployResponseDto(Long packId, PackStatus status, String message) {
         this(
                 packId,
                 null,
@@ -24,6 +25,7 @@ public record ModPackDeployResponseDto(
                 message
         );
     }
+
     public ModPackDeployResponseDto(ModPack modPack, String message) {
         this(
                 modPack.getPackId(),
