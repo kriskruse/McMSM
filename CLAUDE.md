@@ -86,11 +86,52 @@ Configured in `backend/src/main/resources/application.properties`, all overridab
 | `MAX_UPLOAD_REQUEST_SIZE` | `8024MB` | Max request size |
 
 ## Releases
-Triggered by pushing a version tag or `workflow_dispatch` from `.github/workflows/release.yml`. Builds the JAR and creates a GitHub release as `McMSM-{version}.jar`.
+Triggered by pushing a version tag or `workflow_dispatch`. Builds the JAR and creates a GitHub release as `McMSM-{version}.jar`.
 
 ```bash
 git tag v1.0 && git push origin v1.0
 ```
 
+The CI workflow (`.github/workflows/release.yml`) uses Java 25 Temurin and Node.js 22. Version is read from `backend/pom.xml`. Release notes are auto-generated from commits since the previous tag, formatted as:
+```
+- `{shortSha}` - {title} - {author}
+```
+
+## Java Coding Standards
+
+Apply to all `.java` files:
+
+- **DTOs and data holders** → use Java Records instead of classes
+- **Pattern matching** → use `instanceof` patterns and `switch` expressions
+- **Type inference** → use `var` when the type is obvious from the right-hand side
+- **Immutability** → prefer `final`, `List.of()`, `Map.of()`, `Stream.toList()`
+- **Streams** → use Streams API + lambdas/method references for collections
+- **Null handling** → avoid `null`; use `Optional<T>` for possibly-absent values
+- **Resources** → always use try-with-resources for streams, files, sockets (S2095)
+- **Empty catch blocks** → always log or handle exceptions (S1188)
+- **Magic numbers** → replace with named constants (S109)
+- **Long methods** → break into smaller units; reduce cognitive complexity (S138, S3776)
+
+**Naming** (Google Java style): `UpperCamelCase` classes, `lowerCamelCase` methods/variables, `UPPER_SNAKE_CASE` constants, `lowercase` packages. Nouns for classes, verbs for methods. No abbreviations.
+
+### Javadoc
+Public and protected members must have Javadoc. Use `@param`, `@return`, `@throws`. First sentence is the summary and ends with a period. Use `{@inheritDoc}` unless behavior differs meaningfully.
+
+### Maven
+Do **not** use `org.springframework.boot:spring-boot-starter-web` — use `spring-boot-starter-webmvc` instead.
+
+## Docker Best Practices
+
+Apply when writing Dockerfiles or docker-compose files:
+
+- Use **multi-stage builds** for compiled languages to keep runtime images small
+- Use **minimal base images** (`alpine`, `slim`, or `distroless`); pin specific version tags, never `latest` in production
+- Run as a **non-root user** — create a dedicated user/group and `chown` app files
+- Combine `RUN` commands and clean up in the same layer (`rm -rf /var/lib/apt/lists/*`)
+- Copy dependency files before source code to maximize layer cache reuse
+- Use `EXPOSE` to document ports; use `HEALTHCHECK` for orchestration readiness
+- Never hardcode secrets in image layers; use environment variables or runtime secrets
+- Use named volumes for persistent data; never store state in the container writable layer
+
 ## Contribution Notes
-When modifying existing code, explain the rationale — why the change is better or what problem it solves, especially for refactors. Use Java 25 Temurin features and best practices on the backend.
+When modifying existing code, explain the rationale — why the change is better or what problem it solves, especially for refactors.
