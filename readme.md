@@ -119,6 +119,13 @@ Manual trigger options:
 ## TODO:
 ### Notes
 - FTB uses install scripts to get modpack data instead of uploading everything as a zip. How do we manage that?
+- Add a preprocessing step for uploaded modpacks, the goal is to accept a wider variety of modpack zip formats and structures.
+  - Forge installed in the zip vs needed to be installed by the manager.
+  - NeoForge installed in the zip vs needed to be installed by the manager.
+  - Install scripts from FTB modpacks.
+    - Comes as a single `install.sh` or `install.bat` file that downloads their installer
+    - The installer then downloads the modpack files and sets up the structure.
+  - Fabric, quilt, and other modloaders.
 
 
 ### Fixes and Bugs:
