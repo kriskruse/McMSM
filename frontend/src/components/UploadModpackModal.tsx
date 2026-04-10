@@ -1,7 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import type { ModPackUploadResponseDto } from '../dto';
+import { isZipFile } from '../util/fileValidation';
 import { uploadModpack } from '../util/modpackApi';
+import FileDropZone from './FileDropZone';
+import UploadProgress from './UploadProgress';
+
+const SMALL_PACK_SIZE_THRESHOLD = 52_428_800; // 50 MB
+const UPLOAD_SUCCESS_DELAY_MS = 900;
+
+function isFileSizeTooLow(size: number): boolean {
+    return size < SMALL_PACK_SIZE_THRESHOLD;
+}
 
 type UploadModpackModalProps = {
     isOpen: boolean;
@@ -14,10 +24,6 @@ type UploadModpackModalProps = {
         onProgress?: (progressPercent: number) => void,
     ) => Promise<ModPackUploadResponseDto>;
 };
-
-function isZipFile(file: File): boolean {
-    return file.name.toLowerCase().endsWith('.zip');
-}
 
 const UploadModpackModal = ({
     isOpen,
@@ -35,7 +41,6 @@ const UploadModpackModal = ({
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isBackendProcessing, setIsBackendProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const smallPackSizeThreshold = 52428800; // 50mB threshold forfiles
 
     const chooseFile = () => {
         fileInputRef.current?.click();
@@ -59,10 +64,6 @@ const UploadModpackModal = ({
         clearState();
         onClose();
     };
-
-    function isFileSizeTooLow(size: number) {
-        return size < smallPackSizeThreshold;
-    }
 
     useEffect(() => {
         if (!initialFile) {
@@ -157,7 +158,7 @@ const UploadModpackModal = ({
             window.setTimeout(() => {
                 onUploaded(response);
                 clearState();
-            }, 900);
+            }, UPLOAD_SUCCESS_DELAY_MS);
         } catch (uploadError) {
             if (uploadError instanceof Error && uploadError.message) {
                 setError(uploadError.message);
@@ -195,19 +196,13 @@ const UploadModpackModal = ({
                     </button>
                 </div>
 
-                <div
+                <FileDropZone
+                    isDragging={isDragging}
+                    selectedFileName={selectedFile?.name ?? null}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                     onDragLeave={onDragLeave}
-                    className={`rounded-xl border-2 border-dashed p-8 text-center transition ${
-                        isDragging ? 'border-emerald-400 bg-emerald-500/10' : 'border-white/15 bg-slate-950/40'
-                    }`}
-                >
-                    <p className="text-sm text-slate-300">Drop your modpack .zip file here</p>
-                    {selectedFile && (
-                        <p className="mt-2 text-xs text-emerald-300">Selected: {selectedFile.name}</p>
-                    )}
-                </div>
+                />
 
                 <input
                     ref={fileInputRef}
@@ -255,43 +250,12 @@ const UploadModpackModal = ({
                     .
                 </p>
 
-                {(isUploading || isSuccess) && (
-                    <div className="mt-5">
-                        <div className="mb-2 flex items-center justify-between text-xs text-slate-300">
-                            <span>
-                                {isSuccess
-                                    ? 'Upload complete'
-                                    : isBackendProcessing
-                                        ? 'Upload complete. Backend is extracting and scanning files...'
-                                        : 'Uploading modpack...'}
-                            </span>
-                            <span>{uploadProgress}%</span>
-                        </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
-                            <div
-                                className="h-full rounded-full bg-emerald-500 transition-all duration-300"
-                                style={{ width: `${uploadProgress}%` }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {isSuccess && (
-                    <div className="mt-5 flex items-center gap-3 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-emerald-300">
-                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-300/70 bg-emerald-500/20">
-                            <svg
-                                className="h-4 w-4 animate-bounce"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                            >
-                                <path d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
-                        <span className="text-sm font-medium">Upload finished. Opening metadata review...</span>
-                    </div>
-                )}
+                <UploadProgress
+                    isUploading={isUploading}
+                    isSuccess={isSuccess}
+                    isBackendProcessing={isBackendProcessing}
+                    uploadProgress={uploadProgress}
+                />
 
                 {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
             </div>
@@ -299,4 +263,4 @@ const UploadModpackModal = ({
     );
 };
 
-export default UploadModpackModal;
+export default memo(UploadModpackModal);

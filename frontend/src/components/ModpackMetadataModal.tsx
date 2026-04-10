@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import compatData from '../data/minecraft_java_compat.json';
 import type {
     ModPackMetadataRequestDto,
@@ -305,5 +305,5 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
     );
 };
 
-export default ModpackMetadataModal;
+export default memo(ModpackMetadataModal);
 

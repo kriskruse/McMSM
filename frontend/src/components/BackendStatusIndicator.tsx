@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 type BackendStatus = 'checking' | 'online' | 'offline';
 
 type BackendStatusIndicatorProps = {
@@ -33,5 +35,5 @@ const BackendStatusIndicator = ({ status }: BackendStatusIndicatorProps) => {
     );
 };
 
-export default BackendStatusIndicator;
+export default memo(BackendStatusIndicator);
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import type { ModPackCardDto } from '../dto';
 import { getPackLogs } from '../util/modpackApi';
 
@@ -87,7 +87,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
     );
 };
 
-export default ModpackConsole;
+export default memo(ModpackConsole);
 
 
 

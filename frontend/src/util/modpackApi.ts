@@ -4,53 +4,29 @@ import type {
     ModPackMetadataResponseDto,
     ModPackStatus,
     ModPackUploadResponseDto,
-} from '../dto';
-
-type BackendModPackDto = {
-    packId: number;
-    name: string;
-    path: string;
-    packVersion: string;
-    minecraftVersion: string;
-    javaVersion: number;
-    javaXmx: string | null;
-    port: string;
-    entryPoint: string | null;
-    entryPointCandidates: string[] | null;
-    containerName: string | null;
-    containerId: string | null;
-    lastDeployError: string | null;
-    status: string | null;
-    isDeployed: boolean | null;
-    updatedAt: string | null;
-};
+    BackendModPackDto,
+} from '../dto/dto.tsx';
 
 const API_BASE = '/api/modpacks';
 
 function normalizeStatus(status: string | null): ModPackStatus {
-    const normalized = (status ?? 'unknown').toLowerCase();
-    if (normalized === 'running') {
-        return 'running';
+    switch ((status ?? 'unknown').toLowerCase()) {
+        case 'running':
+            return 'running';
+        case 'stopped':
+            return 'stopped';
+        case 'deployed':
+            return 'deployed';
+        case 'deploy_failed':
+            return 'deploy_failed';
+        case 'error':
+            return 'error';
+        case 'saved':
+        case 'not_deployed':
+            return 'saved';
+        default:
+            return 'unknown';
     }
-    if (normalized === 'stopped') {
-        return 'stopped';
-    }
-    if (normalized === 'deployed') {
-        return 'deployed';
-    }
-    if (normalized === 'deploy_failed') {
-        return 'deploy_failed';
-    }
-    if (normalized === 'error') {
-        return 'error';
-    }
-    if (normalized === 'saved') {
-        return 'saved';
-    }
-    if (normalized === 'not_deployed') {
-        return 'saved';
-    }
-    return 'unknown';
 }
 
 function mapToCardDto(pack: BackendModPackDto): ModPackCardDto {

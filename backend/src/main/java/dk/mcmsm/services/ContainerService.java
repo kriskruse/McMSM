@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -43,10 +44,22 @@ public class ContainerService {
         var httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
                 .sslConfig(config.getSSLConfig())
+                .connectionTimeout(Duration.ofSeconds(1))
+                .responseTimeout(Duration.ofMillis(500))
                 .build();
 
         this.dockerClient = DockerClientImpl.getInstance(config, httpClient);
         this.modPackRepository = modPackRepository;
+    }
+
+    public boolean isDockerRunning() {
+        try{
+            dockerClient.pingCmd().exec();
+            return true;
+        } catch (Exception e) {
+            logger.warn("Docker daemon is unreachable: {}", e.getMessage());
+            return false;
+        }
     }
 
     @Scheduled(fixedDelayString = "${app.runtime-sync.interval-ms:15000}")

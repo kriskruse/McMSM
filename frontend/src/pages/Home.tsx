@@ -1,375 +1,100 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import BackendStatusIndicator from '../components/BackendStatusIndicator.tsx';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import ModpackCard from '../components/ModpackCard.tsx';
 import ModpackConsole from '../components/ModpackConsole.tsx';
 import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
 import UploadModpackModal from '../components/UploadModpackModal.tsx';
-import type { ModPackCardDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
-import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack, updateModpack } from '../util/modpackApi';
+import { useDragDrop } from '../hooks/useDragDrop';
+import { useModpacks } from '../hooks/useModpacks';
+import { useUploadFlow } from '../hooks/useUploadFlow';
+import { isZipFile } from '../util/fileValidation';
+import StatusBox from "../components/StatusBox.tsx";
+import {healthCheck} from "../util/healthCheck.ts";
+import {BackendStatus} from "../util/healthCheck.ts";
 
 const appVersion = import.meta.env.VITE_APP_VERSION ?? '1.0.0';
-const apiVersion = import.meta.env.VITE_API_VERSION ?? 'v1';
-const DASHBOARD_REFRESH_MS = 15_000;
-const BACKEND_RECOVERY_HEALTH_POLL_MS = 5_000;
-
-function isZipFile(file: File): boolean {
-    return file.name.toLowerCase().endsWith('.zip');
-}
-
-function isFileDragEvent(event: DragEvent): boolean {
-    return event.dataTransfer?.types?.includes('Files') ?? false;
-}
-
-function getDroppedFile(event: DragEvent): File | null {
-    return event.dataTransfer?.files?.[0] ?? null;
-}
-
-function toUploadResultFromPack(pack: ModPackCardDto): ModPackUploadResponseDto {
-    return {
-        packId: pack.packId,
-        name: pack.name,
-        path: pack.path,
-        packVersion: pack.packVersion,
-        minecraftVersion: pack.minecraftVersion,
-        javaVersion: pack.javaVersion,
-        javaXmx: pack.javaXmx,
-        port: pack.port,
-        entryPoint: pack.entryPoint,
-        entryPointCandidates: pack.entryPointCandidates,
-        message: '',
-    };
-}
-
-function isConnectionError(error: unknown): boolean {
-    if (error instanceof TypeError) {
-        return true;
-    }
-
-    if (!(error instanceof Error)) {
-        return false;
-    }
-
-    const normalizedMessage = error.message.toLowerCase();
-    return (
-        normalizedMessage.includes('failed to fetch')
-        || normalizedMessage.includes('networkerror')
-        || normalizedMessage.includes('err_connection')
-        || normalizedMessage.includes('load failed')
-    );
-}
-
 const Home = () => {
-    const [modpacks, setModpacks] = useState<ModPackCardDto[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [loadError, setLoadError] = useState('');
-    const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [isMetadataModalOpen, setIsMetadataModalOpen] = useState(false);
-    const [pendingUploadResult, setPendingUploadResult] = useState<ModPackUploadResponseDto | null>(null);
-    const [activePackActions, setActivePackActions] = useState<number[]>([]);
-    const [isRefreshing, setIsRefreshing] = useState(false);
-    const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
-    const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
-    const [uploadMode, setUploadMode] = useState<'upload' | 'update'>('upload');
-    const [updateTargetPackId, setUpdateTargetPackId] = useState<number | null>(null);
-    const [isGlobalFileDragActive, setIsGlobalFileDragActive] = useState(false);
-    const globalFileDragDepth = useRef(0);
+    const {
+        modpacks,
+        deployedModpacks,
+        nonDeployedModpacks,
+        isLoading,
+        loadError,
+        setLoadError,
+        activePackActions,
+        isRefreshing,
+        refreshAllPacks,
+        handleManualRefresh,
+        handleDeletePack,
+        handleDeployPack,
+        handleStartPack,
+        handleStopPack,
+        handleArchivePack,
+    } = useModpacks();
 
-    const refreshAllPacks = useCallback(async () => {
-        try {
-            const packs = await getAllPacks();
-            setModpacks(packs);
-            setBackendStatus('online');
-        } catch (error) {
-            if (isConnectionError(error)) {
-                setBackendStatus('offline');
-            } else {
-                // A non-connectivity backend error still proves the backend is reachable.
-                setBackendStatus('online');
-            }
-            throw error;
-        }
+    const {
+        isUploadModalOpen,
+        isMetadataModalOpen,
+        pendingUploadResult,
+        pendingUploadFile,
+        uploadMode,
+        submitUpload,
+        openNewUpload,
+        closeUploadModal,
+        handleUploadCompleted,
+        openUpdatePack,
+        openMetadataForPack,
+        closeMetadataModal,
+        handleMetadataSaved,
+    } = useUploadFlow({ refreshAllPacks, setLoadError });
+
+    useEffect(() => {
+        const pollHealth = () => {
+            healthCheck('/docker').then(setDockerStatus).catch(() => setDockerStatus('offline'));
+            healthCheck('').then(setBackendStatus).catch(() => setBackendStatus('offline'));
+        };
+        pollHealth();
+        const intervalId = window.setInterval(pollHealth, 2000);
+        return () => window.clearInterval(intervalId);
     }, []);
+    const [dockerStatus, setDockerStatus] = useState<BackendStatus>('checking');
+    const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
 
-    const checkBackendHealth = useCallback(async () => {
-        try {
-            const response = await fetch('/api/health');
-            if (!response.ok) {
-                setBackendStatus('offline');
-                return;
-            }
+    const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
+    const modpacksRef = useRef(modpacks);
+    modpacksRef.current = modpacks;
 
-            await refreshAllPacks();
-            setLoadError('');
-        } catch {
-            setBackendStatus('offline');
-        }
-    }, [refreshAllPacks]);
-
-    const handleManualRefresh = useCallback(async () => {
-        setIsRefreshing(true);
-        setLoadError('');
-        try {
-            await refreshAllPacks();
-        } catch (error) {
-            if (error instanceof Error && error.message) {
-                setLoadError(error.message);
-            } else {
-                setLoadError('Failed to refresh modpacks.');
-            }
-        } finally {
-            setIsRefreshing(false);
-        }
-    }, [refreshAllPacks]);
-
-    useEffect(() => {
-        let mounted = true;
-
-        const loadInitialPacks = async () => {
-            try {
-                await refreshAllPacks();
-                if (mounted) {
-                    setLoadError('');
-                }
-            } catch (error) {
-                if (mounted) {
-                    setLoadError(
-                        isConnectionError(error)
-                            ? 'Lost connection to backend. Waiting for recovery...'
-                            : 'Failed to load modpacks from backend.',
-                    );
-                }
-            } finally {
-                if (mounted) {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        void loadInitialPacks();
-
-        return () => {
-            mounted = false;
-        };
-    }, [refreshAllPacks]);
-
-    useEffect(() => {
-        if (backendStatus === 'checking') {
+    const handleFileDrop = useCallback((file: File) => {
+        if (!isZipFile(file)) {
+            setLoadError('Only .zip files are supported for upload.');
             return;
         }
+        setLoadError('');
+        openNewUpload(file);
+    }, [setLoadError, openNewUpload]);
 
-        if (backendStatus === 'online') {
-            const refreshTimer = window.setInterval(() => {
-                void refreshAllPacks().catch(() => {
-                    // Connectivity transitions are handled in refreshAllPacks.
-                });
-            }, DASHBOARD_REFRESH_MS);
+    const { isActive: isGlobalFileDragActive } = useDragDrop(handleFileDrop);
 
-            return () => {
-                window.clearInterval(refreshTimer);
-            };
-        }
-
-        const healthTimer = window.setInterval(() => {
-            void checkBackendHealth();
-        }, BACKEND_RECOVERY_HEALTH_POLL_MS);
-
-        return () => {
-            window.clearInterval(healthTimer);
-        };
-    }, [backendStatus, checkBackendHealth, refreshAllPacks]);
-
-    const deployedModpacks = useMemo(() => modpacks.filter((pack) => pack.isDeployed), [modpacks]);
-    const nonDeployedModpacks = useMemo(() => modpacks.filter((pack) => !pack.isDeployed), [modpacks]);
-    const expandedPack = useMemo(
-        () => modpacks.find((pack) => pack.packId === expandedPackId) ?? null,
-        [modpacks, expandedPackId],
-    );
-
-    const setPackActionState = (packId: number, isActive: boolean) => {
-        setActivePackActions((previous) => {
-            if (isActive) {
-                if (previous.includes(packId)) {
-                    return previous;
-                }
-                return [...previous, packId];
-            }
-
-            return previous.filter((id) => id !== packId);
-        });
-    };
-
-    const toggleExpandedPack = (packId: number) => {
-        const targetPack = modpacks.find((pack) => pack.packId === packId);
+    const toggleExpandedPack = useCallback((packId: number) => {
+        const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
         if (!targetPack) {
             return;
         }
 
         if (!targetPack.isDeployed) {
             setExpandedPackId(null);
-            setPendingUploadResult(toUploadResultFromPack(targetPack));
-            setIsMetadataModalOpen(true);
+            openMetadataForPack(targetPack);
             return;
         }
 
         setExpandedPackId((previous) => (previous === packId ? null : packId));
-    };
+    }, [openMetadataForPack]);
 
-    const runPackAction = async (packId: number, action: () => Promise<void>) => {
-        setPackActionState(packId, true);
-        setLoadError('');
+    const expandedPack = useMemo(
+        () => modpacks.find((pack) => pack.packId === expandedPackId) ?? null,
+        [modpacks, expandedPackId],
+    );
 
-        try {
-            await action();
-            await refreshAllPacks();
-        } catch (error) {
-            if (error instanceof Error && error.message) {
-                setLoadError(error.message);
-            } else {
-                setLoadError('Failed to update modpack state.');
-            }
-        } finally {
-            setPackActionState(packId, false);
-        }
-    };
-
-    const handleDeletePack = (packId: number) => {
-        const targetPack = modpacks.find((pack) => pack.packId === packId);
-        const confirmed = window.confirm(`Delete ${targetPack?.name ?? 'this modpack'}? This removes files and metadata.`);
-        if (!confirmed) {
-            return;
-        }
-        void runPackAction(packId, () => deletePack(packId));
-    };
-
-    const handleDeployPack = (packId: number) => {
-        void runPackAction(packId, () => deployPack(packId));
-    };
-
-    const handleStartPack = (packId: number) => {
-        void runPackAction(packId, () => startPack(packId));
-    };
-
-    const handleStopPack = (packId: number) => {
-        void runPackAction(packId, () => stopPack(packId));
-    };
-
-    const handleArchivePack = (packId: number) => {
-        const targetPack = modpacks.find((pack) => pack.packId === packId);
-        const confirmed = window.confirm(`Archive ${targetPack?.name ?? 'this modpack'}? This removes only the container.`);
-        if (!confirmed) {
-            return;
-        }
-        void runPackAction(packId, () => archivePack(packId));
-    };
-
-    const handleUploadCompleted = (uploadResult: ModPackUploadResponseDto) => {
-        setPendingUploadFile(null);
-        setUploadMode('upload');
-        setUpdateTargetPackId(null);
-        setPendingUploadResult(uploadResult);
-        setIsUploadModalOpen(false);
-        setIsMetadataModalOpen(true);
-    };
-
-    const handleCloseUploadModal = () => {
-        setIsUploadModalOpen(false);
-        setPendingUploadFile(null);
-        setUploadMode('upload');
-        setUpdateTargetPackId(null);
-    };
-
-    const handleUpdatePack = (packId: number) => {
-        setLoadError('');
-        setPendingUploadFile(null);
-        setUploadMode('update');
-        setUpdateTargetPackId(packId);
-        setIsUploadModalOpen(true);
-    };
-
-    const handleMetadataSaved = (response: ModPackMetadataResponseDto) => {
-        setIsMetadataModalOpen(false);
-        setPendingUploadResult(null);
-        if (response.message.toLowerCase().includes('failed')) {
-            setLoadError(response.message);
-        } else {
-            setLoadError('');
-        }
-        void refreshAllPacks();
-    };
-
-    const handleGlobalDragOver = useCallback((event: DragEvent) => {
-        if (!isFileDragEvent(event)) {
-            return;
-        }
-
-        event.preventDefault();
-        if (event.dataTransfer) {
-            event.dataTransfer.dropEffect = 'copy';
-        }
-    }, []);
-
-    const handleGlobalDragEnter = useCallback((event: DragEvent) => {
-        if (!isFileDragEvent(event)) {
-            return;
-        }
-
-        event.preventDefault();
-        globalFileDragDepth.current += 1;
-        setIsGlobalFileDragActive(true);
-    }, []);
-
-    const handleGlobalDragLeave = useCallback((event: DragEvent) => {
-        if (!isFileDragEvent(event)) {
-            return;
-        }
-
-        event.preventDefault();
-        globalFileDragDepth.current = Math.max(0, globalFileDragDepth.current - 1);
-        if (globalFileDragDepth.current === 0) {
-            setIsGlobalFileDragActive(false);
-        }
-    }, []);
-
-    const handleGlobalDrop = useCallback((event: DragEvent) => {
-        if (!isFileDragEvent(event)) {
-            return;
-        }
-
-        event.preventDefault();
-        globalFileDragDepth.current = 0;
-        setIsGlobalFileDragActive(false);
-
-        const droppedFile = getDroppedFile(event);
-        if (!droppedFile) {
-            return;
-        }
-
-        if (!isZipFile(droppedFile)) {
-            setLoadError('Only .zip files are supported for upload.');
-            return;
-        }
-
-        setLoadError('');
-        setPendingUploadFile(droppedFile);
-        setUploadMode('upload');
-        setUpdateTargetPackId(null);
-        setIsUploadModalOpen(true);
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener('dragenter', handleGlobalDragEnter);
-        window.addEventListener('dragover', handleGlobalDragOver);
-        window.addEventListener('dragleave', handleGlobalDragLeave);
-        window.addEventListener('drop', handleGlobalDrop);
-
-        return () => {
-            window.removeEventListener('dragenter', handleGlobalDragEnter);
-            window.removeEventListener('dragover', handleGlobalDragOver);
-            window.removeEventListener('dragleave', handleGlobalDragLeave);
-            window.removeEventListener('drop', handleGlobalDrop);
-        };
-    }, [handleGlobalDragEnter, handleGlobalDragLeave, handleGlobalDragOver, handleGlobalDrop]);
+    const closeConsole = useCallback(() => setExpandedPackId(null), []);
 
     return (
         <main className="w-full max-w-6xl px-4 py-6 text-slate-100 md:px-6">
@@ -382,15 +107,9 @@ const Home = () => {
                         <span className="text-xs">By</span> Kris Kruse
                     </p>
                 </div>
-
-                <div className="w-fit rounded-xl border border-white/10 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">
-                    <h3 className="text-lg font-bold leading-none text-white">Backend</h3>
-                    <div className="mt-2 flex items-center gap-2">
-                        <span className="inline-flex items-center rounded-full bg-slate-950/50 px-2 py-1 text-xs font-medium text-slate-300">
-                            {apiVersion}
-                        </span>
-                        <BackendStatusIndicator status={backendStatus} />
-                    </div>
+                <div className="flex items-center gap-3">
+                    <StatusBox text="Backend" status={backendStatus} />
+                    <StatusBox text="Docker" status={dockerStatus} />
                 </div>
             </header>
 
@@ -408,12 +127,7 @@ const Home = () => {
                 </button>
                 <button
                     type="button"
-                    onClick={() => {
-                        setPendingUploadFile(null);
-                        setUploadMode('upload');
-                        setUpdateTargetPackId(null);
-                        setIsUploadModalOpen(true);
-                    }}
+                    onClick={() => openNewUpload()}
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
                     aria-label="Upload new modpack"
                 >
@@ -434,7 +148,7 @@ const Home = () => {
                             isBusy={activePackActions.includes(pack.packId)}
                             isExpanded={expandedPackId === pack.packId}
                             onToggleExpand={toggleExpandedPack}
-                            onUpdate={handleUpdatePack}
+                            onUpdate={openUpdatePack}
                             onDelete={handleDeletePack}
                             onDeploy={handleDeployPack}
                             onArchive={handleArchivePack}
@@ -455,7 +169,7 @@ const Home = () => {
                             isBusy={activePackActions.includes(pack.packId)}
                             isExpanded={expandedPackId === pack.packId}
                             onToggleExpand={toggleExpandedPack}
-                            onUpdate={handleUpdatePack}
+                            onUpdate={openUpdatePack}
                             onDelete={handleDeletePack}
                             onDeploy={handleDeployPack}
                             onArchive={handleArchivePack}
@@ -468,37 +182,17 @@ const Home = () => {
 
             <UploadModpackModal
                 isOpen={isUploadModalOpen}
-                onClose={handleCloseUploadModal}
+                onClose={closeUploadModal}
                 onUploaded={handleUploadCompleted}
                 initialFile={pendingUploadFile}
                 mode={uploadMode}
-                submitUpload={uploadMode === 'update'
-                    ? async (file, onProgress) => {
-                        if (updateTargetPackId == null) {
-                            throw new Error('No modpack selected for update.');
-                        }
-
-                        const response = await updateModpack(updateTargetPackId, file, onProgress);
-                        if (response.packId == null) {
-                            throw new Error('Update did not return a pack ID.');
-                        }
-
-                        if (response.packId === updateTargetPackId) {
-                            throw new Error('Update returned the same pack ID as the source modpack. A new pack ID is required for migration-based updates.');
-                        }
-
-                        return response;
-                    }
-                    : undefined}
+                submitUpload={submitUpload}
             />
 
             <ModpackMetadataModal
                 isOpen={isMetadataModalOpen}
                 uploadResult={pendingUploadResult}
-                onClose={() => {
-                    setIsMetadataModalOpen(false);
-                    setPendingUploadResult(null);
-                }}
+                onClose={closeMetadataModal}
                 onSaved={handleMetadataSaved}
             />
 
@@ -514,7 +208,7 @@ const Home = () => {
             {expandedPack && expandedPack.isDeployed && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-4"
-                    onClick={() => setExpandedPackId(null)}
+                    onClick={closeConsole}
                 >
                     <div
                         className="relative w-full max-w-7xl max-h-[92vh] overflow-auto rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl"
@@ -522,7 +216,7 @@ const Home = () => {
                     >
                         <button
                             type="button"
-                            onClick={() => setExpandedPackId(null)}
+                            onClick={closeConsole}
                             className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-slate-800 text-xl leading-none text-slate-200 transition hover:bg-slate-700 hover:text-white"
                             aria-label="Close modpack details"
                         >

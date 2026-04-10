@@ -78,3 +78,21 @@ export type ModPackMetadataResponseDto = {
     message: string;
 };
 
+export type BackendModPackDto = {
+    packId: number;
+    name: string;
+    path: string;
+    packVersion: string;
+    minecraftVersion: string;
+    javaVersion: number;
+    javaXmx: string | null;
+    port: string;
+    entryPoint: string | null;
+    entryPointCandidates: string[] | null;
+    containerName: string | null;
+    containerId: string | null;
+    lastDeployError: string | null;
+    status: string | null;
+    isDeployed: boolean | null;
+    updatedAt: string | null;
+};

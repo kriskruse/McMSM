@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ModPackCardDto } from '../dto';
 
 type ModpackCardProps = {
@@ -247,5 +248,5 @@ const ModpackCard = ({
     );
 };
 
-export default ModpackCard;
+export default memo(ModpackCard);
 

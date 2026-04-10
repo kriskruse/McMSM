@@ -4,6 +4,7 @@ import {
     Route,
 } from "react-router-dom";
 
+import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Home from "./pages/Home.tsx";
@@ -13,6 +14,7 @@ function App() {
 
     return (
         <Router>
+            <ErrorBoundary>
             <Routes>
                 <Route
                     path="/"
@@ -32,6 +34,7 @@ function App() {
                 />
                 <Route path="/home" element={<Home />} />
             </Routes>
+            </ErrorBoundary>
         </Router>
     );
 }
