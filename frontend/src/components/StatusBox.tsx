@@ -1,5 +1,5 @@
 import BackendStatusIndicator from "./BackendStatusIndicator.tsx";
-import {BackendStatus} from "../hooks/useModpacks.ts";
+import {BackendStatus} from "../util/healthCheck.ts";
 
 
 export default function StatusBox({text, status }: {text:string, status: BackendStatus }) {
