@@ -1,0 +1,20 @@
+SPDX-License-Identifier: AGPL-3.0-only
+
+McMSM - Dual Licensing Notice
+Copyright (c) 2026 Kris Kruse
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
+
+You may use, modify, distribute, and run this software (including for commercial purposes) under AGPL-3.0 terms.
+If you distribute modified versions, or provide the software as a network service with modifications,
+you must provide corresponding source code under AGPL-3.0.
+
+If you want to use McMSM in a way that does not comply with AGPL-3.0 obligations
+(for example, closed-source commercial distribution or proprietary hosted offerings),
+you must obtain a separate commercial license from the copyright holder.
+
+Full AGPL-3.0 license text:
+https://www.gnu.org/licenses/agpl-3.0.txt
+
+Commercial licensing details:
+See COMMERCIAL_LICENSE.md in this repository.

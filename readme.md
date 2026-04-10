@@ -138,9 +138,7 @@ Manual trigger options:
 - Add some overflow handling for the modpack name in the modpack card view.
 
 #### Medium
-- Add an indicator for the backend Docker connection status.
-- Add a flow that tries to extract the Modpack version from the uploaded zip name and pre-fills the version field in the metadata form.
-- Split FileService into separate services for modpack files and database metadata to improve readability and separation of concerns.
+- Make a pass-through for user interactions with the modpack console, so the user can send commands to the modpack server.
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
@@ -158,3 +156,13 @@ Manual trigger options:
 - Create an update functionality for the manager application itself.
 - Automated modpack downloading from CurseForge, Modrinth and FTB APIs.
 - Modpack explorer to view possible modpacks to download and manage from the app itself.
+
+## License
+
+McMSM is dual-licensed.
+
+- Open-source license: `AGPL-3.0-only`.
+- Commercial closed-source use: available under a separate proprietary license from the repository owner and major contributors, with terms to be discussed on a case-by-case basis.
+
+You can use McMSM commercially under AGPL-3.0 as long as you follow AGPL obligations (including sharing corresponding source code for modified network services/distributions).
+
