@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { UpdateStatusDto } from '../dto';
-import { checkForUpdate, applyUpdate } from '../util/updateApi';
+import { checkForUpdate, forceCheckForUpdate, applyUpdate } from '../util/updateApi';
 import { healthCheck } from '../util/healthCheck';
 
 type UpdatePhase = 'idle' | 'confirming' | 'updating' | 'restarting' | 'failed';
@@ -9,9 +9,22 @@ export default function UpdateButton() {
     const [status, setStatus] = useState<UpdateStatusDto | null>(null);
     const [phase, setPhase] = useState<UpdatePhase>('idle');
     const [error, setError] = useState('');
+    const [checking, setChecking] = useState(false);
 
     useEffect(() => {
         checkForUpdate().then(setStatus).catch(() => {});
+    }, []);
+
+    const handleForceCheck = useCallback(async () => {
+        setChecking(true);
+        try {
+            const result = await forceCheckForUpdate();
+            setStatus(result);
+        } catch {
+            // silently fail — the existing status remains
+        } finally {
+            setChecking(false);
+        }
     }, []);
 
     const handleApply = useCallback(async () => {
@@ -41,21 +54,25 @@ export default function UpdateButton() {
             <div className="flex items-center gap-1.5 text-xs text-emerald-400">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 Latest ({status.currentVersion})
+                <RefreshButton onClick={handleForceCheck} spinning={checking} />
             </div>
         );
     }
 
     return (
         <>
-            <button
-                type="button"
-                onClick={() => setPhase('confirming')}
-                disabled={phase !== 'idle' && phase !== 'failed'}
-                className="flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-300 transition hover:bg-amber-500/20 disabled:opacity-50"
-            >
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
-                Update Available ({status.versionsBehind} behind)
-            </button>
+            <div className="flex items-center gap-1.5">
+                <button
+                    type="button"
+                    onClick={() => setPhase('confirming')}
+                    disabled={phase !== 'idle' && phase !== 'failed'}
+                    className="flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-300 transition hover:bg-amber-500/20 disabled:opacity-50"
+                >
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                    Update Available ({status.versionsBehind} behind)
+                </button>
+                <RefreshButton onClick={handleForceCheck} spinning={checking} />
+            </div>
 
             {phase === 'confirming' && (
                 <ConfirmDialog
@@ -144,6 +161,31 @@ function OverlayMessage({ message }: { message: string }) {
                 <p className="text-sm font-medium">{message}</p>
             </div>
         </div>
+    );
+}
+
+function RefreshButton({ onClick, spinning }: { onClick: () => void; spinning: boolean }) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            disabled={spinning}
+            title="Re-check for updates"
+            className="rounded p-0.5 text-slate-500 transition hover:text-slate-300 disabled:opacity-50"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className={`h-3 w-3 ${spinning ? 'animate-spin' : ''}`}
+            >
+                <path
+                    fillRule="evenodd"
+                    d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.681.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-.908l.84.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44.908l-.84-.84v1.456a.75.75 0 0 1-1.5 0V9.342a.75.75 0 0 1 .75-.75h3.182a.75.75 0 0 1 0 1.5h-1.37l.84.841a4.5 4.5 0 0 0 7.08-.681.75.75 0 0 1 1.024-.274Z"
+                    clipRule="evenodd"
+                />
+            </svg>
+        </button>
     );
 }
 

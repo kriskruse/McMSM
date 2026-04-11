@@ -10,12 +10,53 @@ The application allows users to upload modpacks, configure server settings, and 
 The project is meant to solve a untouch pain point for people who host multiple modpack servers for themselves and their friends.
 The project is open to contributions and feedback, and I hope it can grow into a robust tool.
 
+
+
 ### Core Features
 Currently, the following features are implemented, but hoping to expand in the future:
 - Upload and register modpacks in the backend database
 - Edit modpack metadata (name, versions, Java config, port, entrypoint)
 - Deploy, start, stop, delete, and archive modpack runtime containers
 - Track saved vs deployed instances with live runtime state sync
+
+
+## Getting Started
+
+### Prerequisites
+- **Java 25** JDK (e.g., [Eclipse Temurin](https://adoptium.net/))
+- **Docker Desktop** (or Docker Engine) — required for managing modpack containers
+
+### Quick Start
+1. Download the latest `McMSM-{version}.jar` from [Releases](../../releases).
+2. Run the JAR:
+   ```bash
+   java -jar McMSM-2.0.jar
+   ```
+3. Open `http://localhost:8080` in your browser.
+
+### Configuration
+All settings can be overridden via environment variables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `MODPACKS_ROOT` | `modpacks/` | Where modpack files are stored |
+| `DATA_ROOT` | `data/` | Where metadata JSON files are stored |
+| `TEMP_DIR` | system temp | Temporary upload directory |
+| `RUNTIME_SYNC_INTERVAL_MS` | `15000` | Docker state polling interval (ms) |
+| `MAX_UPLOAD_FILE_SIZE` | `8024MB` | Max upload file size |
+| `MAX_UPLOAD_REQUEST_SIZE` | `8024MB` | Max request size |
+
+Example with custom data directory:
+```bash
+DATA_ROOT=/path/to/data java -jar McMSM-2.0.jar
+```
+
+On Windows (PowerShell):
+```powershell
+$env:DATA_ROOT="C:\mcmsm\data"; java -jar McMSM-2.0.jar
+```
+
+# Technical details and contribution guide
 
 ## Stack
 
@@ -33,7 +74,7 @@ Currently, the following features are implemented, but hoping to expand in the f
 - File-based metadata storage (`backend/data` by default)
 - Docker (for managed Minecraft modpack runtime containers)
 
-## How To Deploy And Run
+## Development Setup
 
 ### Prerequisites
 - Docker Desktop (or Docker Engine)
@@ -78,16 +119,6 @@ mvn clean package -DskipTests
 mvn spring-boot:run
 ```
 
-
-## Configuration Notes
-- Backend defaults are in `backend/src/main/resources/application.properties`
-- Environment overrides are supported:
-  - `MODPACKS_ROOT`
-  - `TEMP_DIR`
-  - `DATA_ROOT`
-  - `RUNTIME_SYNC_INTERVAL_MS`
-  - `MAX_UPLOAD_FILE_SIZE`
-  - `MAX_UPLOAD_REQUEST_SIZE`
 
 ## Releases (GitHub Actions)
 - Workflow file: `.github/workflows/release.yml`

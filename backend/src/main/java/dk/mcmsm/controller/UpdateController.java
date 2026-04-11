@@ -45,8 +45,40 @@ public class UpdateController {
      */
     @GetMapping("/check")
     public ResponseEntity<UpdateStatusResponse> checkForUpdates() {
-        var status = updateService.checkForUpdates();
-        return ResponseEntity.ok(status);
+        try {
+            var status = updateService.checkForUpdates(false);
+            return ResponseEntity.ok(status);
+        } catch (Exception e) {
+            logger.error("Failed to check for updates.", e);
+            return ResponseEntity.internalServerError().body(dummyStatus());
+        }
+    }
+
+    /**
+     * Checks GitHub for available updates. Forces a remote check, ignoring any cached results.
+     *
+     * @return update status with version info and download URL.
+     */
+    @GetMapping("/checkNow")
+    public ResponseEntity<UpdateStatusResponse> checkForUpdatesNow() {
+        try {
+            var status = updateService.checkForUpdates(true);
+            logger.info("Forced check update status - Found: {}", status);
+            return ResponseEntity.ok(status);
+        } catch (Exception e) {
+            logger.error("Forced update check failed.", e);
+            return ResponseEntity.internalServerError().body(dummyStatus());
+        }
+    }
+
+    private UpdateStatusResponse dummyStatus() {
+        return new UpdateStatusResponse(
+                updateService.getCurrentVersion(),
+                null,
+                0,
+                false,
+                null
+        );
     }
 
     /**

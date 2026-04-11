@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dk.mcmsm.config.UpdateProperties;
 import dk.mcmsm.dto.responses.UpdateStatusResponse;
+import dk.mcmsm.exception.RunningInDevModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.info.BuildProperties;
@@ -96,8 +97,8 @@ public class UpdateService {
      *
      * @return update status including version info and download URL.
      */
-    public UpdateStatusResponse checkForUpdates() {
-        if (cachedStatus != null && Instant.now().isBefore(cacheExpiry)) {
+    public UpdateStatusResponse checkForUpdates(boolean forceUpdate) throws RuntimeException {
+        if (!forceUpdate && cachedStatus != null && Instant.now().isBefore(cacheExpiry)) {
             return cachedStatus;
         }
 
@@ -116,9 +117,15 @@ public class UpdateService {
             cachedStatus = status;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return status;
+        } catch (RunningInDevModeException e) {
+            logger.warn("Update check skipped: running outside a JAR (dev mode).");
+            var devStatus = new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
+            cachedStatus = devStatus;
+            cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
+            return devStatus;
         } catch (Exception e) {
             logger.error("Failed to check for updates from GitHub.", e);
-            return new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
+            throw new RuntimeException("Failed to check for updates.", e);
         }
     }
 
@@ -139,7 +146,7 @@ public class UpdateService {
                 throw new IllegalStateException("Cannot self-update when not running from a JAR.");
             }
 
-            var status = checkForUpdates();
+            var status = checkForUpdates(true);
             if (!status.updateAvailable()) {
                 throw new IllegalStateException("No update available.");
             }
@@ -220,7 +227,11 @@ public class UpdateService {
         return null;
     }
 
-    private UpdateStatusResponse buildStatusFromReleases(String currentVersion, List<GitHubRelease> releases) {
+    private UpdateStatusResponse buildStatusFromReleases(String currentVersion, List<GitHubRelease> releases) throws RunningInDevModeException {
+        if (!isRunningFromJar()) {
+            throw new RunningInDevModeException(this.getClass());
+        }
+
         if (releases.isEmpty()) {
             return new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
         }
@@ -241,7 +252,7 @@ public class UpdateService {
             versionsBehind = currentIndex;
         }
 
-        var updateAvailable = versionsBehind > 0 && isRunningFromJar() && latest.downloadUrl() != null;
+        var updateAvailable = versionsBehind > 0 && latest.downloadUrl() != null;
 
         return new UpdateStatusResponse(
                 currentVersion,

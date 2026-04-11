@@ -10,6 +10,14 @@ export async function checkForUpdate(): Promise<UpdateStatusDto> {
     return response.json();
 }
 
+export async function forceCheckForUpdate(): Promise<UpdateStatusDto> {
+    const response = await fetch(`${UPDATE_API_BASE}/checkNow`);
+    if (!response.ok) {
+        throw new Error(`Force update check failed: ${response.status}`);
+    }
+    return response.json();
+}
+
 export async function applyUpdate(): Promise<string> {
     const response = await fetch(`${UPDATE_API_BASE}/apply`, { method: 'POST' });
     const body = await response.json();
