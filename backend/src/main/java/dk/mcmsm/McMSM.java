@@ -2,10 +2,12 @@ package dk.mcmsm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
+@ConfigurationPropertiesScan("dk.mcmsm.config")
 public class McMSM {
 
     static void main(String[] args) {

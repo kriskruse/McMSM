@@ -8,10 +8,9 @@ import { useModpacks } from '../hooks/useModpacks';
 import { useUploadFlow } from '../hooks/useUploadFlow';
 import { isZipFile } from '../util/fileValidation';
 import StatusBox from "../components/StatusBox.tsx";
+import UpdateButton from "../components/UpdateButton.tsx";
 import {healthCheck} from "../util/healthCheck.ts";
 import {BackendStatus} from "../util/healthCheck.ts";
-
-const appVersion = import.meta.env.VITE_APP_VERSION ?? '1.0.0';
 const Home = () => {
     const {
         modpacks,
@@ -227,8 +226,8 @@ const Home = () => {
                 </div>
             )}
 
-            <div className="fixed bottom-3 right-4 text-xs text-slate-500">
-                {appVersion}
+            <div className="fixed bottom-3 right-4">
+                <UpdateButton />
             </div>
         </main>
     );

@@ -96,3 +96,11 @@ export type BackendModPackDto = {
     isDeployed: boolean | null;
     updatedAt: string | null;
 };
+
+export type UpdateStatusDto = {
+    currentVersion: string;
+    latestVersion: string;
+    versionsBehind: number;
+    updateAvailable: boolean;
+    downloadUrl: string | null;
+};
