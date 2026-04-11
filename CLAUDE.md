@@ -86,16 +86,12 @@ Configured in `backend/src/main/resources/application.properties`, all overridab
 | `MAX_UPLOAD_REQUEST_SIZE` | `8024MB` | Max request size |
 
 ## Releases
-Triggered by pushing a version tag or `workflow_dispatch`. Builds the JAR and creates a GitHub release as `McMSM-{version}.jar`.
+Triggered via `workflow_dispatch` in GitHub Actions (Actions → Release McMSM → Run workflow). The version is auto-calculated from the latest GitHub release:
 
-```bash
-git tag v1.0 && git push origin v1.0
-```
+- **Prerelease**: bumps minor (`1.0` → `1.1`). First prerelease is `0.1`.
+- **Full release**: bumps major and resets minor (`1.3` → `2.0`). First full release is `1.0`.
 
-The CI workflow (`.github/workflows/release.yml`) uses Java 25 Temurin and Node.js 22. Version is read from `backend/pom.xml`. Release notes are auto-generated from commits since the previous tag, formatted as:
-```
-- `{shortSha}` - {title} - {author}
-```
+The workflow sets the pom.xml version at build time (via `mvn versions:set`), builds the JAR, generates release notes from commits since the previous tag, and creates a new GitHub release with a SHA-256 checksum. Releases are never overwritten — each run always creates a new version.
 
 ## Java Coding Standards
 
