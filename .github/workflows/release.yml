@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       prerelease:
-        description: "Prerelease (minor bump 0.1) or full release (major bump 1.0)"
+        description: "Prerelease (minor bump 0.1)"
         required: true
         default: true
         type: boolean
