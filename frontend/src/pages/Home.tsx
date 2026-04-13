@@ -36,7 +36,8 @@ const Home = () => {
         pendingUploadResult,
         pendingUploadFile,
         uploadMode,
-        submitUpload,
+        updateTargetPackName,
+        updateTargetPackId,
         openNewUpload,
         closeUploadModal,
         handleUploadCompleted,
@@ -63,13 +64,16 @@ const Home = () => {
     modpacksRef.current = modpacks;
 
     const handleFileDrop = useCallback((file: File) => {
+        if (isUploadModalOpen) {
+            return;
+        }
         if (!isZipFile(file)) {
             setLoadError('Only .zip files are supported for upload.');
             return;
         }
         setLoadError('');
         openNewUpload(file);
-    }, [setLoadError, openNewUpload]);
+    }, [setLoadError, openNewUpload, isUploadModalOpen]);
 
     const { isActive: isGlobalFileDragActive } = useDragDrop(handleFileDrop);
 
@@ -185,7 +189,8 @@ const Home = () => {
                 onUploaded={handleUploadCompleted}
                 initialFile={pendingUploadFile}
                 mode={uploadMode}
-                submitUpload={submitUpload}
+                updatePackName={updateTargetPackName}
+                updateTargetPackId={updateTargetPackId}
             />
 
             <ModpackMetadataModal

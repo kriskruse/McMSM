@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { ModPackCardDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
-import { updateModpack } from '../util/modpackApi';
 
 function toUploadResultFromPack(pack: ModPackCardDto): ModPackUploadResponseDto {
     return {
@@ -32,58 +31,38 @@ export function useUploadFlow({ refreshAllPacks, setLoadError }: UseUploadFlowOp
     const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
     const [uploadMode, setUploadMode] = useState<'upload' | 'update'>('upload');
     const [updateTargetPackId, setUpdateTargetPackId] = useState<number | null>(null);
-
-    const submitUpload = useMemo(() => {
-        if (uploadMode !== 'update' || updateTargetPackId == null) {
-            return undefined;
-        }
-
-        const targetPackId = updateTargetPackId;
-        return async (file: File, onProgress?: (progressPercent: number) => void) => {
-            const response = await updateModpack(targetPackId, file, onProgress);
-
-            if (response.packId == null) {
-                throw new Error('Update did not return a pack ID.');
-            }
-
-            if (response.packId === targetPackId) {
-                throw new Error(
-                    'Update returned the same pack ID as the source modpack. A new pack ID is required for migration-based updates.',
-                );
-            }
-
-            return response;
-        };
-    }, [uploadMode, updateTargetPackId]);
+    const [updateTargetPackName, setUpdateTargetPackName] = useState<string | null>(null);
 
     const openNewUpload = useCallback((file?: File | null) => {
         setPendingUploadFile(file ?? null);
         setUploadMode('upload');
         setUpdateTargetPackId(null);
+        setUpdateTargetPackName(null);
         setIsUploadModalOpen(true);
     }, []);
 
     const closeUploadModal = useCallback(() => {
         setIsUploadModalOpen(false);
         setPendingUploadFile(null);
-        setUploadMode('upload');
         setUpdateTargetPackId(null);
+        setUpdateTargetPackName(null);
     }, []);
 
     const handleUploadCompleted = useCallback((uploadResult: ModPackUploadResponseDto) => {
         setPendingUploadFile(null);
-        setUploadMode('upload');
         setUpdateTargetPackId(null);
+        setUpdateTargetPackName(null);
         setPendingUploadResult(uploadResult);
         setIsUploadModalOpen(false);
         setIsMetadataModalOpen(true);
     }, []);
 
-    const openUpdatePack = useCallback((packId: number) => {
+    const openUpdatePack = useCallback((packId: number, packName?: string) => {
         setLoadError('');
         setPendingUploadFile(null);
         setUploadMode('update');
         setUpdateTargetPackId(packId);
+        setUpdateTargetPackName(packName ?? null);
         setIsUploadModalOpen(true);
     }, [setLoadError]);
 
@@ -116,7 +95,8 @@ export function useUploadFlow({ refreshAllPacks, setLoadError }: UseUploadFlowOp
         pendingUploadResult,
         pendingUploadFile,
         uploadMode,
-        submitUpload,
+        updateTargetPackName,
+        updateTargetPackId,
         openNewUpload,
         closeUploadModal,
         handleUploadCompleted,

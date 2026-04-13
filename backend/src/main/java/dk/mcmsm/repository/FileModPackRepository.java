@@ -50,7 +50,7 @@ public class FileModPackRepository implements ModPackRepository {
 
     @Override
     public ModPack save(ModPack modPack) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
+        Objects.requireNonNull(modPack, "ModPack must not be null");
 
         store.write(modPacks -> {
             if (modPack.getPackId() == null) {

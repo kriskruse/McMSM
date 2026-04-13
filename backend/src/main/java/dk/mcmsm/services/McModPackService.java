@@ -32,6 +32,18 @@ public class McModPackService {
     private static final String UPLOAD_SUCCESS_MESSAGE = "Mod pack uploaded. Review metadata and submit corrections if needed.";
     private static final String METADATA_SUCCESS_MESSAGE = "Metadata updated successfully.";
 
+    /** Server-generated files and directories that must survive a modpack update. */
+    private static final List<String> PERSISTENT_SERVER_DATA = List.of(
+            "world",
+            "server.properties",
+            "whitelist.json",
+            "whitelist.txt",
+            "ops.json",
+            "banned-players.json",
+            "banned-ips.json",
+            "server-icon.png"
+    );
+
     private final ContainerService containerService;
     private final ModPackRepository modPackRepository;
     private final ModPackFileService fileService;
@@ -324,10 +336,10 @@ public class McModPackService {
      * @throws ModPackNotFoundException if the modpack does not exist
      */
     public ModPackUploadResponseDto updatePack(Long packId, MultipartFile file) {
-        ModPack modPack = modPackRepository.findByPackId(packId)
+        ModPack oldPack = modPackRepository.findByPackId(packId)
                 .orElseThrow(() -> new ModPackNotFoundException(packId));
 
-        if (Boolean.TRUE.equals(modPack.getIsDeployed())) {
+        if (Boolean.TRUE.equals(oldPack.getIsDeployed())) {
             stopPack(packId);
         }
 
@@ -340,13 +352,17 @@ public class McModPackService {
                     .orElseThrow(() -> new ModPackOperationException(packId, "update",
                             new IllegalStateException("Failed to find newly saved mod pack with ID: " + savePackResponse.packId())));
 
-            fileService.copyAndOverwriteFileFromTo("world", modPack.getPath(), newPack.getPath());
-            fileService.copyAndOverwriteFileFromTo("server.properties", modPack.getPath(), newPack.getPath());
-            fileService.copyAndOverwriteFileFromTo("whitelist.txt", modPack.getPath(), newPack.getPath());
+            for (String item : PERSISTENT_SERVER_DATA) {
+                fileService.copyIfExists(item, oldPack.getPath(), newPack.getPath());
+            }
 
             deployPack(newPack.getPackId());
 
-            return new ModPackUploadResponseDto(modPack, UPLOAD_SUCCESS_MESSAGE);
+            fileService.deletePackDirectory(oldPack);
+            modPackRepository.delete(oldPack);
+            logger.info("Cleaned up old modpack packId={} after successful update to packId={}.", packId, newPack.getPackId());
+
+            return new ModPackUploadResponseDto(newPack, UPLOAD_SUCCESS_MESSAGE);
         } catch (Exception e) {
             logger.error("Update failed for modpack packId={}", packId, e);
             return new ModPackUploadResponseDto(e.getMessage());

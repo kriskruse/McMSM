@@ -319,6 +319,33 @@ public class ModPackFileService {
         }
     }
 
+    /**
+     * Copies a file or directory from one modpack root to another if the source exists.
+     * Skips silently with a debug log when the source item is not present.
+     *
+     * @param item the relative path of the item to copy
+     * @param from the source root directory
+     * @param to   the target root directory
+     * @return {@code true} if the item existed and was copied, {@code false} if skipped
+     */
+    public boolean copyIfExists(String item, String from, String to) {
+        if (!hasText(item) || !hasText(from) || !hasText(to)) {
+            throw new IllegalArgumentException("item, from and to must contain text.");
+        }
+
+        var sourceRoot = Path.of(from).toAbsolutePath().normalize();
+        var sourcePath = sourceRoot.resolve(item).normalize();
+        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
+
+        if (!Files.exists(sourcePath)) {
+            logger.debug("Skipping copy of '{}' from '{}' — source does not exist.", item, sourceRoot);
+            return false;
+        }
+
+        copyAndOverwriteFileFromTo(item, from, to);
+        return true;
+    }
+
     private void copyTemplateFile(String templateName, Path targetPath) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:templates/" + templateName);
         if (!resource.exists()) {

@@ -6,7 +6,7 @@ type ModpackCardProps = {
     isBusy?: boolean;
     isExpanded: boolean;
     onToggleExpand: (packId: number) => void;
-    onUpdate: (packId: number) => void;
+    onUpdate: (packId: number, packName?: string) => void;
     onDelete: (packId: number) => void;
     onDeploy: (packId: number) => void;
     onArchive: (packId: number) => void;
@@ -222,7 +222,7 @@ const ModpackCard = ({
                 <button
                     type="button"
                     className={`${modpack.isDeployed ? '' : 'ml-auto'} inline-flex h-8 w-8 items-center justify-center rounded-md bg-slate-600 text-white transition hover:bg-slate-500 disabled:opacity-50`}
-                    onClick={() => onUpdate(modpack.packId)}
+                    onClick={() => onUpdate(modpack.packId, modpack.name)}
                     disabled={isBusy}
                     aria-label={`Update ${modpack.name}`}
                 >

@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import type { ModPackUploadResponseDto } from '../dto';
 import { isZipFile } from '../util/fileValidation';
-import { uploadModpack } from '../util/modpackApi';
+import { updateModpack, uploadModpack } from '../util/modpackApi';
 import FileDropZone from './FileDropZone';
 import UploadProgress from './UploadProgress';
 
@@ -19,10 +19,8 @@ type UploadModpackModalProps = {
     onUploaded: (response: ModPackUploadResponseDto) => void;
     initialFile?: File | null;
     mode?: 'upload' | 'update';
-    submitUpload?: (
-        file: File,
-        onProgress?: (progressPercent: number) => void,
-    ) => Promise<ModPackUploadResponseDto>;
+    updatePackName?: string | null;
+    updateTargetPackId?: number | null;
 };
 
 const UploadModpackModal = ({
@@ -31,7 +29,8 @@ const UploadModpackModal = ({
     onUploaded,
     initialFile = null,
     mode = 'upload',
-    submitUpload = uploadModpack,
+    updatePackName = null,
+    updateTargetPackId = null,
 }: UploadModpackModalProps) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -144,13 +143,19 @@ const UploadModpackModal = ({
         setError('');
         setUploadProgress(0);
 
+        const onProgress = (progress: number) => {
+            setUploadProgress(progress);
+            if (progress >= 100) {
+                setIsBackendProcessing(true);
+            }
+        };
+
         try {
-            const response = await submitUpload(selectedFile, (progress) => {
-                setUploadProgress(progress);
-                if (progress >= 100) {
-                    setIsBackendProcessing(true);
-                }
-            });
+            console.log('mode: ', mode, 'updateTargetPackId: ', updateTargetPackId );
+            const response = mode === 'update' && updateTargetPackId != null
+                ? await updateModpack(updateTargetPackId, selectedFile, onProgress)
+                : await uploadModpack(selectedFile, onProgress);
+
             setUploadProgress(100);
             setIsSuccess(true);
 
@@ -176,7 +181,9 @@ const UploadModpackModal = ({
                 <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
                         <h2 className="text-xl font-semibold text-white">
-                            {mode === 'update' ? 'Update Modpack' : 'Upload Modpack'}
+                            {mode === 'update'
+                                ? `Update ${updatePackName ?? 'Modpack'}`
+                                : 'Upload Modpack'}
                         </h2>
                         <p className="mt-1 text-sm text-slate-400">
                             {mode === 'update'
