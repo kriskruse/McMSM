@@ -19,6 +19,8 @@ Currently, the following features are implemented, but hoping to expand in the f
 - Deploy, start, stop, delete, and archive modpack runtime containers
 - Track saved vs deployed instances with live runtime state sync
 
+Currently supports Forge and NeoForge modpacks.
+
 
 ## Getting Started
 
@@ -150,19 +152,12 @@ Manual trigger options:
 ## TODO:
 ### Notes
 - FTB uses install scripts to get modpack data instead of uploading everything as a zip. How do we manage that?
-- Add a preprocessing step for uploaded modpacks, the goal is to accept a wider variety of modpack zip formats and structures.
-  - Forge installed in the zip vs needed to be installed by the manager.
-  - NeoForge installed in the zip vs needed to be installed by the manager.
-  - Install scripts from FTB modpacks.
-    - Comes as a single `install.sh` or `install.bat` file that downloads their installer
-    - The installer then downloads the modpack files and sets up the structure.
-  - Fabric, quilt, and other modloaders.
+
 
 
 ### Fixes and Bugs:
 #### Small
 - Center align the X button on the modpack expanded view
-- Add an indicator to the upload view between the upload done and form creation steps.
 - Fix expanded modpack view auto-scroll when streaming logs to the console.
 - Add a warning for port overlap when creating/editing modpacks.
 - fix metadata edit form not listing minecraft versions.
@@ -178,13 +173,10 @@ Manual trigger options:
 ### Security Considerations:
 - Add hashing and encryption to user data.
 - Do proper authentication and authorization for the API endpoints, just basic user auth.
-- 
 
 ### Feature Ideas:
 - Backup worlds
 - Update modpacks by uploading a new zip and keeping the same metadata, world and optional configuration files.
-- Proper flow to ensure modpack servers are ran with proper java args
-- Create an update functionality for the manager application itself.
 - Automated modpack downloading from CurseForge, Modrinth and FTB APIs.
 - Modpack explorer to view possible modpacks to download and manage from the app itself.
 

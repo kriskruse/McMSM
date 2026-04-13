@@ -152,7 +152,6 @@ const UploadModpackModal = ({
                 }
             });
             setUploadProgress(100);
-            setIsBackendProcessing(false);
             setIsSuccess(true);
 
             window.setTimeout(() => {
