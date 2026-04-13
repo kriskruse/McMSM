@@ -29,6 +29,15 @@ try {
     Pop-Location
 }
 
-Write-Host "[2/2] Starting backend..."
+$jarFile = Get-ChildItem -Path "$backendDirPath\target" -Filter "*.jar" |
+    Where-Object { $_.Name -notlike "*-sources*" -and $_.Name -notlike "*-javadoc*" } |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
 
-mvn spring-boot:run
+if (-not $jarFile) {
+    throw "No JAR found in $backendDirPath\target"
+}
+
+Write-Host "[2/2] Starting $($jarFile.Name)..."
+
+java -jar $jarFile.FullName

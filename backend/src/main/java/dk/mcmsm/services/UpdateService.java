@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -45,7 +47,9 @@ public class UpdateService {
     private final BuildProperties buildProperties;
     private final ConfigurableApplicationContext applicationContext;
     private final Gson gson = new Gson();
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build();
     private final ReentrantLock updateLock = new ReentrantLock();
 
     private volatile UpdateStatusResponse cachedStatus;
@@ -73,8 +77,12 @@ public class UpdateService {
      * @return current version string.
      */
     public String getCurrentVersion() {
-        var version = buildProperties.getVersion();
+        String version = buildProperties.getVersion();
         return version != null ? version : DEV_VERSION;
+    }
+
+    private String resolveWorkingPath(){
+        return getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
     }
 
     /**
@@ -84,11 +92,7 @@ public class UpdateService {
      * @return whether a self-update is structurally possible.
      */
     public boolean isRunningFromJar() {
-        var codeSource = getClass().getProtectionDomain().getCodeSource();
-        if (codeSource == null) {
-            return false;
-        }
-        return codeSource.getLocation().getPath().endsWith(".jar");
+        return resolveWorkingPath().contains(".jar");
     }
 
     /**
@@ -102,24 +106,24 @@ public class UpdateService {
             return cachedStatus;
         }
 
-        var currentVersion = getCurrentVersion();
+        String currentVersion = getCurrentVersion();
 
         if (DEV_VERSION.equals(currentVersion)) {
-            var devStatus = new UpdateStatusResponse(DEV_VERSION, DEV_VERSION, 0, false, null);
+            UpdateStatusResponse devStatus = new UpdateStatusResponse(DEV_VERSION, DEV_VERSION, 0, false, null);
             cachedStatus = devStatus;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return devStatus;
         }
 
         try {
-            var releases = fetchGitHubReleases();
-            var status = buildStatusFromReleases(currentVersion, releases);
+            List<GitHubRelease> releases = fetchGitHubReleases();
+            UpdateStatusResponse status = buildStatusFromReleases(currentVersion, releases);
             cachedStatus = status;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return status;
         } catch (RunningInDevModeException e) {
             logger.warn("Update check skipped: running outside a JAR (dev mode).");
-            var devStatus = new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
+            UpdateStatusResponse devStatus = new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
             cachedStatus = devStatus;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return devStatus;
@@ -146,23 +150,24 @@ public class UpdateService {
                 throw new IllegalStateException("Cannot self-update when not running from a JAR.");
             }
 
-            var status = checkForUpdates(true);
+            UpdateStatusResponse status = checkForUpdates(true);
             if (!status.updateAvailable()) {
                 throw new IllegalStateException("No update available.");
             }
 
-            var currentJarPath = resolveCurrentJarPath();
-            var jarDirectory = currentJarPath.getParent();
-            var newJarName = "McMSM-" + status.latestVersion() + ".jar";
-            var newJarPath = jarDirectory.resolve(newJarName);
+            logger.info("Running in Jar, resolving path.");
+            Path currentJarPath = workingDirAsPath();
+            Path jarDirectory = currentJarPath.getParent();
+            String newJarName = "McMSM-" + status.latestVersion() + ".jar";
+            Path newJarPath = jarDirectory.resolve(newJarName);
 
             logger.info("Downloading update {} to {}", status.latestVersion(), newJarPath);
             downloadRelease(status.downloadUrl(), newJarPath);
 
-            var metadataPath = jarDirectory.resolve("update-pending.json");
+            Path metadataPath = jarDirectory.resolve("update-pending.json");
             writeUpdateMetadata(metadataPath, currentJarPath, newJarPath);
 
-            var scriptPath = writeUpdaterScript(jarDirectory, currentJarPath, newJarPath);
+            Path scriptPath = writeUpdaterScript(jarDirectory, currentJarPath, newJarPath);
             launchUpdaterScript(scriptPath);
 
             logger.info("Update downloaded. Initiating shutdown for restart.");
@@ -180,30 +185,30 @@ public class UpdateService {
     }
 
     private List<GitHubRelease> fetchGitHubReleases() throws IOException, InterruptedException {
-        var uri = URI.create(GITHUB_API_BASE + properties.githubRepo() + "/releases");
-        var request = HttpRequest.newBuilder(uri)
+        URI uri = URI.create(GITHUB_API_BASE + properties.githubRepo() + "/releases");
+        HttpRequest request = HttpRequest.newBuilder(uri)
                 .header("Accept", "application/vnd.github+json")
                 .GET()
                 .build();
 
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
             throw new IOException("GitHub API returned status " + response.statusCode());
         }
 
-        var jsonArray = gson.fromJson(response.body(), JsonArray.class);
-        var releases = new ArrayList<GitHubRelease>();
+        JsonArray jsonArray = gson.fromJson(response.body(), JsonArray.class);
+        ArrayList<GitHubRelease> releases = new ArrayList<>();
 
         for (JsonElement element : jsonArray) {
-            var obj = element.getAsJsonObject();
+            JsonObject obj = element.getAsJsonObject();
             if (obj.get("draft").getAsBoolean() || obj.get("prerelease").getAsBoolean()) {
                 continue;
             }
 
-            var tagName = obj.get("tag_name").getAsString();
-            var version = tagName.startsWith("v") ? tagName.substring(1) : tagName;
-            var publishedAt = obj.get("published_at").getAsString();
-            var downloadUrl = extractJarDownloadUrl(obj);
+            String tagName = obj.get("tag_name").getAsString();
+            String version = tagName.startsWith("v") ? tagName.substring(1) : tagName;
+            String publishedAt = obj.get("published_at").getAsString();
+            String downloadUrl = extractJarDownloadUrl(obj);
 
             releases.add(new GitHubRelease(version, tagName, publishedAt, downloadUrl));
         }
@@ -213,13 +218,13 @@ public class UpdateService {
     }
 
     private String extractJarDownloadUrl(JsonObject releaseObj) {
-        var assets = releaseObj.getAsJsonArray("assets");
+        JsonArray assets = releaseObj.getAsJsonArray("assets");
         if (assets == null) {
             return null;
         }
         for (JsonElement asset : assets) {
-            var assetObj = asset.getAsJsonObject();
-            var name = assetObj.get("name").getAsString();
+            JsonObject assetObj = asset.getAsJsonObject();
+            String name = assetObj.get("name").getAsString();
             if (name.endsWith(".jar")) {
                 return assetObj.get("browser_download_url").getAsString();
             }
@@ -236,8 +241,8 @@ public class UpdateService {
             return new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
         }
 
-        var latest = releases.getFirst();
-        var currentIndex = -1;
+        GitHubRelease latest = releases.getFirst();
+        int currentIndex = -1;
         for (int i = 0; i < releases.size(); i++) {
             if (releases.get(i).version().equals(currentVersion)) {
                 currentIndex = i;
@@ -252,7 +257,7 @@ public class UpdateService {
             versionsBehind = currentIndex;
         }
 
-        var updateAvailable = versionsBehind > 0 && latest.downloadUrl() != null;
+        boolean updateAvailable = versionsBehind > 0 && latest.downloadUrl() != null;
 
         return new UpdateStatusResponse(
                 currentVersion,
@@ -263,22 +268,21 @@ public class UpdateService {
         );
     }
 
-    private Path resolveCurrentJarPath() {
-        var codeSource = getClass().getProtectionDomain().getCodeSource();
-        if (codeSource == null) {
-            throw new IllegalStateException("Cannot determine current JAR location.");
-        }
+    private Path workingDirAsPath() {
+
         try {
-            // Code source URL may be nested (jar:file:/path/app.jar!/BOOT-INF/classes!/)
-            var location = codeSource.getLocation().toURI();
-            var path = location.getSchemeSpecificPart();
-            // Strip jar: prefix and !/... suffix for Spring Boot fat JARs
-            if (path.contains("!")) {
-                path = path.substring(0, path.indexOf("!"));
+            String path = URLDecoder.decode(resolveWorkingPath(), StandardCharsets.UTF_8);
+
+            if (path.startsWith("nested:/")) {
+                path = path.substring("nested:/".length());
             }
-            if (path.startsWith("file:")) {
-                path = path.substring(5);
+
+            int jarIndex = path.indexOf(".jar");
+            if (jarIndex != -1) {
+                path = path.substring(0, jarIndex + 4);
             }
+            logger.info("workingDirAsPath found path: {}", path);
+
             // On Windows, remove leading slash before drive letter (e.g., /C:/...)
             if (System.getProperty("os.name").toLowerCase().contains("win") && path.matches("^/[A-Za-z]:.*")) {
                 path = path.substring(1);
@@ -290,14 +294,14 @@ public class UpdateService {
     }
 
     private void downloadRelease(String downloadUrl, Path targetPath) throws IOException {
-        var tempPath = targetPath.resolveSibling(targetPath.getFileName() + ".tmp");
+        Path tempPath = targetPath.resolveSibling(targetPath.getFileName() + ".tmp");
         try {
-            var request = HttpRequest.newBuilder(URI.create(downloadUrl))
+            HttpRequest request = HttpRequest.newBuilder(URI.create(downloadUrl))
                     .header("Accept", "application/octet-stream")
                     .GET()
                     .build();
 
-            var response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (response.statusCode() != 200) {
                 throw new IOException("Download failed with status " + response.statusCode());
             }
@@ -316,7 +320,7 @@ public class UpdateService {
     }
 
     private void writeUpdateMetadata(Path metadataPath, Path oldJar, Path newJar) throws IOException {
-        var metadata = new JsonObject();
+        JsonObject metadata = new JsonObject();
         metadata.addProperty("oldJar", oldJar.toAbsolutePath().toString());
         metadata.addProperty("newJar", newJar.toAbsolutePath().toString());
         metadata.addProperty("pid", ProcessHandle.current().pid());
@@ -325,22 +329,26 @@ public class UpdateService {
     }
 
     private Path writeUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
-        var isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+        logger.info("Determining OS for updater script generation.");
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
         if (isWindows) {
+            logger.info("Found os Windows, using windows script: {}", directory);
             return writeWindowsUpdaterScript(directory, oldJar, newJar);
         } else {
+            logger.info("Found os as Other, using unix script: {}", directory);
             return writeUnixUpdaterScript(directory, oldJar, newJar);
         }
     }
 
     private Path writeWindowsUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
-        var scriptPath = directory.resolve("mcmsm-updater.bat");
-        var pid = ProcessHandle.current().pid();
-        var javaHome = System.getProperty("java.home");
-        var javaExe = Path.of(javaHome, "bin", "java.exe").toAbsolutePath().toString();
-        var port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
+        logger.info("Creating Windows updater script in directory: {}", directory);
+        Path scriptPath = directory.resolve("mcmsm-updater.bat");
+        long pid = ProcessHandle.current().pid();
+        String javaHome = System.getProperty("java.home");
+        String javaExe = Path.of(javaHome, "bin", "java.exe").toAbsolutePath().toString();
+        String port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
 
-        var script = """
+        String script = """
                 @echo off
                 setlocal
                 set "OLD_PID=%d"
@@ -390,17 +398,19 @@ public class UpdateService {
                 javaExe, port, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
 
         Files.writeString(scriptPath, script);
+        logger.info("Windows updater script written to: {}", scriptPath);
         return scriptPath;
     }
 
     private Path writeUnixUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
-        var scriptPath = directory.resolve("mcmsm-updater.sh");
-        var pid = ProcessHandle.current().pid();
-        var javaHome = System.getProperty("java.home");
-        var javaExe = Path.of(javaHome, "bin", "java").toAbsolutePath().toString();
-        var port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
+        logger.info("Creating Unix updater script in directory: {}", directory);
+        Path scriptPath = directory.resolve("mcmsm-updater.sh");
+        long pid = ProcessHandle.current().pid();
+        String javaHome = System.getProperty("java.home");
+        String javaExe = Path.of(javaHome, "bin", "java").toAbsolutePath().toString();
+        String port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
 
-        var script = """
+        String script = """
                 #!/usr/bin/env bash
                 set -euo pipefail
 
@@ -443,20 +453,23 @@ public class UpdateService {
 
         Files.writeString(scriptPath, script);
         scriptPath.toFile().setExecutable(true);
+        logger.info("Unix updater script written to: {}", scriptPath);
         return scriptPath;
     }
 
     private void launchUpdaterScript(Path scriptPath) throws IOException {
-        var isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+        logger.info("Attempting to launch updater script: {}", scriptPath);
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
         ProcessBuilder pb;
         if (isWindows) {
-            pb = new ProcessBuilder("cmd.exe", "/c", "start", "/b", scriptPath.toAbsolutePath().toString());
+            pb = new ProcessBuilder("cmd.exe", "/c", scriptPath.toAbsolutePath().toString());
         } else {
             pb = new ProcessBuilder("bash", scriptPath.toAbsolutePath().toString());
         }
         pb.directory(scriptPath.getParent().toFile());
         pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
         pb.redirectErrorStream(true);
+        logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
         pb.start();
     }
 
