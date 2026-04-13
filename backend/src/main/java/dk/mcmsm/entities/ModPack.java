@@ -1,6 +1,7 @@
 package dk.mcmsm.entities;
 
 import java.time.Instant;
+import java.util.List;
 
 public class ModPack {
 
@@ -21,6 +22,8 @@ public class ModPack {
     private Instant lastDeployAt;
     private String lastDeployError;
     private Instant updatedAt;
+    private String loaderType;
+    private List<String> loaderWarnings;
 
 
     public ModPack(String name,
@@ -37,7 +40,9 @@ public class ModPack {
                    PackStatus status,
                    Instant lastDeployAt,
                    String lastDeployError,
-                   Instant updatedAt) {
+                   Instant updatedAt,
+                   String loaderType,
+                   List<String> loaderWarnings) {
         this.name = name;
         this.path = path;
         this.packVersion = packVersion;
@@ -54,6 +59,8 @@ public class ModPack {
         this.lastDeployAt = lastDeployAt;
         this.lastDeployError = lastDeployError;
         this.updatedAt = updatedAt;
+        this.loaderType = loaderType;
+        this.loaderWarnings = loaderWarnings;
     }
 
     public ModPack() {
@@ -77,6 +84,8 @@ public class ModPack {
     public Instant getLastDeployAt() { return lastDeployAt; }
     public String getLastDeployError() { return lastDeployError; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public String getLoaderType() { return loaderType; }
+    public List<String> getLoaderWarnings() { return loaderWarnings; }
 
     public void setPackId(Long packId) { this.packId = packId;}
     public void setName(String name) { this.name = name; }
@@ -95,5 +104,7 @@ public class ModPack {
     public void setLastDeployAt(Instant lastDeployAt) { this.lastDeployAt = lastDeployAt; }
     public void setLastDeployError(String lastDeployError) { this.lastDeployError = lastDeployError; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+    public void setLoaderType(String loaderType) { this.loaderType = loaderType; }
+    public void setLoaderWarnings(List<String> loaderWarnings) { this.loaderWarnings = loaderWarnings; }
 
 }

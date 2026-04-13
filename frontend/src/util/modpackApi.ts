@@ -47,6 +47,7 @@ function mapToCardDto(pack: BackendModPackDto): ModPackCardDto {
         status: normalizeStatus(pack.status),
         isDeployed: Boolean(pack.isDeployed),
         updatedAt: pack.updatedAt,
+        loaderType: pack.loaderType ?? null,
     };
 }
 
@@ -125,6 +126,8 @@ function parseUploadResponse(xhr: XMLHttpRequest): ModPackUploadResponseDto {
         port: null,
         entryPoint: null,
         entryPointCandidates: null,
+        loaderType: null,
+        loaderWarnings: null,
         message: 'Upload completed.',
     };
 }

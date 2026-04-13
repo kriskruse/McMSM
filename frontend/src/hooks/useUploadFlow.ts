@@ -14,6 +14,8 @@ function toUploadResultFromPack(pack: ModPackCardDto): ModPackUploadResponseDto 
         port: pack.port,
         entryPoint: pack.entryPoint,
         entryPointCandidates: pack.entryPointCandidates,
+        loaderType: pack.loaderType ?? null,
+        loaderWarnings: null,
         message: '',
     };
 }

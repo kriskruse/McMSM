@@ -36,6 +36,7 @@ export type ModPackCardDto = {
     isDeployed: boolean;
     lastDeployError: string | null;
     updatedAt: string | null;
+    loaderType: string | null;
 };
 
 export type ModPackUploadResponseDto = {
@@ -49,6 +50,8 @@ export type ModPackUploadResponseDto = {
     port: string | null;
     entryPoint: string | null;
     entryPointCandidates: string[] | null;
+    loaderType: string | null;
+    loaderWarnings: string[] | null;
     message: string;
 };
 
@@ -75,6 +78,7 @@ export type ModPackMetadataResponseDto = {
     entryPointCandidates: string[] | null;
     isDeployed: boolean | null;
     status: string | null;
+    loaderType: string | null;
     message: string;
 };
 
@@ -95,6 +99,7 @@ export type BackendModPackDto = {
     status: string | null;
     isDeployed: boolean | null;
     updatedAt: string | null;
+    loaderType: string | null;
 };
 
 export type UpdateStatusDto = {

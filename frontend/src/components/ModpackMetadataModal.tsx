@@ -26,6 +26,7 @@ type MetadataForm = {
     javaXmx: string;
     port: string;
     entryPoint: string;
+    loaderType: string;
 };
 
 type ModpackMetadataModalProps = {
@@ -85,6 +86,17 @@ function resolveGroupVersion(minecraftVersion: string | null): string {
     return minecraftVersionGroups[0]?.value ?? '1.21.11';
 }
 
+function formatLoaderType(loaderType: string | null | undefined): string {
+    switch (loaderType?.toLowerCase()) {
+        case 'forge':
+            return 'Forge';
+        case 'neoforge':
+            return 'NeoForge';
+        default:
+            return 'Unknown';
+    }
+}
+
 function resolveEntryPointCandidates(uploadResult: ModPackUploadResponseDto): string[] {
     if (uploadResult.entryPointCandidates && uploadResult.entryPointCandidates.length > 0) {
         return uploadResult.entryPointCandidates;
@@ -112,6 +124,7 @@ function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm 
         entryPoint: entryPointCandidates.includes(detectedEntryPoint)
             ? detectedEntryPoint
             : entryPointCandidates[0],
+        loaderType: formatLoaderType(uploadResult.loaderType),
     };
 }
 
@@ -219,6 +232,16 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
                     </button>
                 </div>
 
+                {uploadResult.loaderWarnings && uploadResult.loaderWarnings.length > 0 && (
+                    <div className="mb-4 flex flex-col gap-2">
+                        {uploadResult.loaderWarnings.map((warning, index) => (
+                            <p key={index} className="rounded-md bg-amber-400/10 px-3 py-2 text-sm text-amber-400">
+                                {warning}
+                            </p>
+                        ))}
+                    </div>
+                )}
+
                 <div className="grid gap-4 md:grid-cols-2">
                     <label>
                         <span className="text-sm text-slate-300">Name</span>
@@ -273,6 +296,11 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
                                 </option>
                             ))}
                         </select>
+                    </label>
+
+                    <label>
+                        <span className="text-sm text-slate-300">Detected Loader</span>
+                        <input className={`${inputClass} cursor-not-allowed text-slate-400`} value={form.loaderType} readOnly />
                     </label>
                 </div>
 

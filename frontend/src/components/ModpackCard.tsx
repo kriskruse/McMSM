@@ -156,6 +156,12 @@ const ModpackCard = ({
                     <dt className="text-slate-400">Java</dt>
                     <dd>{modpack.javaVersion}</dd>
                 </div>
+                {modpack.loaderType && modpack.loaderType !== 'unknown' && (
+                    <div>
+                        <dt className="text-slate-400">Loader</dt>
+                        <dd className="capitalize">{modpack.loaderType}</dd>
+                    </div>
+                )}
             </dl>
 
             <div className="mt-4 flex items-center gap-2">

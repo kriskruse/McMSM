@@ -20,10 +20,12 @@ public record ModPackMetadataResponseDto(
         String[] entryPointCandidates,
         Boolean isDeployed,
         PackStatus status,
+        String loaderType,
         String message
 ) {
     public ModPackMetadataResponseDto(Long packId, String message) {
         this(packId,
+                null,
                 null,
                 null,
                 null,
@@ -53,8 +55,8 @@ public record ModPackMetadataResponseDto(
                 modPack.getEntryPointCandidates(),
                 modPack.getIsDeployed(),
                 modPack.getStatus(),
+                modPack.getLoaderType(),
                 message
         );
     }
 }
-

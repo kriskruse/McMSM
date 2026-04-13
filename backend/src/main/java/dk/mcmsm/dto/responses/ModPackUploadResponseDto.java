@@ -2,6 +2,7 @@ package dk.mcmsm.dto.responses;
 
 import dk.mcmsm.entities.ModPack;
 
+import java.util.List;
 import java.util.Objects;
 
 import static dk.mcmsm.services.ModPackFileService.DEFAULT_JAVA_XMX;
@@ -17,10 +18,14 @@ public record ModPackUploadResponseDto(
         String port,
         String entryPoint,
         String[] entryPointCandidates,
+        String loaderType,
+        String[] loaderWarnings,
         String message
 ) {
     public ModPackUploadResponseDto(String message){
         this(null,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -45,8 +50,16 @@ public record ModPackUploadResponseDto(
                 modPack.getPort(),
                 modPack.getEntryPoint(),
                 modPack.getEntryPointCandidates(),
+                modPack.getLoaderType(),
+                toArray(modPack.getLoaderWarnings()),
                 message
         );
     }
-}
 
+    private static String[] toArray(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.toArray(String[]::new);
+    }
+}

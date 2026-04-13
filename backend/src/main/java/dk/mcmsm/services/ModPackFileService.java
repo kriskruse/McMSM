@@ -2,6 +2,9 @@ package dk.mcmsm.services;
 
 import dk.mcmsm.entities.ModPack;
 import dk.mcmsm.entities.PackStatus;
+import dk.mcmsm.services.loader.LoaderDetectionResult;
+import dk.mcmsm.services.loader.LoaderService;
+import dk.mcmsm.services.loader.LoaderType;
 import dk.mcmsm.util.ZipArchiveUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,6 +49,7 @@ public class ModPackFileService {
     public static final String DEFAULT_JAVA_XMX = "5G";
     private static final String DEFAULT_PORT = "25565";
     private static final String DEFAULT_ENTRYPOINT = "startserver.sh";
+    private static final String MCMSM_LAUNCH_SCRIPT = "mcmsm-launch.sh";
     private static final String[] DEFAULT_ENTRYPOINT_CANDIDATES = new String[]{DEFAULT_ENTRYPOINT};
     private static final int DEFAULT_XMX_MIB = 8192;
     private static final int XMX_OVERHEAD_MIB = 250;
@@ -54,15 +59,18 @@ public class ModPackFileService {
     private final Path modpacksRoot;
     private final Path tempRoot;
     private final ResourceLoader resourceLoader;
+    private final LoaderService loaderService;
 
     public ModPackFileService(
             @Value("${app.storage.modpacks-root:modpacks}") String modpacksRootPath,
             @Value("${app.storage.temp-root:${java.io.tmpdir}/application-demo}") String tempRootPath,
-            ResourceLoader resourceLoader
+            ResourceLoader resourceLoader,
+            LoaderService loaderService
     ) {
         this.modpacksRoot = Path.of(modpacksRootPath).toAbsolutePath().normalize();
         this.tempRoot = Path.of(tempRootPath).toAbsolutePath().normalize();
         this.resourceLoader = resourceLoader;
+        this.loaderService = loaderService;
     }
 
     /**
@@ -110,16 +118,24 @@ public class ModPackFileService {
             }
         }
 
-        var entryPointCandidates = resolveEntryPointCandidates(stagingDirectory);
-        var entryPoint = resolveEntryPoint(entryPointCandidates);
+        // Detect loader, run/download installer if needed, generate mcmsm-launch.sh
+        var loaderResult = prepareLoader(stagingDirectory, inferredName);
+
+        // Re-scan entry points after installer may have created new scripts
+        var entryPointCandidates = resolveEntryPointCandidatesWithLaunchScript(stagingDirectory);
+        var entryPoint = MCMSM_LAUNCH_SCRIPT;
         var javaXmx = resolveJavaXmx(stagingDirectory.resolve("user_jvm_args.txt"));
+        var detectedMcVersion = loaderResult.minecraftVersion() != null
+                ? loaderResult.minecraftVersion()
+                : DEFAULT_MINECRAFT_VERSION;
+        var loaderType = loaderResult.loaderType().wireFormat();
         var now = Instant.now();
 
         return new ModPack(
                 inferredName,
                 stagingDirectory.toString(),
                 packVersion,
-                DEFAULT_MINECRAFT_VERSION,
+                detectedMcVersion,
                 DEFAULT_JAVA_VERSION,
                 javaXmx,
                 DEFAULT_PORT,
@@ -130,7 +146,9 @@ public class ModPackFileService {
                 DEFAULT_STATUS,
                 null,
                 null,
-                now
+                now,
+                loaderType,
+                loaderResult.warnings()
         );
     }
 
@@ -310,6 +328,34 @@ public class ModPackFileService {
         try (InputStream inputStream = resource.getInputStream()) {
             Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
+    }
+
+    private LoaderDetectionResult prepareLoader(Path stagingDirectory, String packName) {
+        try {
+            var result = loaderService.prepareModpack(stagingDirectory);
+            result.warnings().forEach(warning ->
+                    logger.warn("Loader warning for '{}': {}", packName, warning));
+            return result;
+        } catch (Exception e) {
+            logger.error("Loader preparation failed for '{}'. Falling back to defaults.", packName, e);
+            return LoaderDetectionResult.unknownWithWarning(
+                    "Loader preparation failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Resolves entry point candidates ensuring mcmsm-launch.sh is first.
+     * Scans after installer execution so newly created scripts are included.
+     */
+    private String[] resolveEntryPointCandidatesWithLaunchScript(Path packDirectory) {
+        var baseCandidates = resolveEntryPointCandidates(packDirectory);
+        // Ensure mcmsm-launch.sh is first, followed by all others (deduplicated)
+        var allCandidates = new java.util.ArrayList<String>();
+        allCandidates.add(MCMSM_LAUNCH_SCRIPT);
+        Arrays.stream(baseCandidates)
+                .filter(name -> !name.equals(MCMSM_LAUNCH_SCRIPT))
+                .forEach(allCandidates::add);
+        return allCandidates.toArray(String[]::new);
     }
 
     private void ensureJvmArgsExists(Path packDirectory) throws IOException {
