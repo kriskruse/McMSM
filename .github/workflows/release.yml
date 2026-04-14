@@ -3,11 +3,15 @@ name: Release McMSM
 on:
   workflow_dispatch:
     inputs:
-      prerelease:
-        description: "Prerelease (minor bump 0.1)"
+      release_type:
+        description: "Release type"
         required: true
-        default: true
-        type: boolean
+        default: "prerelease"
+        type: choice
+        options:
+          - prerelease
+          - full
+          - hotfix
       draft:
         description: "Create as draft release"
         required: false
@@ -35,7 +39,7 @@ jobs:
         id: version
         env:
           GH_TOKEN: ${{ github.token }}
-          IS_PRERELEASE: ${{ inputs.prerelease }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
         shell: bash
         run: |
           set -euo pipefail
@@ -45,29 +49,40 @@ jobs:
             --jq '[.[] | select(.isDraft == false)] | sort_by(.publishedAt) | last | .tagName // empty')
 
           if [[ -z "$LATEST_TAG" ]]; then
-            if [[ "$IS_PRERELEASE" == "true" ]]; then
-              NEW_VERSION="0.1"
-            else
-              NEW_VERSION="1.0"
-            fi
+            case "$RELEASE_TYPE" in
+              prerelease) NEW_VERSION="0.1" ;;
+              full)       NEW_VERSION="1.0" ;;
+              hotfix)
+                echo "::error::No previous release to hotfix"
+                exit 1
+                ;;
+            esac
           else
             LAST_VERSION="${LATEST_TAG#v}"
-            MAJOR="${LAST_VERSION%%.*}"
-            MINOR="${LAST_VERSION#*.}"
 
-            if ! [[ "$MAJOR" =~ ^[0-9]+$ ]] || ! [[ "$MINOR" =~ ^[0-9]+$ ]]; then
-              echo "::error::Latest release tag '$LATEST_TAG' does not follow MAJOR.MINOR format"
+            # Split into MAJOR.MINOR[.PATCH]
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_VERSION"
+            PATCH="${PATCH:-0}"
+
+            if ! [[ "$MAJOR" =~ ^[0-9]+$ ]] || ! [[ "$MINOR" =~ ^[0-9]+$ ]] || ! [[ "$PATCH" =~ ^[0-9]+$ ]]; then
+              echo "::error::Latest release tag '$LATEST_TAG' does not follow MAJOR.MINOR[.PATCH] format"
               exit 1
             fi
 
-            if [[ "$IS_PRERELEASE" == "true" ]]; then
-              MINOR=$((10#$MINOR + 1))
-            else
-              MAJOR=$((10#$MAJOR + 1))
-              MINOR=0
-            fi
-
-            NEW_VERSION="${MAJOR}.${MINOR}"
+            case "$RELEASE_TYPE" in
+              prerelease)
+                MINOR=$((10#$MINOR + 1))
+                NEW_VERSION="${MAJOR}.${MINOR}"
+                ;;
+              full)
+                MAJOR=$((10#$MAJOR + 1))
+                NEW_VERSION="${MAJOR}.0"
+                ;;
+              hotfix)
+                PATCH=$((10#$PATCH + 1))
+                NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+                ;;
+            esac
           fi
 
           RELEASE_TAG="v${NEW_VERSION}"
@@ -78,9 +93,15 @@ jobs:
             exit 1
           fi
 
+          IS_PRERELEASE="false"
+          if [[ "$RELEASE_TYPE" == "prerelease" ]]; then
+            IS_PRERELEASE="true"
+          fi
+
           echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
-          echo "### Version: $NEW_VERSION (tag: $RELEASE_TAG)" >> "$GITHUB_STEP_SUMMARY"
+          echo "is_prerelease=$IS_PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "### Version: $NEW_VERSION (tag: $RELEASE_TAG, type: $RELEASE_TYPE)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Java 25 (Temurin)
         uses: actions/setup-java@v4
@@ -200,7 +221,7 @@ jobs:
             ARGS+=(--draft)
           fi
 
-          if [[ "${{ inputs.prerelease }}" == "true" ]]; then
+          if [[ "${{ steps.version.outputs.is_prerelease }}" == "true" ]]; then
             ARGS+=(--prerelease)
           fi
 

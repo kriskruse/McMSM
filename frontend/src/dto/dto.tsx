@@ -108,6 +108,7 @@ export type UpdateStatusDto = {
     versionsBehind: number;
     majorVersionsBehind: number;
     minorVersionsBehind: number;
+    patchVersionsBehind: number;
     updateAvailable: boolean;
     downloadUrl: string | null;
 };

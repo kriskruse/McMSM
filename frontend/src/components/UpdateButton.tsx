@@ -59,7 +59,7 @@ export default function UpdateButton() {
         );
     }
 
-    const behindText = formatVersionsBehind(status.majorVersionsBehind, status.minorVersionsBehind);
+    const behindText = formatVersionsBehind(status.majorVersionsBehind, status.minorVersionsBehind, status.patchVersionsBehind);
 
     return (
         <>
@@ -191,14 +191,15 @@ function RefreshButton({ onClick, spinning }: { onClick: () => void; spinning: b
     );
 }
 
-function formatVersionsBehind(major: number, minor: number): string {
-    const majorPart = major > 0 ? `${major} major` : '';
-    const minorPart = minor > 0 ? `${minor} minor` : '';
+function formatVersionsBehind(major: number, minor: number, patch: number): string {
+    const parts: string[] = [];
+    if (major > 0) parts.push(`${major} major`);
+    if (minor > 0) parts.push(`${minor} minor`);
+    if (patch > 0) parts.push(`${patch} patch`);
 
-    if (majorPart && minorPart) {
-        return `${majorPart} and ${minorPart} versions behind`;
-    }
-    return `${majorPart || minorPart} version${(major + minor) !== 1 ? 's' : ''} behind`;
+    const total = major + minor + patch;
+    const joined = parts.join(' and ');
+    return `${joined} version${total !== 1 ? 's' : ''} behind`;
 }
 
 async function waitForRestart(): Promise<void> {
