@@ -215,15 +215,14 @@ jobs:
             --target "${{ github.sha }}"
             --title "McMSM $VERSION"
             --notes-file "${{ steps.notes.outputs.path }}"
-            --latest
           )
 
           if [[ "${{ inputs.draft }}" == "true" ]]; then
             ARGS+=(--draft)
-          fi
-
-          if [[ "${{ steps.version.outputs.is_prerelease }}" == "true" ]]; then
+          elif [[ "${{ steps.version.outputs.is_prerelease }}" == "true" ]]; then
             ARGS+=(--prerelease)
+          else
+            ARGS+=(--latest)
           fi
 
           gh release create "${ARGS[@]}"
