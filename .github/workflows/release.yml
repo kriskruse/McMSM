@@ -215,6 +215,7 @@ jobs:
             --target "${{ github.sha }}"
             --title "McMSM $VERSION"
             --notes-file "${{ steps.notes.outputs.path }}"
+            --latest
           )
 
           if [[ "${{ inputs.draft }}" == "true" ]]; then
