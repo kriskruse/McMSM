@@ -82,8 +82,8 @@ Configured in `backend/src/main/resources/application.properties`, all overridab
 | `DATA_ROOT` | `data/` | JSON metadata storage |
 | `TEMP_DIR` | system temp | Temp upload directory |
 | `RUNTIME_SYNC_INTERVAL_MS` | `15000` | Docker state poll interval |
-| `MAX_UPLOAD_FILE_SIZE` | `8024MB` | Max upload file size |
-| `MAX_UPLOAD_REQUEST_SIZE` | `8024MB` | Max request size |
+| `MAX_UPLOAD_FILE_SIZE` | `15360MB` | Max upload file size |
+| `MAX_UPLOAD_REQUEST_SIZE` | `15360MB` | Max request size |
 
 ## Releases
 Triggered via `workflow_dispatch` in GitHub Actions (Actions → Release McMSM → Run workflow). The version is auto-calculated from the latest GitHub release:

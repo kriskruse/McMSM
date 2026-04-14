@@ -25,3 +25,7 @@
 -XX:SurvivorRatio=32
 -XX:+PerfDisableSharedMem
 -XX:MaxTenuringThreshold=1
+-XX:MaxDirectMemorySize=2G
+-Dio.netty.maxDirectMemory=2G
+-Dio.netty.allocator.numDirectArenas=0
+-Dio.netty.allocator.maxOrder=8

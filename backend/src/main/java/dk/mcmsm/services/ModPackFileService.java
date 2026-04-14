@@ -387,9 +387,6 @@ public class ModPackFileService {
 
     private void ensureJvmArgsExists(Path packDirectory) throws IOException {
         var jvmArgsPath = packDirectory.resolve("user_jvm_args.txt");
-        if (Files.exists(jvmArgsPath)) {
-            return;
-        }
         copyTemplateFile("user_jvm_args.txt", jvmArgsPath);
     }
 

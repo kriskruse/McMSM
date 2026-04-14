@@ -45,8 +45,8 @@ All settings can be overridden via environment variables:
 | `DATA_ROOT` | `data/` | Where metadata JSON files are stored |
 | `TEMP_DIR` | system temp | Temporary upload directory |
 | `RUNTIME_SYNC_INTERVAL_MS` | `15000` | Docker state polling interval (ms) |
-| `MAX_UPLOAD_FILE_SIZE` | `8024MB` | Max upload file size |
-| `MAX_UPLOAD_REQUEST_SIZE` | `8024MB` | Max request size |
+| `MAX_UPLOAD_FILE_SIZE` | `15360MB` | Max upload file size |
+| `MAX_UPLOAD_REQUEST_SIZE` | `15360MB` | Max request size |
 
 Example with custom data directory:
 ```bash
@@ -176,7 +176,7 @@ Manual trigger options:
 
 ### Feature Ideas:
 - Backup worlds
-- Update modpacks by uploading a new zip and keeping the same metadata, world and optional configuration files.
+- Web page to edit the JVM args template used for new and updated modpacks.
 - Automated modpack downloading from CurseForge, Modrinth and FTB APIs.
 - Modpack explorer to view possible modpacks to download and manage from the app itself.
 
