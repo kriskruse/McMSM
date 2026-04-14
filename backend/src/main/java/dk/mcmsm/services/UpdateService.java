@@ -286,8 +286,8 @@ public class UpdateService {
         try {
             String path = URLDecoder.decode(resolveWorkingPath(), StandardCharsets.UTF_8);
 
-            if (path.startsWith("nested:/")) {
-                path = path.substring("nested:/".length());
+            if (path.startsWith("nested:")) {
+                path = path.substring("nested:".length());
             }
 
             int jarIndex = path.indexOf(".jar");
