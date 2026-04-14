@@ -52,8 +52,10 @@ public class ModPackFileService {
     private static final String MCMSM_LAUNCH_SCRIPT = "mcmsm-launch.sh";
     private static final String[] DEFAULT_ENTRYPOINT_CANDIDATES = new String[]{DEFAULT_ENTRYPOINT};
     private static final int DEFAULT_XMX_MIB = 8192;
-    private static final int XMX_OVERHEAD_MIB = 250;
+    private static final int JVM_OVERHEAD_MIB = 512;
+    private static final int DEFAULT_DIRECT_MEMORY_MIB = 2048;
     private static final Pattern XMX_PATTERN = Pattern.compile("(?i)^(?:-Xmx)?(\\d+)([mMgG])$");
+    private static final Pattern DIRECT_MEMORY_PATTERN = Pattern.compile("(?i)^-XX:MaxDirectMemorySize=(\\d+)([mMgG])$");
     private static final Pattern PACK_VERSION_PATTERN = Pattern.compile("(?:^|[-_])(\\d+(?:[.-]\\d+){2,})");
 
     private final Path modpacksRoot;
@@ -181,17 +183,50 @@ public class ModPackFileService {
     }
 
     /**
-     * Calculates the Docker container memory limit from the modpack's JVM Xmx setting.
+     * Calculates the Docker container memory limit from the modpack's JVM Xmx setting
+     * and MaxDirectMemorySize parsed from user_jvm_args.txt.
      *
      * @param modPack the modpack to resolve memory for
-     * @return memory limit in MiB (Xmx + overhead)
+     * @return memory limit in MiB (Xmx + MaxDirectMemorySize + JVM overhead)
      */
     public int resolveContainerMemoryLimitMiB(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
         var xmxMiB = parseXmxMiB(Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX)).orElse(DEFAULT_XMX_MIB);
-        var limitMiB = xmxMiB + XMX_OVERHEAD_MIB;
-        logger.debug("Resolved memory limit for packId={}: xmxMiB={}, overheadMiB={}, limitMiB={}", modPack.getPackId(), xmxMiB, XMX_OVERHEAD_MIB, limitMiB);
+        var directMemoryMiB = resolveDirectMemoryMiB(modPack);
+        var limitMiB = xmxMiB + directMemoryMiB + JVM_OVERHEAD_MIB;
+        logger.debug("Resolved memory limit for packId={}: xmxMiB={}, directMemoryMiB={}, jvmOverheadMiB={}, limitMiB={}",
+                modPack.getPackId(), xmxMiB, directMemoryMiB, JVM_OVERHEAD_MIB, limitMiB);
         return limitMiB;
+    }
+
+    private int resolveDirectMemoryMiB(ModPack modPack) {
+        if (!hasText(modPack.getPath())) {
+            return DEFAULT_DIRECT_MEMORY_MIB;
+        }
+        var jvmArgsPath = Path.of(modPack.getPath()).toAbsolutePath().normalize().resolve("user_jvm_args.txt");
+        try {
+            var lines = Files.readAllLines(jvmArgsPath);
+            return parseDirectMemoryMiB(lines).orElse(DEFAULT_DIRECT_MEMORY_MIB);
+        } catch (IOException e) {
+            logger.warn("Could not read user_jvm_args.txt for packId={}, using default direct memory {}MiB.", modPack.getPackId(), DEFAULT_DIRECT_MEMORY_MIB);
+            return DEFAULT_DIRECT_MEMORY_MIB;
+        }
+    }
+
+    private OptionalInt parseDirectMemoryMiB(List<String> lines) {
+        for (var line : lines) {
+            var trimmed = line.trim();
+            if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                continue;
+            }
+            var matcher = DIRECT_MEMORY_PATTERN.matcher(trimmed);
+            if (matcher.matches()) {
+                var value = Integer.parseInt(matcher.group(1));
+                var unit = matcher.group(2).toUpperCase();
+                return OptionalInt.of("G".equals(unit) ? value * 1024 : value);
+            }
+        }
+        return OptionalInt.empty();
     }
 
     /**
