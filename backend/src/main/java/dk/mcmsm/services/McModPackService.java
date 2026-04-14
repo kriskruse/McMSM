@@ -327,8 +327,9 @@ public class McModPackService {
     }
 
     /**
-     * Updates a modpack with a new archive: stops the running instance, uploads new files,
-     * preserves world/properties/whitelist, and redeploys.
+     * Updates a modpack with a new archive: stops and archives the running instance, uploads new files,
+     * preserves world/properties/whitelist, and redeploys. The old modpack is kept and renamed
+     * to "(old) &lt;name&gt;" so it can be used as a fallback if the update causes issues.
      *
      * @param packId the modpack ID to update
      * @param file   the new modpack archive
@@ -358,9 +359,10 @@ public class McModPackService {
 
             deployPack(newPack.getPackId());
 
-            fileService.deletePackDirectory(oldPack);
-            modPackRepository.delete(oldPack);
-            logger.info("Cleaned up old modpack packId={} after successful update to packId={}.", packId, newPack.getPackId());
+            oldPack.setName("(old) " + oldPack.getName());
+            modPackRepository.save(oldPack);
+            logger.info("Renamed old modpack packId={} to '{}' after update to packId={}.",
+                    packId, oldPack.getName(), newPack.getPackId());
 
             return new ModPackUploadResponseDto(newPack, UPLOAD_SUCCESS_MESSAGE);
         } catch (Exception e) {

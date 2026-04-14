@@ -59,6 +59,8 @@ export default function UpdateButton() {
         );
     }
 
+    const behindText = formatVersionsBehind(status.majorVersionsBehind, status.minorVersionsBehind);
+
     return (
         <>
             <div className="flex items-center gap-1.5">
@@ -69,7 +71,7 @@ export default function UpdateButton() {
                     className="flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-300 transition hover:bg-amber-500/20 disabled:opacity-50"
                 >
                     <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
-                    Update Available ({status.versionsBehind} behind)
+                    Update Available ({behindText})
                 </button>
                 <RefreshButton onClick={handleForceCheck} spinning={checking} />
             </div>
@@ -187,6 +189,16 @@ function RefreshButton({ onClick, spinning }: { onClick: () => void; spinning: b
             </svg>
         </button>
     );
+}
+
+function formatVersionsBehind(major: number, minor: number): string {
+    const majorPart = major > 0 ? `${major} major` : '';
+    const minorPart = minor > 0 ? `${minor} minor` : '';
+
+    if (majorPart && minorPart) {
+        return `${majorPart} and ${minorPart} versions behind`;
+    }
+    return `${majorPart || minorPart} version${(major + minor) !== 1 ? 's' : ''} behind`;
 }
 
 async function waitForRestart(): Promise<void> {

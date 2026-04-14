@@ -109,7 +109,7 @@ public class UpdateService {
         String currentVersion = getCurrentVersion();
 
         if (DEV_VERSION.equals(currentVersion)) {
-            UpdateStatusResponse devStatus = new UpdateStatusResponse(DEV_VERSION, DEV_VERSION, 0, false, null);
+            UpdateStatusResponse devStatus = new UpdateStatusResponse(DEV_VERSION, DEV_VERSION, 0, 0, 0, false, null);
             cachedStatus = devStatus;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return devStatus;
@@ -123,7 +123,7 @@ public class UpdateService {
             return status;
         } catch (RunningInDevModeException e) {
             logger.warn("Update check skipped: running outside a JAR (dev mode).");
-            UpdateStatusResponse devStatus = new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
+            UpdateStatusResponse devStatus = new UpdateStatusResponse(currentVersion, currentVersion, 0, 0, 0, false, null);
             cachedStatus = devStatus;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return devStatus;
@@ -201,7 +201,7 @@ public class UpdateService {
 
         for (JsonElement element : jsonArray) {
             JsonObject obj = element.getAsJsonObject();
-            if (obj.get("draft").getAsBoolean() || obj.get("prerelease").getAsBoolean()) {
+            if (obj.get("draft").getAsBoolean()) {
                 continue;
             }
 
@@ -238,7 +238,7 @@ public class UpdateService {
         }
 
         if (releases.isEmpty()) {
-            return new UpdateStatusResponse(currentVersion, currentVersion, 0, false, null);
+            return new UpdateStatusResponse(currentVersion, currentVersion, 0, 0, 0, false, null);
         }
 
         GitHubRelease latest = releases.getFirst();
@@ -257,12 +257,25 @@ public class UpdateService {
             versionsBehind = currentIndex;
         }
 
+        int majorBehind = 0;
+        int minorBehind = 0;
+        int newerCount = currentIndex == -1 ? releases.size() : currentIndex;
+        for (int i = 0; i < newerCount; i++) {
+            if (isMajorRelease(releases.get(i).version())) {
+                majorBehind++;
+            } else {
+                minorBehind++;
+            }
+        }
+
         boolean updateAvailable = versionsBehind > 0 && latest.downloadUrl() != null;
 
         return new UpdateStatusResponse(
                 currentVersion,
                 latest.version(),
                 versionsBehind,
+                majorBehind,
+                minorBehind,
                 updateAvailable,
                 latest.downloadUrl()
         );
@@ -471,6 +484,18 @@ public class UpdateService {
         pb.redirectErrorStream(true);
         logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
         pb.start();
+    }
+
+    /**
+     * A major release has minor version 0 (e.g. "2.0"). Everything else is a minor/prerelease.
+     */
+    private static boolean isMajorRelease(String version) {
+        int dot = version.indexOf('.');
+        if (dot == -1) {
+            return true;
+        }
+        String minor = version.substring(dot + 1);
+        return "0".equals(minor);
     }
 
     private record GitHubRelease(String version, String tagName, String publishedAt, String downloadUrl) {

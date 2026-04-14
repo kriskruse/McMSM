@@ -76,6 +76,8 @@ public class UpdateController {
                 updateService.getCurrentVersion(),
                 null,
                 0,
+                0,
+                0,
                 false,
                 null
         );
