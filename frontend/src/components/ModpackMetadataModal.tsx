@@ -1,4 +1,5 @@
 import { memo, useEffect, useMemo, useState } from 'react';
+import CloseButton from './CloseButton';
 import compatData from '../data/minecraft_java_compat.json';
 import type {
     ModPackMetadataRequestDto,
@@ -29,9 +30,16 @@ type MetadataForm = {
     loaderType: string;
 };
 
+type PortInfo = {
+    packId: number;
+    name: string;
+    port: string;
+};
+
 type ModpackMetadataModalProps = {
     isOpen: boolean;
     uploadResult: ModPackUploadResponseDto | null;
+    existingPorts: PortInfo[];
     onClose: () => void;
     onSaved: (response: ModPackMetadataResponseDto) => void;
 };
@@ -131,7 +139,7 @@ function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm 
 const inputClass =
     'mt-1 block w-full rounded-md bg-white/5 px-3 py-2 text-white outline outline-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500 sm:text-sm';
 
-const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: ModpackMetadataModalProps) => {
+const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, onSaved }: ModpackMetadataModalProps) => {
     const [form, setForm] = useState<MetadataForm | null>(null);
     const [error, setError] = useState('');
     const [isSaving, setIsSaving] = useState(false);
@@ -145,6 +153,12 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
 
     const canRender = isOpen && uploadResult && form;
     const packId = uploadResult?.packId ?? null;
+
+    const portConflict = useMemo(() => {
+        if (!form?.port || !packId) return null;
+        const conflict = existingPorts.find((p) => p.port === form.port && p.packId !== packId);
+        return conflict ?? null;
+    }, [form?.port, packId, existingPorts]);
 
     const title = useMemo(() => {
         if (!uploadResult?.name) {
@@ -221,15 +235,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
                         <h2 className="text-xl font-semibold text-white">{title}</h2>
                         <p className="mt-1 text-sm text-slate-400">Confirm detected values before deployment.</p>
                     </div>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        disabled={isSaving}
-                        className="rounded-md px-2 py-1 text-slate-300 transition hover:bg-slate-800 hover:text-white disabled:opacity-40"
-                        aria-label="Close metadata modal"
-                    >
-                        x
-                    </button>
+                    <CloseButton onClick={onClose} disabled={isSaving} className="shrink-0" />
                 </div>
 
                 {uploadResult.loaderWarnings && uploadResult.loaderWarnings.length > 0 && (
@@ -281,6 +287,11 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, onClose, onSaved }: Modpac
                     <label>
                         <span className="text-sm text-slate-300">Port</span>
                         <input className={inputClass} value={form.port} onChange={(event) => updateForm('port', event.target.value)} />
+                        {portConflict && (
+                            <p className="mt-1 text-xs text-amber-400">
+                                Port {form.port} is already used by "{portConflict.name}"
+                            </p>
+                        )}
                     </label>
 
                     <label>

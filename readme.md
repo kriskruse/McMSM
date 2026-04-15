@@ -156,12 +156,9 @@ Manual trigger options:
 
 ### Fixes and Bugs:
 #### Small
-- Make a nice new close button for the expanded view.
-- Add a warning for port overlap when creating/editing modpacks.
-- Add some overflow handling for the modpack name in the modpack card view.
 
 #### Medium
-
+- We have a lot of OS and Jar path checks in UpdateService should we move this to global variables as these don't change?
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.

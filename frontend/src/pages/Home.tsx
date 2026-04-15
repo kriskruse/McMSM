@@ -11,6 +11,8 @@ import StatusBox from "../components/StatusBox.tsx";
 import UpdateButton from "../components/UpdateButton.tsx";
 import {healthCheck} from "../util/healthCheck.ts";
 import {BackendStatus} from "../util/healthCheck.ts";
+import CloseButton from "../components/CloseButton";
+
 const Home = () => {
     const {
         modpacks,
@@ -218,14 +220,7 @@ const Home = () => {
                         className="relative w-full max-w-7xl max-h-[92vh] overflow-auto rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl"
                         onClick={(event) => event.stopPropagation()}
                     >
-                        <button
-                            type="button"
-                            onClick={closeConsole}
-                            className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-slate-800 text-xl leading-none text-slate-200 transition hover:bg-slate-700 hover:text-white"
-                            aria-label="Close modpack details"
-                        >
-                            <span className="-translate-y-px">x</span>
-                        </button>
+                        <CloseButton onClick={closeConsole} className="absolute right-4 top-4" />
                         <ModpackConsole modpack={expandedPack} />
                     </div>
                 </div>

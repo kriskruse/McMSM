@@ -5,6 +5,7 @@ import { isZipFile } from '../util/fileValidation';
 import { updateModpack, uploadModpack } from '../util/modpackApi';
 import FileDropZone from './FileDropZone';
 import UploadProgress from './UploadProgress';
+import CloseButton from "./CloseButton.tsx";
 
 const SMALL_PACK_SIZE_THRESHOLD = 52_428_800; // 50 MB
 const UPLOAD_SUCCESS_DELAY_MS = 900;
@@ -191,15 +192,7 @@ const UploadModpackModal = ({
                                 : 'Drag and drop a .zip file or choose one manually.'}
                         </p>
                     </div>
-                    <button
-                        type="button"
-                        onClick={handleClose}
-                        className="rounded-md px-2 py-1 text-slate-300 transition hover:bg-slate-800 hover:text-white disabled:opacity-40"
-                        disabled={isUploading}
-                        aria-label="Close upload modal"
-                    >
-                        x
-                    </button>
+                    <CloseButton onClick={handleClose} disabled={isUploading} className="shrink-0" />
                 </div>
 
                 <FileDropZone

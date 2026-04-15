@@ -68,7 +68,7 @@ const ModpackCard = ({
     return (
         <article className="rounded-xl border border-white/10 bg-slate-900/70 p-4 shadow-md">
             <div className="mb-3 flex items-start justify-between gap-4">
-                <h3 className="text-lg font-semibold text-white">{modpack.name}</h3>
+                <h3 className="min-w-0 truncate text-lg font-semibold text-white" title={modpack.name}>{modpack.name}</h3>
                 <div className="flex items-center gap-2">
                     <div className="inline-flex items-center gap-2 rounded-full bg-slate-950/60 px-3 py-1 text-xs font-medium">
                         <span className={`h-2.5 w-2.5 rounded-full ${indicator.dot}`} />
