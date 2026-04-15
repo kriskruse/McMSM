@@ -107,7 +107,7 @@ const Home = () => {
                         MC Modded Server Manager
                     </h1>
                     <p className="mt-1 text-sm text-slate-400">
-                        <span className="text-xs">By</span> Kris Kruse
+                        <span className="text-xs">McMSM</span>
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
