@@ -9,6 +9,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import dk.mcmsm.util.Globals;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,12 +48,12 @@ public class UpdateCleanupService {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void cleanupAfterUpdate() {
-        var jarPath = resolveJarDirectory();
-        if (jarPath.isEmpty()) {
+        if (!Globals.IS_RUNNING_FROM_JAR) {
             return;
         }
 
-        var metadataPath = jarPath.get().resolve("update-pending.json");
+        var jarDirectory = Globals.WORKING_DIRECTORY.getParent();
+        var metadataPath = jarDirectory.resolve("update-pending.json");
         if (!Files.exists(metadataPath)) {
             return;
         }
@@ -64,44 +66,15 @@ public class UpdateCleanupService {
 
             logger.info("Post-update cleanup: removing old JAR {}", oldJar);
             deleteWithRetry(oldJar);
-            deleteQuietly(jarPath.get().resolve("mcmsm-updater.bat"));
-            deleteQuietly(jarPath.get().resolve("mcmsm-updater.sh"));
-            deleteQuietly(jarPath.get().resolve("mcmsm-updater.log"));
+            deleteQuietly(jarDirectory.resolve("mcmsm-updater.bat"));
+            deleteQuietly(jarDirectory.resolve("mcmsm-updater.sh"));
+            deleteQuietly(jarDirectory.resolve("mcmsm-updater.log"));
             deleteQuietly(metadataPath);
 
             logger.info("Post-update cleanup completed successfully.");
         } catch (Exception e) {
             logger.warn("Post-update cleanup failed. Old files may remain.", e);
         }
-    }
-
-    private java.util.Optional<Path> resolveJarDirectory() {
-        var codeSource = getClass().getProtectionDomain().getCodeSource();
-        if (codeSource == null) {
-            return java.util.Optional.empty();
-        }
-
-        try {
-            var location = codeSource.getLocation().toURI();
-            var path = location.getSchemeSpecificPart();
-            if (path.contains("!")) {
-                path = path.substring(0, path.indexOf("!"));
-            }
-            if (path.startsWith("file:")) {
-                path = path.substring(5);
-            }
-            if (System.getProperty("os.name").toLowerCase().contains("win") && path.matches("^/[A-Za-z]:.*")) {
-                path = path.substring(1);
-            }
-            var jarFile = Path.of(path);
-            if (jarFile.getFileName().toString().endsWith(".jar")) {
-                return java.util.Optional.ofNullable(jarFile.getParent());
-            }
-        } catch (Exception e) {
-            logger.debug("Could not resolve JAR directory for cleanup.", e);
-        }
-
-        return java.util.Optional.empty();
     }
 
     private void deleteWithRetry(Path file) {

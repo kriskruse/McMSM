@@ -1,5 +1,6 @@
 package dk.mcmsm.services.loader;
 
+import dk.mcmsm.util.Globals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -121,7 +122,7 @@ public class LoaderService {
     private void runInstaller(LoaderStrategy strategy, Path installerJar, Path packDir, List<String> warnings) {
         logger.info("Running installer {} in {}", installerJar.getFileName(), packDir);
         try {
-            var javaExe = Path.of(System.getProperty("java.home"), "bin", "java").toAbsolutePath().toString();
+            var javaExe = Globals.JAVA_EXE;
             var args = new ArrayList<>(strategy.installerArguments(installerJar, packDir));
             // Replace "java" placeholder with absolute host java path
             if (!args.isEmpty() && "java".equals(args.getFirst())) {

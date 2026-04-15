@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import dk.mcmsm.config.UpdateProperties;
 import dk.mcmsm.dto.responses.UpdateStatusResponse;
 import dk.mcmsm.exception.RunningInDevModeException;
+import dk.mcmsm.util.Globals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.info.BuildProperties;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 /**
  * Handles checking GitHub for new releases, downloading updates,
  * generating platform-specific updater scripts, and triggering application restart.
@@ -38,13 +40,11 @@ public class UpdateService {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateService.class);
     private static final String GITHUB_API_BASE = "https://api.github.com/repos/";
-    private static final String DEV_VERSION = "dev";
     private static final int HEALTH_CHECK_RETRIES = 30;
     private static final int HEALTH_CHECK_DELAY_SECONDS = 2;
     private static final int SHUTDOWN_WAIT_SECONDS = 30;
 
     private final UpdateProperties properties;
-    private final BuildProperties buildProperties;
     private final ConfigurableApplicationContext applicationContext;
     private final Gson gson = new Gson();
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -59,40 +59,12 @@ public class UpdateService {
      * Creates a new UpdateService.
      *
      * @param properties         update configuration properties.
-     * @param buildProperties    Spring Boot build info (provides the artifact version).
      * @param applicationContext used to trigger graceful shutdown after update.
      */
     public UpdateService(UpdateProperties properties,
-                         BuildProperties buildProperties,
                          ConfigurableApplicationContext applicationContext) {
         this.properties = properties;
-        this.buildProperties = buildProperties;
         this.applicationContext = applicationContext;
-    }
-
-    /**
-     * Returns the version of the currently running application.
-     * Returns {@value DEV_VERSION} when running outside a packaged JAR.
-     *
-     * @return current version string.
-     */
-    public String getCurrentVersion() {
-        String version = buildProperties.getVersion();
-        return version != null ? version : DEV_VERSION;
-    }
-
-    private String resolveWorkingPath(){
-        return getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-    }
-
-    /**
-     * Returns {@code true} if the application is running from a packaged JAR file
-     * rather than from an IDE or {@code mvn spring-boot:run}.
-     *
-     * @return whether a self-update is structurally possible.
-     */
-    public boolean isRunningFromJar() {
-        return resolveWorkingPath().contains(".jar");
     }
 
     /**
@@ -106,10 +78,10 @@ public class UpdateService {
             return cachedStatus;
         }
 
-        String currentVersion = getCurrentVersion();
+        String currentVersion = Globals.APP_VERSION;
 
-        if (DEV_VERSION.equals(currentVersion)) {
-            UpdateStatusResponse devStatus = new UpdateStatusResponse(DEV_VERSION, DEV_VERSION, 0, 0, 0, 0, false, null);
+        if (Globals.DEV_VERSION.equals(currentVersion)) {
+            UpdateStatusResponse devStatus = new UpdateStatusResponse(Globals.DEV_VERSION, Globals.DEV_VERSION, 0, 0, 0, 0, false, null);
             cachedStatus = devStatus;
             cacheExpiry = Instant.now().plusMillis(properties.checkIntervalMs());
             return devStatus;
@@ -146,7 +118,7 @@ public class UpdateService {
         }
 
         try {
-            if (!isRunningFromJar()) {
+            if (!Globals.IS_RUNNING_FROM_JAR) {
                 throw new IllegalStateException("Cannot self-update when not running from a JAR.");
             }
 
@@ -156,7 +128,7 @@ public class UpdateService {
             }
 
             logger.info("Running in Jar, resolving path.");
-            Path currentJarPath = workingDirAsPath();
+            Path currentJarPath = Globals.WORKING_DIRECTORY;
             Path jarDirectory = currentJarPath.getParent();
             String newJarName = "McMSM-" + status.latestVersion() + ".jar";
             Path newJarPath = jarDirectory.resolve(newJarName);
@@ -233,7 +205,7 @@ public class UpdateService {
     }
 
     private UpdateStatusResponse buildStatusFromReleases(String currentVersion, List<GitHubRelease> releases) throws RunningInDevModeException {
-        if (!isRunningFromJar()) {
+        if (!Globals.IS_RUNNING_FROM_JAR) {
             throw new RunningInDevModeException(this.getClass());
         }
 
@@ -286,30 +258,7 @@ public class UpdateService {
         );
     }
 
-    private Path workingDirAsPath() {
 
-        try {
-            String path = URLDecoder.decode(resolveWorkingPath(), StandardCharsets.UTF_8);
-
-            if (path.startsWith("nested:")) {
-                path = path.substring("nested:".length());
-            }
-
-            int jarIndex = path.indexOf(".jar");
-            if (jarIndex != -1) {
-                path = path.substring(0, jarIndex + 4);
-            }
-            logger.info("workingDirAsPath found path: {}", path);
-
-            // On Windows, remove leading slash before drive letter (e.g., /C:/...)
-            if (System.getProperty("os.name").toLowerCase().contains("win") && path.matches("^/[A-Za-z]:.*")) {
-                path = path.substring(1);
-            }
-            return Path.of(path);
-        } catch (Exception e) {
-            throw new IllegalStateException("Cannot resolve current JAR path.", e);
-        }
-    }
 
     private void downloadRelease(String downloadUrl, Path targetPath) throws IOException {
         Path tempPath = targetPath.resolveSibling(targetPath.getFileName() + ".tmp");
@@ -341,15 +290,14 @@ public class UpdateService {
         JsonObject metadata = new JsonObject();
         metadata.addProperty("oldJar", oldJar.toAbsolutePath().toString());
         metadata.addProperty("newJar", newJar.toAbsolutePath().toString());
-        metadata.addProperty("pid", ProcessHandle.current().pid());
+        metadata.addProperty("pid", Globals.PROCESS_ID);
         metadata.addProperty("timestamp", Instant.now().toString());
         Files.writeString(metadataPath, gson.toJson(metadata));
     }
 
     private Path writeUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
         logger.info("Determining OS for updater script generation.");
-        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
-        if (isWindows) {
+        if (Globals.IS_WINDOWS) {
             logger.info("Found os Windows, using windows script: {}", directory);
             return writeWindowsUpdaterScript(directory, oldJar, newJar);
         } else {
@@ -361,10 +309,6 @@ public class UpdateService {
     private Path writeWindowsUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
         logger.info("Creating Windows updater script in directory: {}", directory);
         Path scriptPath = directory.resolve("mcmsm-updater.bat");
-        long pid = ProcessHandle.current().pid();
-        String javaHome = System.getProperty("java.home");
-        String javaExe = Path.of(javaHome, "bin", "java.exe").toAbsolutePath().toString();
-        String port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
 
         String script = """
                 @echo off
@@ -412,8 +356,8 @@ public class UpdateService {
 
                 :END
                 endlocal
-                """.formatted(pid, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
-                javaExe, port, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
+                """.formatted(Globals.PROCESS_ID, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
+                Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
 
         Files.writeString(scriptPath, script);
         logger.info("Windows updater script written to: {}", scriptPath);
@@ -423,10 +367,6 @@ public class UpdateService {
     private Path writeUnixUpdaterScript(Path directory, Path oldJar, Path newJar) throws IOException {
         logger.info("Creating Unix updater script in directory: {}", directory);
         Path scriptPath = directory.resolve("mcmsm-updater.sh");
-        long pid = ProcessHandle.current().pid();
-        String javaHome = System.getProperty("java.home");
-        String javaExe = Path.of(javaHome, "bin", "java").toAbsolutePath().toString();
-        String port = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
 
         String script = """
                 #!/usr/bin/env bash
@@ -478,8 +418,8 @@ public class UpdateService {
                 launch_jar "$OLD_JAR"
                 rm -f "$NEW_JAR"
                 echo "[McMSM Updater] Rollback complete."
-                """.formatted(pid, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
-                javaExe, port, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
+                """.formatted(Globals.PROCESS_ID, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
+                Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
 
         Files.writeString(scriptPath, script);
         scriptPath.toFile().setExecutable(true);
@@ -489,9 +429,8 @@ public class UpdateService {
 
     private void launchUpdaterScript(Path scriptPath) throws IOException {
         logger.info("Attempting to launch updater script: {}", scriptPath);
-        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
         ProcessBuilder pb;
-        if (isWindows) {
+        if (Globals.IS_WINDOWS) {
             pb = new ProcessBuilder("cmd.exe", "/c", scriptPath.toAbsolutePath().toString());
             pb.directory(scriptPath.getParent().toFile());
             pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());

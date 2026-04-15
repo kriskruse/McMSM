@@ -2,6 +2,7 @@ package dk.mcmsm.controller;
 
 import dk.mcmsm.dto.responses.UpdateStatusResponse;
 import dk.mcmsm.services.UpdateService;
+import dk.mcmsm.util.Globals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class UpdateController {
      */
     @GetMapping("/version")
     public ResponseEntity<Map<String, String>> getVersion() {
-        return ResponseEntity.ok(Map.of("version", updateService.getCurrentVersion()));
+        return ResponseEntity.ok(Map.of("version", Globals.APP_VERSION));
     }
 
     /**
@@ -73,7 +74,7 @@ public class UpdateController {
 
     private UpdateStatusResponse dummyStatus() {
         return new UpdateStatusResponse(
-                updateService.getCurrentVersion(),
+                Globals.APP_VERSION,
                 null,
                 0,
                 0,

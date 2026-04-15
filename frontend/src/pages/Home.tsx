@@ -198,6 +198,7 @@ const Home = () => {
             <ModpackMetadataModal
                 isOpen={isMetadataModalOpen}
                 uploadResult={pendingUploadResult}
+                existingPorts={modpacks.map((pack) => ({ packId: pack.packId, name: pack.name, port: pack.port }))}
                 onClose={closeMetadataModal}
                 onSaved={handleMetadataSaved}
             />
