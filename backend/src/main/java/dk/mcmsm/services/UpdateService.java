@@ -439,6 +439,18 @@ public class UpdateService {
                 PORT="%s"
                 RETRIES=%d
                 DELAY=%d
+                APP_LOG="$(dirname "$NEW_JAR")/mcmsm-app.log"
+
+                launch_jar() {
+                    local jar="$1"
+                    if [ -t 1 ]; then
+                        "$JAVA_EXE" -jar "$jar" &
+                        echo "[McMSM Updater] Process output visible in this terminal."
+                    else
+                        nohup "$JAVA_EXE" -jar "$jar" > "$APP_LOG" 2>&1 &
+                        echo "[McMSM Updater] Headless mode. Output: $APP_LOG"
+                    fi
+                }
 
                 echo "[McMSM Updater] Waiting for old process (PID $OLD_PID) to exit..."
                 while kill -0 "$OLD_PID" 2>/dev/null; do
@@ -446,7 +458,7 @@ public class UpdateService {
                 done
                 echo "[McMSM Updater] Old process exited. Starting new version..."
 
-                "$JAVA_EXE" -jar "$NEW_JAR" &
+                launch_jar "$NEW_JAR"
                 NEW_PID=$!
 
                 echo "[McMSM Updater] Waiting for new version to become healthy..."
@@ -463,7 +475,7 @@ public class UpdateService {
                 echo "[McMSM Updater] New version failed health check. Rolling back..."
                 kill "$NEW_PID" 2>/dev/null || true
                 sleep 2
-                "$JAVA_EXE" -jar "$OLD_JAR" &
+                launch_jar "$OLD_JAR"
                 rm -f "$NEW_JAR"
                 echo "[McMSM Updater] Rollback complete."
                 """.formatted(pid, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
@@ -481,14 +493,67 @@ public class UpdateService {
         ProcessBuilder pb;
         if (isWindows) {
             pb = new ProcessBuilder("cmd.exe", "/c", scriptPath.toAbsolutePath().toString());
+            pb.directory(scriptPath.getParent().toFile());
+            pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
+            pb.redirectErrorStream(true);
         } else {
-            pb = new ProcessBuilder("bash", scriptPath.toAbsolutePath().toString());
+            var terminal = detectLinuxTerminalEmulator();
+            pb = buildUnixUpdaterProcessBuilder(terminal, scriptPath);
+            pb.directory(scriptPath.getParent().toFile());
+            if (terminal == null) {
+                pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
+                pb.redirectErrorStream(true);
+            }
         }
-        pb.directory(scriptPath.getParent().toFile());
-        pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
-        pb.redirectErrorStream(true);
         logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
         pb.start();
+    }
+
+    /**
+     * Detects an available terminal emulator on Linux when a display server is present.
+     *
+     * @return the terminal emulator command name, or {@code null} if headless or none found
+     */
+    private String detectLinuxTerminalEmulator() {
+        var display = System.getenv("DISPLAY");
+        var waylandDisplay = System.getenv("WAYLAND_DISPLAY");
+        if ((display == null || display.isBlank()) && (waylandDisplay == null || waylandDisplay.isBlank())) {
+            logger.info("No display server detected (headless). Will run updater without terminal.");
+            return null;
+        }
+
+        var candidates = List.of("gnome-terminal", "konsole", "xfce4-terminal", "xterm", "x-terminal-emulator");
+        for (var candidate : candidates) {
+            try {
+                var check = new ProcessBuilder("which", candidate)
+                        .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+                        .redirectErrorStream(true)
+                        .start();
+                if (check.waitFor() == 0) {
+                    logger.info("Detected terminal emulator: {}", candidate);
+                    return candidate;
+                }
+            } catch (IOException | InterruptedException e) {
+                logger.debug("Failed to check for terminal emulator '{}': {}", candidate, e.getMessage());
+            }
+        }
+        logger.info("No terminal emulator found. Will run updater without terminal.");
+        return null;
+    }
+
+    private ProcessBuilder buildUnixUpdaterProcessBuilder(String terminal, Path scriptPath) {
+        var script = scriptPath.toAbsolutePath().toString();
+        if (terminal == null) {
+            return new ProcessBuilder("bash", script);
+        }
+        return switch (terminal) {
+            case "gnome-terminal" -> new ProcessBuilder(terminal, "--title=McMSM Server", "--", "bash", script);
+            case "konsole" -> new ProcessBuilder(terminal, "-e", "bash", script);
+            case "xfce4-terminal" -> new ProcessBuilder(terminal, "--title=McMSM Server", "-e", "bash " + script);
+            case "xterm" -> new ProcessBuilder(terminal, "-title", "McMSM Server", "-e", "bash", script);
+            case "x-terminal-emulator" -> new ProcessBuilder(terminal, "-e", "bash", script);
+            default -> new ProcessBuilder("bash", script);
+        };
     }
 
     /**

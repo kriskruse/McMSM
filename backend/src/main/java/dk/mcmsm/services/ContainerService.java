@@ -81,9 +81,10 @@ public class ContainerService {
         }
     }
 
-    public DeploymentResult deployServer(ModPack modPack, int memoryLimitMiB) {
+    public DeploymentResult deployServer(ModPack modPack, int memoryLimitMiB, int memoryReservationMiB) {
         Objects.requireNonNull(modPack, "modPack must not be null");
-        logger.info("Deploying container for packId={}, name='{}', requestedPort='{}', memoryLimitMiB={}", modPack.getPackId(), modPack.getName(), modPack.getPort(), memoryLimitMiB);
+        logger.info("Deploying container for packId={}, name='{}', requestedPort='{}', memoryLimitMiB={}, memoryReservationMiB={}",
+                modPack.getPackId(), modPack.getName(), modPack.getPort(), memoryLimitMiB, memoryReservationMiB);
 
         var packPath = Path.of(modPack.getPath()).toAbsolutePath().normalize();
         if (!Files.isDirectory(packPath)) {
@@ -98,8 +99,11 @@ public class ContainerService {
         removeContainerIfExists(containerName);
 
         var containerPort = ExposedPort.tcp(hostPort);
+        var memoryLimitBytes = (long) memoryLimitMiB * 1024 * 1024;
         var hostConfig = HostConfig.newHostConfig()
-                .withMemory((long) memoryLimitMiB * 1024 * 1024)
+                .withMemory(memoryLimitBytes)
+                .withMemoryReservation((long) memoryReservationMiB * 1024 * 1024)
+                .withMemorySwap(memoryLimitBytes)
                 .withBinds(new Bind(packPath.toString(), new Volume(CONTAINER_WORKDIR)))
                 .withPortBindings(new PortBinding(Ports.Binding.bindPort(hostPort), containerPort));
 
@@ -115,7 +119,7 @@ public class ContainerService {
 
         dockerClient.startContainerCmd(containerResponse.getId()).exec();
         logger.info("Container started for packId={} with containerId='{}' and name='{}'.", modPack.getPackId(), containerResponse.getId(), containerName);
-        return new DeploymentResult(containerResponse, containerName, image, memoryLimitMiB);
+        return new DeploymentResult(containerResponse, containerName, image, memoryLimitMiB, memoryReservationMiB);
     }
 
     public void deleteContainer(ModPack modPack) {
@@ -462,10 +466,12 @@ public class ContainerService {
             String containerId,
             String containerName,
             String image,
-            Integer memoryLimitMiB
+            Integer memoryLimitMiB,
+            Integer memoryReservationMiB
     ) {
-        DeploymentResult(CreateContainerResponse containerResponse, String containerName, String image, Integer memoryLimitMiB) {
-            this(containerResponse.getId(), containerName, image, memoryLimitMiB);
+        DeploymentResult(CreateContainerResponse containerResponse, String containerName, String image,
+                         Integer memoryLimitMiB, Integer memoryReservationMiB) {
+            this(containerResponse.getId(), containerName, image, memoryLimitMiB, memoryReservationMiB);
         }
     }
 

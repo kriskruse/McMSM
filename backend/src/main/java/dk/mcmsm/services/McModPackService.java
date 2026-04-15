@@ -150,7 +150,8 @@ public class McModPackService {
         try {
             fileService.syncServerPortWithMetadata(modPack);
             int memoryLimitMiB = fileService.resolveContainerMemoryLimitMiB(modPack);
-            DeploymentResult deploymentResult = containerService.deployServer(modPack, memoryLimitMiB);
+            int memoryReservationMiB = fileService.resolveContainerMemoryReservationMiB(modPack);
+            DeploymentResult deploymentResult = containerService.deployServer(modPack, memoryLimitMiB, memoryReservationMiB);
 
             modPack.setContainerId(deploymentResult.containerId());
             modPack.setContainerName(deploymentResult.containerName());
@@ -162,11 +163,12 @@ public class McModPackService {
 
             ModPack savedModPack = modPackRepository.save(modPack);
             logger.info(
-                    "Deployment succeeded for modpack packId={}, containerId='{}', image='{}', memoryLimitMiB={}",
+                    "Deployment succeeded for modpack packId={}, containerId='{}', image='{}', memoryLimitMiB={}, memoryReservationMiB={}",
                     savedModPack.getPackId(),
                     deploymentResult.containerId(),
                     deploymentResult.image(),
-                    deploymentResult.memoryLimitMiB()
+                    deploymentResult.memoryLimitMiB(),
+                    deploymentResult.memoryReservationMiB()
             );
             return new ModPackDeployResponseDto(
                     savedModPack.getPackId(),
@@ -175,6 +177,7 @@ public class McModPackService {
                     deploymentResult.containerName(),
                     deploymentResult.image(),
                     deploymentResult.memoryLimitMiB(),
+                    deploymentResult.memoryReservationMiB(),
                     savedModPack.getStatus(),
                     "Mod pack deployed successfully."
             );

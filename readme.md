@@ -152,8 +152,7 @@ Manual trigger options:
 ## TODO:
 ### Notes
 - FTB uses install scripts to get modpack data instead of uploading everything as a zip. How do we manage that?
-- Can we make the ram allocation more dynamic, so it is a maximum and the modpack can use less if it doesn't need it?
-- on linux, after an app update the app is started silently in the background and the user has no terminal output to know it is running.
+
 
 ### Fixes and Bugs:
 #### Small

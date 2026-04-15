@@ -199,6 +199,24 @@ public class ModPackFileService {
         return limitMiB;
     }
 
+    /**
+     * Calculates the Docker memory reservation (soft limit) from the modpack's JVM Xmx setting.
+     * The reservation represents the typical working set without burst off-heap allocations,
+     * allowing Docker to reclaim idle memory under host pressure while still permitting
+     * bursts up to the hard limit.
+     *
+     * @param modPack the modpack to resolve memory for
+     * @return memory reservation in MiB (Xmx + JVM overhead, excluding MaxDirectMemorySize)
+     */
+    public int resolveContainerMemoryReservationMiB(ModPack modPack) {
+        Objects.requireNonNull(modPack, "modPack must not be null");
+        var xmxMiB = parseXmxMiB(Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX)).orElse(DEFAULT_XMX_MIB);
+        var reservationMiB = xmxMiB + JVM_OVERHEAD_MIB;
+        logger.debug("Resolved memory reservation for packId={}: xmxMiB={}, jvmOverheadMiB={}, reservationMiB={}",
+                modPack.getPackId(), xmxMiB, JVM_OVERHEAD_MIB, reservationMiB);
+        return reservationMiB;
+    }
+
     private int resolveDirectMemoryMiB(ModPack modPack) {
         if (!hasText(modPack.getPath())) {
             return DEFAULT_DIRECT_MEMORY_MIB;

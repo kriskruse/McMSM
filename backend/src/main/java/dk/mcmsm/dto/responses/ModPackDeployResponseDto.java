@@ -10,12 +10,14 @@ public record ModPackDeployResponseDto(
         String containerName,
         String image,
         Integer memoryLimitMiB,
+        Integer memoryReservationMiB,
         PackStatus status,
         String message
 ) {
     public ModPackDeployResponseDto(Long packId, PackStatus status, String message) {
         this(
                 packId,
+                null,
                 null,
                 null,
                 null,
@@ -32,6 +34,7 @@ public record ModPackDeployResponseDto(
                 modPack.getName(),
                 modPack.getContainerId(),
                 modPack.getContainerName(),
+                null,
                 null,
                 null,
                 modPack.getStatus(),
