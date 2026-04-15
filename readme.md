@@ -152,19 +152,17 @@ Manual trigger options:
 ## TODO:
 ### Notes
 - FTB uses install scripts to get modpack data instead of uploading everything as a zip. How do we manage that?
-
-
+- Can we make the ram allocation more dynamic, so it is a maximum and the modpack can use less if it doesn't need it?
+- on linux, after an app update the app is started silently in the background and the user has no terminal output to know it is running.
 
 ### Fixes and Bugs:
 #### Small
-- Center align the X button on the modpack expanded view
-- Fix expanded modpack view auto-scroll when streaming logs to the console.
+- Make a nice new close button for the expanded view.
 - Add a warning for port overlap when creating/editing modpacks.
-- fix metadata edit form not listing minecraft versions.
 - Add some overflow handling for the modpack name in the modpack card view.
 
 #### Medium
-- Make a pass-through for user interactions with the modpack console, so the user can send commands to the modpack server.
+
 
 #### Big
 - Make some end-to-end tests for the backend API using something like RestAssured to ensure the modpack lifecycle flows work as expected.
@@ -174,7 +172,7 @@ Manual trigger options:
 - Add hashing and encryption to user data.
 - Do proper authentication and authorization for the API endpoints, just basic user auth.
 
-### Feature Ideas:
+### Future Feature Ideas:
 - Backup worlds
 - Web page to edit the JVM args template used for new and updated modpacks.
 - Automated modpack downloading from CurseForge, Modrinth and FTB APIs.

@@ -209,3 +209,15 @@ export function updateModpack(
     return sendModpackArchive(`${API_BASE}/${packId}/update`, file, onProgress);
 }
 
+export async function sendCommand(packId: number, command: string): Promise<void> {
+    const response = await fetch(`${API_BASE}/${packId}/command`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command }),
+    });
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to send command (${response.status}).`);
+    }
+}
+

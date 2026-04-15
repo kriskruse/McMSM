@@ -1,5 +1,6 @@
 package dk.mcmsm.controller;
 
+import dk.mcmsm.dto.requests.CommandRequestDto;
 import dk.mcmsm.dto.requests.ModPackMetadataRequestDto;
 import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackMetadataResponseDto;
@@ -12,8 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * REST controller for modpack lifecycle operations.
@@ -52,6 +55,39 @@ public class ModPackController {
     ) {
         logger.debug("Log fetch requested for modpack packId={}, tail={}", packId, tail);
         return ResponseEntity.ok(mcModPackService.getPackLogs(packId, tail));
+    }
+
+    /**
+     * Streams live Docker container logs via Server-Sent Events.
+     *
+     * @param packId the modpack ID.
+     * @param tail   number of initial log lines.
+     * @return SSE emitter streaming log events.
+     */
+    @GetMapping(value = "/{packId}/logs/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamPackLogs(
+            @PathVariable Long packId,
+            @RequestParam(name = "tail", defaultValue = "200") Integer tail
+    ) {
+        logger.info("SSE log stream requested for packId={}, tail={}", packId, tail);
+        return mcModPackService.streamPackLogs(packId, tail);
+    }
+
+    /**
+     * Sends a console command to a running modpack container.
+     *
+     * @param packId  the modpack ID.
+     * @param request the command request body.
+     * @return confirmation message.
+     */
+    @PostMapping("/{packId}/command")
+    public ResponseEntity<Map<String, String>> sendCommand(
+            @PathVariable Long packId,
+            @RequestBody CommandRequestDto request
+    ) {
+        logger.info("Command sent to packId={}: '{}'", packId, request.command());
+        mcModPackService.sendCommand(packId, request.command());
+        return ResponseEntity.ok(Map.of("message", "Command sent."));
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

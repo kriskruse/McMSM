@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -324,6 +326,49 @@ public class McModPackService {
 
         int effectiveTail = tailLines == null ? 200 : tailLines;
         return containerService.readContainerLogs(modPack, effectiveTail);
+    }
+
+    /**
+     * Sends a console command to the running Docker container of a modpack.
+     *
+     * @param packId  the modpack ID.
+     * @param command the console command to send.
+     * @throws ModPackNotFoundException if the modpack does not exist.
+     */
+    public void sendCommand(Long packId, String command) {
+        var modPack = modPackRepository.findByPackId(packId)
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
+        containerService.executeCommand(modPack, command);
+    }
+
+    /**
+     * Creates an SSE emitter that streams live logs from a modpack's container.
+     *
+     * @param packId    the modpack ID.
+     * @param tailLines number of initial historical lines to include.
+     * @return configured SSE emitter.
+     * @throws ModPackNotFoundException if the modpack does not exist.
+     */
+    public SseEmitter streamPackLogs(Long packId, int tailLines) {
+        var modPack = modPackRepository.findByPackId(packId)
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
+
+        var emitter = new SseEmitter(0L);
+        var callback = containerService.streamContainerLogs(modPack, emitter, tailLines);
+
+        Runnable cleanup = () -> {
+            try {
+                callback.close();
+            } catch (IOException e) {
+                logger.debug("Error closing docker log callback for packId={}: {}", packId, e.getMessage());
+            }
+        };
+
+        emitter.onCompletion(cleanup);
+        emitter.onTimeout(cleanup);
+        emitter.onError(t -> cleanup.run());
+
+        return emitter;
     }
 
     /**
