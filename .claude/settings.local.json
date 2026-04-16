@@ -1,6 +1,18 @@
 {
   "permissions": {
     "allow": [
+      "Bash(mvn test *)",
+      "Bash(jar tf *)",
+      "Bash(find *)",
+      "Bash(wc *)",
+      "WebSearch",
+      "Bash(cat docker-compose*.yml)",
+      "Bash(ls *.Dockerfile)",
+      "Bash(ls docker*)",
+      "WebFetch(domain:pelican.dev)",
+      "WebFetch(domain:www.answeroverflow.com)",
+      "WebFetch(domain:docs.github.com)",
+      "WebFetch(domain:docs.immich.app)"
     ]
   }
 }
