@@ -4,8 +4,8 @@ import type { ModPackUploadResponseDto } from '../dto';
 import { isZipFile } from '../util/fileValidation';
 import { updateModpack, uploadModpack } from '../util/modpackApi';
 import FileDropZone from './FileDropZone';
+import Modal from './Modal';
 import UploadProgress from './UploadProgress';
-import CloseButton from "./CloseButton.tsx";
 
 const SMALL_PACK_SIZE_THRESHOLD = 52_428_800; // 50 MB
 const UPLOAD_SUCCESS_DELAY_MS = 900;
@@ -176,25 +176,16 @@ const UploadModpackModal = ({
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4">
-            <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
-                <div className="mb-5 flex items-start justify-between gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold text-white">
-                            {mode === 'update'
-                                ? `Update ${updatePackName ?? 'Modpack'}`
-                                : 'Upload Modpack'}
-                        </h2>
-                        <p className="mt-1 text-sm text-slate-400">
-                            {mode === 'update'
-                                ? 'Upload a replacement .zip for this existing modpack.'
-                                : 'Drag and drop a .zip file or choose one manually.'}
-                        </p>
-                    </div>
-                    <CloseButton onClick={handleClose} disabled={isUploading} className="shrink-0" />
-                </div>
+    const modalTitle = mode === 'update'
+        ? `Update ${updatePackName ?? 'Modpack'}`
+        : 'Upload Modpack';
 
+    const modalSubtitle = mode === 'update'
+        ? 'Upload a replacement .zip for this existing modpack.'
+        : 'Drag and drop a .zip file or choose one manually.';
+
+    return (
+        <Modal title={modalTitle} subtitle={modalSubtitle} onClose={handleClose} closeDisabled={isUploading}>
                 <FileDropZone
                     isDragging={isDragging}
                     selectedFileName={selectedFile?.name ?? null}
@@ -257,8 +248,7 @@ const UploadModpackModal = ({
                 />
 
                 {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-            </div>
-        </div>
+        </Modal>
     );
 };
 

@@ -1,83 +1,19 @@
-import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { ModPackCardDto } from '../dto';
-import { getPackLogs, sendCommand } from '../util/modpackApi';
+import { getPackLogs } from '../util/modpackApi';
+import { LOG_LEVEL_CLASSES, highlightText, parseLogLines } from '../util/logUtils';
 import { resolveIndicator } from '../util/statusIndicator';
+import CommandBar from './CommandBar';
+import MetadataTag from './MetadataTag';
+import StatusBadge from './StatusBadge';
 
 type ModpackConsoleProps = {
     modpack: ModPackCardDto;
 };
 
-type LogLevel = 'info' | 'warn' | 'error' | 'default';
-type ParsedLine = { text: string; level: LogLevel };
-
 const LOG_POLL_MS = 2_000;
 const MAX_SSE_LINES = 5_000;
-
-const LOG_LEVEL_CLASSES: Record<LogLevel, string> = {
-    info: 'text-slate-200',
-    warn: 'text-yellow-300',
-    error: 'text-red-400',
-    default: 'text-emerald-300',
-};
-
-function parseLogLevel(line: string): LogLevel {
-    if (line.includes('/INFO]') || line.includes('[INFO]') || line.includes(' INFO ')) return 'info';
-    if (line.includes('/WARN]') || line.includes('[WARN]') || line.includes(' WARN ')) return 'warn';
-    if (line.includes('/ERROR]') || line.includes('[ERROR]') || line.includes(' ERROR ') || line.includes('/FATAL]')) return 'error';
-    return 'default';
-}
-
-function parseLogLines(raw: string): ParsedLine[] {
-    const lines = raw.split('\n');
-    const result: ParsedLine[] = [];
-    let lastLevel: LogLevel = 'default';
-
-    for (const line of lines) {
-        const detected = parseLogLevel(line);
-        if (detected !== 'default') {
-            lastLevel = detected;
-            result.push({ text: line, level: detected });
-        } else {
-            // Stack traces / continuation lines inherit the previous level
-            result.push({ text: line, level: line.trim() === '' ? 'default' : lastLevel });
-        }
-    }
-    return result;
-}
-
-function highlightText(text: string, query: string): ReactNode {
-    if (!query) return text;
-    const lower = text.toLowerCase();
-    const lowerQ = query.toLowerCase();
-    const parts: ReactNode[] = [];
-    let last = 0;
-    let idx = lower.indexOf(lowerQ, last);
-
-    while (idx !== -1) {
-        if (idx > last) parts.push(text.slice(last, idx));
-        parts.push(
-            <span key={idx} className="rounded-sm bg-yellow-500/30 px-0.5 text-yellow-200">
-                {text.slice(idx, idx + query.length)}
-            </span>,
-        );
-        last = idx + query.length;
-        idx = lower.indexOf(lowerQ, last);
-    }
-
-    if (last < text.length) parts.push(text.slice(last));
-    return parts.length > 0 ? parts : text;
-}
-
-function MetadataTag({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="rounded-md border border-white/10 bg-slate-950/50 px-3 py-2 text-xs">
-            <p className="text-slate-400">{label}</p>
-            <p className="mt-1 break-all font-medium text-slate-200">{value || '-'}</p>
-        </div>
-    );
-}
 
 const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
     const [logs, setLogs] = useState('Loading logs...');
@@ -86,30 +22,11 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
     const [tailCount, setTailCount] = useState(200);
     const [copied, setCopied] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [commandInput, setCommandInput] = useState('');
-    const [commandError, setCommandError] = useState('');
     const logContainerRef = useRef<HTMLDivElement>(null);
-    const commandInputRef = useRef<HTMLInputElement>(null);
     const autoScrollRef = useRef(true);
     const sseBufferRef = useRef('');
     const sseRafRef = useRef(0);
     const isProgrammaticScrollRef = useRef(false);
-
-    const handleCommandSubmit = useCallback(
-        async (e: React.FormEvent) => {
-            e.preventDefault();
-            const trimmed = commandInput.trim();
-            if (!trimmed) return;
-            setCommandError('');
-            try {
-                await sendCommand(modpack.packId, trimmed);
-                setCommandInput('');
-            } catch (err) {
-                setCommandError(err instanceof Error ? err.message : 'Failed to send command.');
-            }
-        },
-        [modpack.packId, commandInput],
-    );
 
     const handleCopyLogs = useCallback(async () => {
         try {
@@ -249,10 +166,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
         <div>
             <h4 className="mb-3 flex items-center gap-3 text-sm font-semibold text-white">
                 {modpack.name}
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/60 px-2.5 py-0.5 text-xs font-medium">
-                    <span className={`h-2 w-2 rounded-full ${indicator.dot}`} />
-                    <span className={indicator.text}>{indicator.label}</span>
-                </span>
+                <StatusBadge indicator={indicator} />
             </h4>
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
                 <div className="relative rounded-lg border border-white/10 bg-slate-950 p-3">
@@ -347,26 +261,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
                             Scroll to bottom
                         </button>
                     )}
-                    <form onSubmit={handleCommandSubmit} className="mt-2 flex items-center gap-2">
-                        <span className="text-sm text-slate-500">{'>'}</span>
-                        <input
-                            ref={commandInputRef}
-                            type="text"
-                            value={commandInput}
-                            onChange={(e) => setCommandInput(e.target.value)}
-                            placeholder="Enter server command..."
-                            disabled={modpack.status !== 'running'}
-                            className="flex-1 rounded-md border border-white/10 bg-slate-950 px-3 py-1.5 font-mono text-xs text-slate-200 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none disabled:opacity-40"
-                        />
-                        <button
-                            type="submit"
-                            disabled={modpack.status !== 'running' || !commandInput.trim()}
-                            className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-500 disabled:opacity-40"
-                        >
-                            Send
-                        </button>
-                    </form>
-                    {commandError && <p className="mt-1 text-xs text-red-400">{commandError}</p>}
+                    <CommandBar packId={modpack.packId} disabled={modpack.status !== 'running'} />
                     {logError && <p className="mt-2 text-xs text-red-400">{logError}</p>}
                 </div>
                 <div className="flex flex-col gap-2">
@@ -383,6 +278,3 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
 };
 
 export default memo(ModpackConsole);
-
-
-

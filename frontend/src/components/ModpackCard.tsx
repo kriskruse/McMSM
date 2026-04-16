@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { ModPackCardDto } from '../dto';
 import { resolveIndicator } from '../util/statusIndicator';
+import StatusBadge from './StatusBadge';
 
 type ModpackCardProps = {
     modpack: ModPackCardDto;
@@ -70,10 +71,7 @@ const ModpackCard = ({
             <div className="mb-3 flex items-start justify-between gap-4">
                 <h3 className="min-w-0 truncate text-lg font-semibold text-white" title={modpack.name}>{modpack.name}</h3>
                 <div className="flex items-center gap-2">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-slate-950/60 px-3 py-1 text-xs font-medium">
-                        <span className={`h-2.5 w-2.5 rounded-full ${indicator.dot}`} />
-                        <span className={indicator.text}>{indicator.label}</span>
-                    </div>
+                    <StatusBadge indicator={indicator} />
                     <button
                         type="button"
                         className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/20 bg-slate-800/80 text-slate-200 transition hover:bg-slate-700"

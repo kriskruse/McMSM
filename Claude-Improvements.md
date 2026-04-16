@@ -6,22 +6,7 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 
 ---
 
-## 1. TECH STACK UPGRADES (Quick Wins)
-
-| # | Change | Effort | Impact | Detail |
-|---|--------|--------|--------|--------|
-| T1 | **Spring Boot 4.1.0-M2 → 4.0.1 GA** | Low | High | Milestone version not production-ready. 4.0.1 includes 88 bug fixes. Stable foundation |
-| T2 | **Enable virtual threads** | 1 line | High | Add `spring.threads.virtual.enabled=true`. ~43% less memory, 4x better tail latency for concurrent SSE streams, uploads, Docker ops |
-| T3 | **Vite 6.2 → 8** | Low | Medium | Rolldown (Rust bundler) replaces Rollup+esbuild. 10-30x faster builds, 100x less peak memory. Drop-in for simple configs |
-| T4 | **React Router 6.19 → v7** | Low | Medium | ~15% smaller bundle, built-in route error boundaries, better TypeScript. `react-router-dom` package deprecated |
-| T5 | **React Compiler** | Low | Medium | `babel-plugin-react-compiler` auto-memoizes. Eliminates ~10 manual `useCallback`/`useMemo` in `useModpacks.ts` |
-| T6 | **docker-java 3.7.0 → 3.7.1** | Low | Low | Security patches in transitive deps (Netty, Jackson, commons). Also increase `responseTimeout` from 500ms → 5s — 500ms too aggressive for image pulls |
-| T7 | **Adopt `useOptimistic`** (React 19) | Medium | Medium | Instant UI feedback on deploy/start/stop. Update status optimistically, revert on failure. Dashboard feels snappier |
-| T8 | **Adopt `useActionState`** (React 19) | Medium | Medium | Replace manual loading/error state tracking for pack actions. Less boilerplate in `useModpacks.ts` |
-
----
-
-## 2. CODE QUALITY IMPROVEMENTS
+## 1. CODE QUALITY IMPROVEMENTS
 
 ### Backend
 
@@ -36,35 +21,8 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 | C7 | **ModPack entity** | `ModPack.java` — mutable POJO with 17 fields | Split into immutable `ModPackConfig` record (name, version, javaVersion, port, entryPoint) + mutable `ModPackState` (status, containerId, isDeployed) |
 | C8 | **Java 25 features** | Throughout backend | Adopt module imports (`import module java.base`), Stream Gatherers for container iteration, sealed interfaces for result types |
 
-### Frontend
 
-| # | Area | Issue | Suggestion |
-|---|------|-------|------------|
-| C9 | **Duplicated input classes** | `Login.tsx:40`, `Register.tsx:44`, `ModpackMetadataModal.tsx:139` | Extract to shared Tailwind class constant |
-| C10 | **Large components** | `ModpackConsole.tsx` (386 lines), `Home.tsx` (237 lines) | Split console into LogViewer, CommandInput, MetadataTags subcomponents |
-| C11 | **No auth context** | Throughout frontend | No `useAuth()` hook or AuthContext. Auth state implicit from routing |
-| C12 | **Duplicated modal pattern** | Overlay + box + close across 3 modals | Extract reusable `<Modal>` wrapper component |
-| C13 | **Status indicator duplication** | `statusIndicator.ts` vs `BackendStatusIndicator.tsx` | Redundant style definitions. Single source of truth |
-| C14 | **Placeholder logo** | `Login.tsx:46`, `Register.tsx:50` | Using Tailwind marketing asset URL. Replace with project logo or remove |
-
----
-
-## 3. PERFORMANCE IMPROVEMENTS
-
-| # | Area | Issue | Fix |
-|---|------|-------|-----|
-| P1 | **Full JSON read on every op** | `JsonFileStore.readAll()` deserializes entire file per API call | Add in-memory cache invalidated on write. Or consider SQLite if feature set grows (audit logs, scheduled tasks) |
-| P2 | **Full JSON rewrite on every write** | Delete 1 modpack = rewrite entire file | In-memory cache makes this less painful. SQLite long-term |
-| P3 | **Docker container listing** | `ContainerService.resolveContainerReference():331-347` lists ALL containers per call | Cache container list with TTL (5-10s), invalidate on deploy/undeploy |
-| P4 | **Sync task is O(n*m)** | n deployed packs * m total containers, every 15 seconds | Use cached container list. Or use structured concurrency (`StructuredTaskScope` with virtual threads) to inspect all packs concurrently |
-| P5 | **Aggressive health polling** | `Home.tsx:58` — 2-second interval | Reduce to 5-10s. 2s is excessive for health status |
-| P6 | **No route code splitting** | `App.tsx` loads all pages upfront | `React.lazy()` + `Suspense` for Home page (heaviest) |
-| P7 | **No request deduplication** | Rapid clicks fire duplicate API calls | Debounce or disable buttons during pending actions (partially done via `activePackActions` but not for all ops) |
-| P8 | **Race condition in JSON store** | Concurrent read-modify-write can lose updates | Wrap full read+modify+write under single write lock. Virtual threads make this less blocking |
-
----
-
-## 4. INFRASTRUCTURE & DISTRIBUTION
+## 2. INFRASTRUCTURE & DISTRIBUTION
 
 ### Build & CI
 
@@ -76,35 +34,9 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 | I4 | **No dependency scanning** | No Dependabot or Renovate | Add `dependabot.yml` for both Maven + npm ecosystems. Set `open-pull-requests-limit: 5` |
 | I5 | **No security scanning in CI** | No SAST | Add CodeQL for Java + Trivy for filesystem scanning. Upload SARIF to GitHub Security tab |
 
-### Docker & Deployment
-
-| # | Area | Current | Improvement |
-|---|------|---------|-------------|
-| I6 | **No docker-compose** | Users run JAR directly | Create `docker-compose.yml` + `example.env` as release assets. Gold standard install: `wget compose + env → docker compose up -d` (pattern used by Immich, Gitea) |
-| I7 | **No Docker image publishing** | Only JAR in GitHub Releases | Add GHCR publish job to release workflow. Multi-arch (`linux/amd64` + `linux/arm64`). Tag strategy: `latest`, `X.Y`, `X.Y.Z`. Use GHA layer cache |
-| I8 | **Dockerfiles run as root** | No `USER` directive | Add non-root user per CLAUDE.md Docker best practices |
-| I9 | **No HEALTHCHECK** | Neither Dockerfile has it | Add Spring Boot Actuator health endpoint + `HEALTHCHECK` in Dockerfile. Custom indicators: Docker daemon connectivity, disk space, data dir writability |
-| I10 | **No .dockerignore** | Build context includes everything | Add `.dockerignore` for both backend and frontend |
-| I11 | **Missing standard files** | No `.editorconfig`, `.env.example` | Add `.editorconfig` for cross-IDE consistency, `.env.example` for self-hosted setup |
-
-### Self-Hosted Distribution (Best Practices from Immich/Gitea/Portainer)
-
-**Target install experience (3 commands):**
-```bash
-mkdir mcmsm && cd mcmsm
-wget -O docker-compose.yml https://github.com/kriskruse/McMSM/releases/latest/download/docker-compose.yml
-wget -O .env https://github.com/kriskruse/McMSM/releases/latest/download/example.env
-docker compose up -d
-```
-
-- All config via `.env` (ports, paths, memory) — users never edit compose file
-- Named volumes for `data/` and `modpacks/` — upgrades preserve state
-- Update path: `docker compose pull && docker compose up -d`
-- Compatible with Tugtainer (Watchtower successor) for auto-updates
-
 ---
 
-## 5. UI/UX IMPROVEMENTS
+## 3. UI/UX IMPROVEMENTS
 
 | # | Area | Current State | Improvement |
 |---|------|---------------|-------------|
@@ -120,7 +52,7 @@ docker compose up -d
 
 ---
 
-## 6. FEATURE IDEAS
+## 4. FEATURE IDEAS
 
 ### High Value
 

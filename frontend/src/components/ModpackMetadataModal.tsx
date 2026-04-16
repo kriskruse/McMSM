@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import CloseButton from './CloseButton';
+import Modal from './Modal';
 import compatData from '../data/minecraft_java_compat.json';
 import type {
     ModPackMetadataRequestDto,
@@ -7,6 +7,7 @@ import type {
     ModPackUploadResponseDto,
 } from '../dto';
 import { updatePackMetadata } from '../util/modpackApi';
+import { INPUT_CLASS } from '../util/styles';
 
 type CompatRange = {
     min: string;
@@ -136,9 +137,6 @@ function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm 
     };
 }
 
-const inputClass =
-    'mt-1 block w-full rounded-md bg-white/5 px-3 py-2 text-white outline outline-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500 sm:text-sm';
-
 const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, onSaved }: ModpackMetadataModalProps) => {
     const [form, setForm] = useState<MetadataForm | null>(null);
     const [error, setError] = useState('');
@@ -228,16 +226,13 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4">
-            <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
-                <div className="mb-5 flex items-start justify-between gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold text-white">{title}</h2>
-                        <p className="mt-1 text-sm text-slate-400">Confirm detected values before deployment.</p>
-                    </div>
-                    <CloseButton onClick={onClose} disabled={isSaving} className="shrink-0" />
-                </div>
-
+        <Modal
+            maxWidth="max-w-3xl"
+            title={title}
+            subtitle="Confirm detected values before deployment."
+            onClose={onClose}
+            closeDisabled={isSaving}
+        >
                 {uploadResult.loaderWarnings && uploadResult.loaderWarnings.length > 0 && (
                     <div className="mb-4 flex flex-col gap-2">
                         {uploadResult.loaderWarnings.map((warning, index) => (
@@ -251,18 +246,18 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
                 <div className="grid gap-4 md:grid-cols-2">
                     <label>
                         <span className="text-sm text-slate-300">Name</span>
-                        <input className={inputClass} value={form.name} onChange={(event) => updateForm('name', event.target.value)} />
+                        <input className={INPUT_CLASS} value={form.name} onChange={(event) => updateForm('name', event.target.value)} />
                     </label>
 
                     <label>
                         <span className="text-sm text-slate-300">Pack Version</span>
-                        <input className={inputClass} value={form.packVersion} onChange={(event) => updateForm('packVersion', event.target.value)} />
+                        <input className={INPUT_CLASS} value={form.packVersion} onChange={(event) => updateForm('packVersion', event.target.value)} />
                     </label>
 
                     <label>
                         <span className="text-sm text-slate-300">Minecraft Version</span>
                         <select
-                            className={inputClass}
+                            className={INPUT_CLASS}
                             value={form.minecraftVersion}
                             onChange={(event) => onMinecraftVersionChange(event.target.value)}
                         >
@@ -276,17 +271,17 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
 
                     <label>
                         <span className="text-sm text-slate-300">Java Version</span>
-                        <input className={`${inputClass} cursor-not-allowed text-slate-400`} value={form.javaVersion} readOnly />
+                        <input className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`} value={form.javaVersion} readOnly />
                     </label>
 
                     <label>
                         <span className="text-sm text-slate-300">Java Xmx</span>
-                        <input className={inputClass} value={form.javaXmx} onChange={(event) => updateForm('javaXmx', event.target.value)} />
+                        <input className={INPUT_CLASS} value={form.javaXmx} onChange={(event) => updateForm('javaXmx', event.target.value)} />
                     </label>
 
                     <label>
                         <span className="text-sm text-slate-300">Port</span>
-                        <input className={inputClass} value={form.port} onChange={(event) => updateForm('port', event.target.value)} />
+                        <input className={INPUT_CLASS} value={form.port} onChange={(event) => updateForm('port', event.target.value)} />
                         {portConflict && (
                             <p className="mt-1 text-xs text-amber-400">
                                 Port {form.port} is already used by "{portConflict.name}"
@@ -297,7 +292,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
                     <label>
                         <span className="text-sm text-slate-300">Entry Point</span>
                         <select
-                            className={inputClass}
+                            className={INPUT_CLASS}
                             value={form.entryPoint}
                             onChange={(event) => updateForm('entryPoint', event.target.value)}
                         >
@@ -311,7 +306,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
 
                     <label>
                         <span className="text-sm text-slate-300">Detected Loader</span>
-                        <input className={`${inputClass} cursor-not-allowed text-slate-400`} value={form.loaderType} readOnly />
+                        <input className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`} value={form.loaderType} readOnly />
                     </label>
                 </div>
 
@@ -339,8 +334,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
                         {isSaving ? 'Saving...' : 'Save Metadata'}
                     </button>
                 </div>
-            </div>
-        </div>
+        </Modal>
     );
 };
 
