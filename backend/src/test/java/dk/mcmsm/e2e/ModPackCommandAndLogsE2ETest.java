@@ -35,7 +35,7 @@ class ModPackCommandAndLogsE2ETest extends BaseE2ETest {
         get("/api/modpacks/" + result.upload().packId() + "/logs?tail=50", String.class);
 
         var tailCaptor = ArgumentCaptor.forClass(Integer.class);
-        verify(containerService).readContainerLogs(any(ModPack.class), tailCaptor.capture());
+        verify(containerLogService).readContainerLogs(any(ModPack.class), tailCaptor.capture());
         assertThat(tailCaptor.getValue()).isEqualTo(50);
     }
 
@@ -53,7 +53,7 @@ class ModPackCommandAndLogsE2ETest extends BaseE2ETest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).containsEntry("message", "Command sent.");
-        verify(containerService).executeCommand(any(ModPack.class), eq("say hello"));
+        verify(containerLogService).executeCommand(any(ModPack.class), eq("say hello"));
     }
 
     @Test

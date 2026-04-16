@@ -3,6 +3,7 @@ package dk.mcmsm.e2e;
 import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackUploadResponseDto;
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.services.ContainerLogService;
 import dk.mcmsm.services.ContainerService;
 import dk.mcmsm.services.ContainerService.DeploymentResult;
 import dk.mcmsm.services.ContainerService.RuntimeState;
@@ -61,6 +62,9 @@ abstract class BaseE2ETest {
     ContainerService containerService;
 
     @MockitoBean
+    ContainerLogService containerLogService;
+
+    @MockitoBean
     LoaderService loaderService;
 
     @LocalServerPort
@@ -98,7 +102,7 @@ abstract class BaseE2ETest {
             });
         }
 
-        Mockito.reset(containerService, loaderService);
+        Mockito.reset(containerService, containerLogService, loaderService);
         stubLoaderService();
     }
 
@@ -202,12 +206,12 @@ abstract class BaseE2ETest {
     }
 
     void stubLogs(String logContent) {
-        when(containerService.readContainerLogs(any(ModPack.class), anyInt()))
+        when(containerLogService.readContainerLogs(any(ModPack.class), anyInt()))
                 .thenReturn(logContent);
     }
 
     void stubCommand() {
-        doNothing().when(containerService).executeCommand(any(ModPack.class), anyString());
+        doNothing().when(containerLogService).executeCommand(any(ModPack.class), anyString());
     }
 
     UploadAndDeployResult uploadAndDeploy() {

@@ -4,16 +4,11 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import dk.mcmsm.entities.ModPack;
 import dk.mcmsm.entities.PackStatus;
 import dk.mcmsm.repository.ModPackRepository;
@@ -21,12 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.time.Duration;
 import java.time.Instant;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -40,16 +31,14 @@ public class ContainerService {
     private final DockerClient dockerClient;
     private final ModPackRepository modPackRepository;
 
-    public ContainerService(ModPackRepository modPackRepository) {
-        var config = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-        var httpClient = new ApacheDockerHttpClient.Builder()
-                .dockerHost(config.getDockerHost())
-                .sslConfig(config.getSSLConfig())
-                .connectionTimeout(Duration.ofSeconds(1))
-                .responseTimeout(Duration.ofSeconds(5))
-                .build();
-
-        this.dockerClient = DockerClientImpl.getInstance(config, httpClient);
+    /**
+     * Creates the container service with an injected Docker client and modpack repository.
+     *
+     * @param dockerClient       the Docker client bean
+     * @param modPackRepository   the modpack repository
+     */
+    public ContainerService(DockerClient dockerClient, ModPackRepository modPackRepository) {
+        this.dockerClient = dockerClient;
         this.modPackRepository = modPackRepository;
     }
 
@@ -185,131 +174,26 @@ public class ContainerService {
         return new RuntimeState(containerRef.containerId(), containerRef.containerName(), containerRef.running());
     }
 
-    public String readContainerLogs(ModPack modPack, int tailLines) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-
-        var containerRef = resolveContainerReference(modPack);
-        if (containerRef == null) {
-            return "No container found for modpack " + modPack.getPackId() + ".";
-        }
-
-        var logsBuilder = new StringBuilder();
-        try (var callback = new ResultCallback.Adapter<Frame>() {
-            @Override
-            public void onNext(Frame item) {
-                if (item != null && item.getPayload() != null) {
-                    logsBuilder.append(new String(item.getPayload(), StandardCharsets.UTF_8));
-                }
-                super.onNext(item);
-            }
-        }) {
-            dockerClient.logContainerCmd(containerRef.containerId())
-                    .withStdOut(true)
-                    .withStdErr(true)
-                    .withTail(Math.max(1, tailLines))
-                    .exec(callback);
-            callback.awaitCompletion();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException("Interrupted while reading logs for mod pack " + modPack.getPackId() + ".", e);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to close log stream for mod pack " + modPack.getPackId() + ".", e);
-        }
-
-        return logsBuilder.toString().trim();
+    /**
+     * Resolves the Docker container ID for a modpack, or null if no container exists.
+     *
+     * @param modPack the target modpack
+     * @return the container ID, or null
+     */
+    String resolveContainerId(ModPack modPack) {
+        var ref = resolveContainerReference(modPack);
+        return ref == null ? null : ref.containerId();
     }
 
     /**
-     * Sends a console command to a running container by writing to PID 1's stdin.
+     * Resolves the container ID for a modpack only if the container is running.
      *
-     * @param modPack the target modpack.
-     * @param command the console command to execute.
-     * @throws IllegalStateException if no running container is found.
+     * @param modPack the target modpack
+     * @return the container ID if running, or null
      */
-    public void executeCommand(ModPack modPack, String command) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-        Objects.requireNonNull(command, "command must not be null");
-
-        var containerRef = resolveContainerReference(modPack);
-        if (containerRef == null || !containerRef.running()) {
-            throw new IllegalStateException("No running container found for modpack " + modPack.getPackId() + ".");
-        }
-
-        var sanitized = sanitizeCommand(command);
-        var execCreate = dockerClient.execCreateCmd(containerRef.containerId())
-                .withCmd("bash", "-c", "printf '%s\\n' " + sanitized + " > /proc/1/fd/0")
-                .withAttachStdout(false)
-                .withAttachStderr(false)
-                .exec();
-
-        dockerClient.execStartCmd(execCreate.getId())
-                .withDetach(true)
-                .exec(new ResultCallback.Adapter<>());
-
-        logger.info("Sent command to packId={}: '{}'", modPack.getPackId(), command);
-    }
-
-    /**
-     * Streams live container logs to an SSE emitter using docker-java's follow stream.
-     * The returned callback must be closed when the SSE connection ends.
-     *
-     * @param modPack   the target modpack.
-     * @param emitter   the SSE emitter to send log lines to.
-     * @param tailLines initial number of historical lines to include.
-     * @return the closeable callback for cleanup on disconnect.
-     * @throws IllegalStateException if no container is found.
-     */
-    public ResultCallback.Adapter<Frame> streamContainerLogs(ModPack modPack, SseEmitter emitter, int tailLines) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-
-        var containerRef = resolveContainerReference(modPack);
-        if (containerRef == null) {
-            throw new IllegalStateException("No container found for modpack " + modPack.getPackId() + ".");
-        }
-
-        var callback = new ResultCallback.Adapter<Frame>() {
-            @Override
-            public void onNext(Frame frame) {
-                if (frame == null || frame.getPayload() == null) return;
-                try {
-                    var line = new String(frame.getPayload(), StandardCharsets.UTF_8);
-                    emitter.send(SseEmitter.event().data(line).name("log"));
-                } catch (IOException e) {
-                    logger.debug("SSE send failed for packId={}, closing stream.", modPack.getPackId());
-                    try { close(); } catch (IOException ignored) { /* already closing */ }
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                logger.warn("Docker log stream error for packId={}: {}", modPack.getPackId(), throwable.getMessage());
-                emitter.completeWithError(throwable);
-            }
-
-            @Override
-            public void onComplete() {
-                logger.debug("Docker log stream completed for packId={}", modPack.getPackId());
-                emitter.complete();
-            }
-        };
-
-        dockerClient.logContainerCmd(containerRef.containerId())
-                .withStdOut(true)
-                .withStdErr(true)
-                .withTail(Math.max(1, tailLines))
-                .withFollowStream(true)
-                .exec(callback);
-
-        return callback;
-    }
-
-    private String sanitizeCommand(String command) {
-        // Shell-escape for single-quoted context: replace ' with '\'' and wrap in single quotes
-        var escaped = command
-                .replace("\r", "")
-                .replace("\n", "")
-                .replace("'", "'\\''");
-        return "'" + escaped + "'";
+    String resolveRunningContainerId(ModPack modPack) {
+        var ref = resolveContainerReference(modPack);
+        return ref != null && ref.running() ? ref.containerId() : null;
     }
 
     private ContainerReference resolveContainerReference(ModPack modPack) {

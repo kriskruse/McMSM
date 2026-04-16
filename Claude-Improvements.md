@@ -6,22 +6,6 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 
 ---
 
-## 1. CODE QUALITY IMPROVEMENTS
-
-### Backend
-
-| # | Area | Issue | Suggestion |
-|---|------|-------|------------|
-| C1 | **God object** | `ModPackFileService.java` (628 lines, 12+ responsibilities) | Split into: `TemplateService`, `MetadataInferenceService`, `MemoryCalculationService`, file ops |
-| C2 | **God object** | `ContainerService.java` (493 lines) | Extract command execution, log streaming, inspection into separate classes |
-| C3 | **Duplicate repo logic** | `FileUserRepository` + `FileModPackRepository` | Nearly identical `save()`, `nextId()`. Extract generic base or utility |
-| C4 | **Exception handling gaps** | `GlobalExceptionHandler.java` | Missing handlers for `MultipartException`, `HttpMessageNotReadableException`, generic `Exception` fallback |
-| C5 | **Docker client coupling** | `ContainerService.java:43-50` | DockerClient created in constructor. Should be injected as a Spring Bean for testability |
-| C6 | **IOException wrapping** | `ModPackFileService.java:112-114` | IOException → generic IllegalStateException. Loses type info. Use domain exceptions |
-| C7 | **ModPack entity** | `ModPack.java` — mutable POJO with 17 fields | Split into immutable `ModPackConfig` record (name, version, javaVersion, port, entryPoint) + mutable `ModPackState` (status, containerId, isDeployed) |
-| C8 | **Java 25 features** | Throughout backend | Adopt module imports (`import module java.base`), Stream Gatherers for container iteration, sealed interfaces for result types |
-
-
 ## 2. INFRASTRUCTURE & DISTRIBUTION
 
 ### Build & CI

@@ -1,12 +1,15 @@
 package dk.mcmsm.controller;
 
+import dk.mcmsm.exception.ModPackFileException;
 import dk.mcmsm.exception.ModPackNotFoundException;
 import dk.mcmsm.exception.ModPackOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 /**
  * Centralized exception handling for all REST controllers.
@@ -48,6 +51,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles modpack file-system operation failures with a 500 response.
+     *
+     * @param ex the file exception
+     * @return 500 response with error message
+     */
+    @ExceptionHandler(ModPackFileException.class)
+    public ResponseEntity<ErrorResponse> handleFileError(ModPackFileException ex) {
+        logger.error("Modpack file operation failed: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(500).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    /**
      * Handles illegal argument errors with a 400 response.
      *
      * @param ex the illegal argument exception
@@ -69,5 +84,41 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
         logger.error("Illegal state: {}", ex.getMessage(), ex);
         return ResponseEntity.status(500).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    /**
+     * Handles multipart upload errors (corrupt file, size exceeded) with a 400 response.
+     *
+     * @param ex the multipart exception
+     * @return 400 response with error message
+     */
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ErrorResponse> handleMultipartError(MultipartException ex) {
+        logger.warn("Multipart error: {}", ex.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse("File upload failed: " + ex.getMessage()));
+    }
+
+    /**
+     * Handles malformed or unreadable JSON request bodies with a 400 response.
+     *
+     * @param ex the message not readable exception
+     * @return 400 response with error message
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadableMessage(HttpMessageNotReadableException ex) {
+        logger.warn("Unreadable request body: {}", ex.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse("Invalid request body."));
+    }
+
+    /**
+     * Catch-all handler for unexpected exceptions with a 500 response.
+     *
+     * @param ex the unexpected exception
+     * @return 500 response with generic error message
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex) {
+        logger.error("Unexpected error: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(500).body(new ErrorResponse("An unexpected error occurred."));
     }
 }

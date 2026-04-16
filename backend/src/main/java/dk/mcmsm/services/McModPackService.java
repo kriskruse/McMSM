@@ -47,13 +47,19 @@ public class McModPackService {
     );
 
     private final ContainerService containerService;
+    private final ContainerLogService containerLogService;
     private final ModPackRepository modPackRepository;
     private final ModPackFileService fileService;
+    private final MemoryCalculationService memoryCalculationService;
 
-    public McModPackService(ContainerService containerService, ModPackRepository modPackRepository, ModPackFileService fileService) {
+    public McModPackService(ContainerService containerService, ContainerLogService containerLogService,
+                            ModPackRepository modPackRepository, ModPackFileService fileService,
+                            MemoryCalculationService memoryCalculationService) {
         this.containerService = containerService;
+        this.containerLogService = containerLogService;
         this.modPackRepository = modPackRepository;
         this.fileService = fileService;
+        this.memoryCalculationService = memoryCalculationService;
     }
 
     /**
@@ -149,8 +155,8 @@ public class McModPackService {
 
         try {
             fileService.syncServerPortWithMetadata(modPack);
-            int memoryLimitMiB = fileService.resolveContainerMemoryLimitMiB(modPack);
-            int memoryReservationMiB = fileService.resolveContainerMemoryReservationMiB(modPack);
+            int memoryLimitMiB = memoryCalculationService.resolveContainerMemoryLimitMiB(modPack);
+            int memoryReservationMiB = memoryCalculationService.resolveContainerMemoryReservationMiB(modPack);
             DeploymentResult deploymentResult = containerService.deployServer(modPack, memoryLimitMiB, memoryReservationMiB);
 
             modPack.setContainerId(deploymentResult.containerId());
@@ -328,7 +334,7 @@ public class McModPackService {
                 .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         int effectiveTail = tailLines == null ? 200 : tailLines;
-        return containerService.readContainerLogs(modPack, effectiveTail);
+        return containerLogService.readContainerLogs(modPack, effectiveTail);
     }
 
     /**
@@ -341,7 +347,7 @@ public class McModPackService {
     public void sendCommand(Long packId, String command) {
         var modPack = modPackRepository.findByPackId(packId)
                 .orElseThrow(() -> new ModPackNotFoundException(packId));
-        containerService.executeCommand(modPack, command);
+        containerLogService.executeCommand(modPack, command);
     }
 
     /**
@@ -357,7 +363,7 @@ public class McModPackService {
                 .orElseThrow(() -> new ModPackNotFoundException(packId));
 
         var emitter = new SseEmitter(0L);
-        var callback = containerService.streamContainerLogs(modPack, emitter, tailLines);
+        var callback = containerLogService.streamContainerLogs(modPack, emitter, tailLines);
 
         Runnable cleanup = () -> {
             try {

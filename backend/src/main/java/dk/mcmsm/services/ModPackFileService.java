@@ -2,6 +2,9 @@ package dk.mcmsm.services;
 
 import dk.mcmsm.entities.ModPack;
 import dk.mcmsm.entities.PackStatus;
+import dk.mcmsm.exception.ModPackFileException;
+
+import static dk.mcmsm.services.MemoryCalculationService.DEFAULT_JAVA_XMX;
 import dk.mcmsm.services.loader.LoaderDetectionResult;
 import dk.mcmsm.services.loader.LoaderService;
 import dk.mcmsm.services.loader.LoaderType;
@@ -27,7 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -46,16 +48,11 @@ public class ModPackFileService {
     private static final String DEFAULT_PACK_VERSION = "unknown";
     private static final String DEFAULT_MINECRAFT_VERSION = "unknown";
     private static final Integer DEFAULT_JAVA_VERSION = 21;
-    public static final String DEFAULT_JAVA_XMX = "5G";
     private static final String DEFAULT_PORT = "25565";
     private static final String DEFAULT_ENTRYPOINT = "startserver.sh";
     private static final String MCMSM_LAUNCH_SCRIPT = "mcmsm-launch.sh";
     private static final String[] DEFAULT_ENTRYPOINT_CANDIDATES = new String[]{DEFAULT_ENTRYPOINT};
-    private static final int DEFAULT_XMX_MIB = 8192;
-    private static final int JVM_OVERHEAD_MIB = 512;
-    private static final int DEFAULT_DIRECT_MEMORY_MIB = 2048;
     private static final Pattern XMX_PATTERN = Pattern.compile("(?i)^(?:-Xmx)?(\\d+)([mMgG])$");
-    private static final Pattern DIRECT_MEMORY_PATTERN = Pattern.compile("(?i)^-XX:MaxDirectMemorySize=(\\d+)([mMgG])$");
     private static final Pattern PACK_VERSION_PATTERN = Pattern.compile("(?:^|[-_])(\\d+(?:[.-]\\d+){2,})");
 
     private final Path modpacksRoot;
@@ -111,7 +108,7 @@ public class ModPackFileService {
             logger.info("Archive extracted to staging directory '{}'.", stagingDirectory);
         } catch (IOException e) {
             logger.error("Failed processing uploaded archive originalName='{}'.", originalName, e);
-            throw new IllegalStateException("Failed to process uploaded modpack archive.", e);
+            throw new ModPackFileException("Failed to process uploaded modpack archive.", e);
         } finally {
             try {
                 Files.deleteIfExists(archivePath);
@@ -178,73 +175,8 @@ public class ModPackFileService {
             logger.info("Synchronized server port for packId={} to {}.", modPack.getPackId(), requestedPort);
         } catch (IOException e) {
             logger.error("Failed to synchronize server.properties for packId={}", modPack.getPackId(), e);
-            throw new IllegalStateException("Failed to synchronize server.properties for modpack '" + modPack.getName() + "'.", e);
+            throw new ModPackFileException("Failed to synchronize server.properties for modpack '" + modPack.getName() + "'.", e);
         }
-    }
-
-    /**
-     * Calculates the Docker container memory limit from the modpack's JVM Xmx setting
-     * and MaxDirectMemorySize parsed from user_jvm_args.txt.
-     *
-     * @param modPack the modpack to resolve memory for
-     * @return memory limit in MiB (Xmx + MaxDirectMemorySize + JVM overhead)
-     */
-    public int resolveContainerMemoryLimitMiB(ModPack modPack) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-        var xmxMiB = parseXmxMiB(Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX)).orElse(DEFAULT_XMX_MIB);
-        var directMemoryMiB = resolveDirectMemoryMiB(modPack);
-        var limitMiB = xmxMiB + directMemoryMiB + JVM_OVERHEAD_MIB;
-        logger.debug("Resolved memory limit for packId={}: xmxMiB={}, directMemoryMiB={}, jvmOverheadMiB={}, limitMiB={}",
-                modPack.getPackId(), xmxMiB, directMemoryMiB, JVM_OVERHEAD_MIB, limitMiB);
-        return limitMiB;
-    }
-
-    /**
-     * Calculates the Docker memory reservation (soft limit) from the modpack's JVM Xmx setting.
-     * The reservation represents the typical working set without burst off-heap allocations,
-     * allowing Docker to reclaim idle memory under host pressure while still permitting
-     * bursts up to the hard limit.
-     *
-     * @param modPack the modpack to resolve memory for
-     * @return memory reservation in MiB (Xmx + JVM overhead, excluding MaxDirectMemorySize)
-     */
-    public int resolveContainerMemoryReservationMiB(ModPack modPack) {
-        Objects.requireNonNull(modPack, "modPack must not be null");
-        var xmxMiB = parseXmxMiB(Objects.requireNonNullElse(modPack.getJavaXmx(), DEFAULT_JAVA_XMX)).orElse(DEFAULT_XMX_MIB);
-        var reservationMiB = xmxMiB + JVM_OVERHEAD_MIB;
-        logger.debug("Resolved memory reservation for packId={}: xmxMiB={}, jvmOverheadMiB={}, reservationMiB={}",
-                modPack.getPackId(), xmxMiB, JVM_OVERHEAD_MIB, reservationMiB);
-        return reservationMiB;
-    }
-
-    private int resolveDirectMemoryMiB(ModPack modPack) {
-        if (!hasText(modPack.getPath())) {
-            return DEFAULT_DIRECT_MEMORY_MIB;
-        }
-        var jvmArgsPath = Path.of(modPack.getPath()).toAbsolutePath().normalize().resolve("user_jvm_args.txt");
-        try {
-            var lines = Files.readAllLines(jvmArgsPath);
-            return parseDirectMemoryMiB(lines).orElse(DEFAULT_DIRECT_MEMORY_MIB);
-        } catch (IOException e) {
-            logger.warn("Could not read user_jvm_args.txt for packId={}, using default direct memory {}MiB.", modPack.getPackId(), DEFAULT_DIRECT_MEMORY_MIB);
-            return DEFAULT_DIRECT_MEMORY_MIB;
-        }
-    }
-
-    private OptionalInt parseDirectMemoryMiB(List<String> lines) {
-        for (var line : lines) {
-            var trimmed = line.trim();
-            if (trimmed.isEmpty() || trimmed.startsWith("#")) {
-                continue;
-            }
-            var matcher = DIRECT_MEMORY_PATTERN.matcher(trimmed);
-            if (matcher.matches()) {
-                var value = Integer.parseInt(matcher.group(1));
-                var unit = matcher.group(2).toUpperCase();
-                return OptionalInt.of("G".equals(unit) ? value * 1024 : value);
-            }
-        }
-        return OptionalInt.empty();
     }
 
     /**
@@ -293,7 +225,7 @@ public class ModPackFileService {
             logger.info("Deleted modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath);
         } catch (IOException e) {
             logger.error("Failed deleting modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath, e);
-            throw new IllegalStateException("Failed deleting modpack directory for '" + modPack.getName() + "'.", e);
+            throw new ModPackFileException("Failed deleting modpack directory for '" + modPack.getName() + "'.", e);
         }
     }
 
@@ -331,7 +263,7 @@ public class ModPackFileService {
                 logger.info("Moved modpack directory without atomic move for packId={} from '{}' to immutable path '{}'.", modPack.getPackId(), currentPath, targetPath);
             } catch (IOException moveException) {
                 logger.error("Failed moving modpack directory to immutable path for packId={} from '{}' to '{}'.", modPack.getPackId(), currentPath, targetPath, moveException);
-                throw new IllegalStateException("Failed to assign immutable modpack directory path.", moveException);
+                throw new ModPackFileException("Failed to assign immutable modpack directory path.", moveException);
             }
         }
 
@@ -368,7 +300,7 @@ public class ModPackFileService {
             logger.info("Copied '{}' from '{}' to '{}' with overwrite enabled.", item, sourceRoot, targetRoot);
         } catch (IOException e) {
             logger.error("Failed copying '{}' from '{}' to '{}'.", item, sourceRoot, targetRoot, e);
-            throw new IllegalStateException("Failed copying item from source to target.", e);
+            throw new ModPackFileException("Failed copying item from source to target.", e);
         }
     }
 
@@ -464,18 +396,6 @@ public class ModPackFileService {
             logger.warn("Could not resolve java xmx from '{}', using default {}.", jvmArgsPath, DEFAULT_JAVA_XMX);
             return DEFAULT_JAVA_XMX;
         }
-    }
-
-    private OptionalInt parseXmxMiB(String xmxToken) {
-        var matcher = XMX_PATTERN.matcher(Objects.requireNonNullElse(xmxToken, "").trim());
-        if (!matcher.matches()) {
-            return OptionalInt.empty();
-        }
-
-        var value = Integer.parseInt(matcher.group(1));
-        var unit = matcher.group(2).toUpperCase();
-        var valueMiB = "G".equals(unit) ? value * 1024 : value;
-        return OptionalInt.of(valueMiB);
     }
 
     private Optional<String> parseXmxToken(List<String> lines) {
