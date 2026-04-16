@@ -12,7 +12,14 @@
       "WebFetch(domain:pelican.dev)",
       "WebFetch(domain:www.answeroverflow.com)",
       "WebFetch(domain:docs.github.com)",
-      "WebFetch(domain:docs.immich.app)"
+      "WebFetch(domain:docs.immich.app)",
+      "WebFetch(domain:space-node.net)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:repo1.maven.org)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:search.maven.org)",
+      "Bash(npm view *)",
+      "Bash(npm run *)"
     ]
   }
 }

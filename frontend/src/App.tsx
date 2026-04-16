@@ -2,7 +2,7 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-} from "react-router-dom";
+} from "react-router";
 
 import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import Login from "./pages/Login.tsx";

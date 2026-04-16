@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from 'react';
 import type { ModPackCardDto } from '../dto';
 import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack } from '../util/modpackApi';
 import {BackendStatus} from "../util/healthCheck.ts";
+
+type OptimisticUpdate = { packId: number; changes: Partial<ModPackCardDto> };
 
 
 
@@ -33,6 +35,14 @@ export function useModpacks() {
     const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
     const [activePackActions, setActivePackActions] = useState<number[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [, startTransition] = useTransition();
+    const [optimisticModpacks, addOptimistic] = useOptimistic(
+        modpacks,
+        (currentModpacks, { packId, changes }: OptimisticUpdate) =>
+            currentModpacks.map(pack =>
+                pack.packId === packId ? { ...pack, ...changes } : pack
+            )
+    );
     const modpacksRef = useRef(modpacks);
     modpacksRef.current = modpacks;
 
@@ -139,8 +149,8 @@ export function useModpacks() {
         };
     }, [backendStatus, checkBackendHealth, refreshAllPacks]);
 
-    const deployedModpacks = useMemo(() => modpacks.filter((pack) => pack.isDeployed), [modpacks]);
-    const nonDeployedModpacks = useMemo(() => modpacks.filter((pack) => !pack.isDeployed), [modpacks]);
+    const deployedModpacks = useMemo(() => optimisticModpacks.filter((pack) => pack.isDeployed), [optimisticModpacks]);
+    const nonDeployedModpacks = useMemo(() => optimisticModpacks.filter((pack) => !pack.isDeployed), [optimisticModpacks]);
 
     const setPackActionState = useCallback((packId: number, isActive: boolean) => {
         setActivePackActions((previous) => {
@@ -154,23 +164,32 @@ export function useModpacks() {
         });
     }, []);
 
-    const runPackAction = useCallback(async (packId: number, action: () => Promise<void>) => {
+    const runPackAction = useCallback((
+        packId: number,
+        action: () => Promise<void>,
+        optimisticChanges?: Partial<ModPackCardDto>,
+    ) => {
         setPackActionState(packId, true);
         setLoadError('');
 
-        try {
-            await action();
-            await refreshAllPacks();
-        } catch (error) {
-            if (error instanceof Error && error.message) {
-                setLoadError(error.message);
-            } else {
-                setLoadError('Failed to update modpack state.');
+        startTransition(async () => {
+            if (optimisticChanges) {
+                addOptimistic({ packId, changes: optimisticChanges });
             }
-        } finally {
-            setPackActionState(packId, false);
-        }
-    }, [refreshAllPacks, setPackActionState]);
+            try {
+                await action();
+                await refreshAllPacks();
+            } catch (error) {
+                if (error instanceof Error && error.message) {
+                    setLoadError(error.message);
+                } else {
+                    setLoadError('Failed to update modpack state.');
+                }
+            } finally {
+                setPackActionState(packId, false);
+            }
+        });
+    }, [refreshAllPacks, setPackActionState, addOptimistic, startTransition]);
 
     const handleDeletePack = useCallback((packId: number) => {
         const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
@@ -178,19 +197,19 @@ export function useModpacks() {
         if (!confirmed) {
             return;
         }
-        void runPackAction(packId, () => deletePack(packId));
+        runPackAction(packId, () => deletePack(packId));
     }, [runPackAction]);
 
     const handleDeployPack = useCallback((packId: number) => {
-        void runPackAction(packId, () => deployPack(packId));
+        runPackAction(packId, () => deployPack(packId), { status: 'deployed', isDeployed: true });
     }, [runPackAction]);
 
     const handleStartPack = useCallback((packId: number) => {
-        void runPackAction(packId, () => startPack(packId));
+        runPackAction(packId, () => startPack(packId), { status: 'running' });
     }, [runPackAction]);
 
     const handleStopPack = useCallback((packId: number) => {
-        void runPackAction(packId, () => stopPack(packId));
+        runPackAction(packId, () => stopPack(packId), { status: 'stopped' });
     }, [runPackAction]);
 
     const handleArchivePack = useCallback((packId: number) => {
@@ -199,11 +218,11 @@ export function useModpacks() {
         if (!confirmed) {
             return;
         }
-        void runPackAction(packId, () => archivePack(packId));
+        runPackAction(packId, () => archivePack(packId), { isDeployed: false, status: 'saved' });
     }, [runPackAction]);
 
     return {
-        modpacks,
+        modpacks: optimisticModpacks,
         deployedModpacks,
         nonDeployedModpacks,
         isLoading,

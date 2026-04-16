@@ -1,6 +1,5 @@
 package dk.mcmsm.util;
 
-import dk.mcmsm.services.UpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.info.BuildProperties;
@@ -14,9 +13,6 @@ import java.util.Optional;
 @Component
 public class Globals {
     private static final Logger logger = LoggerFactory.getLogger(Globals.class);
-    private final BuildProperties buildProperties;
-
-
     public static final String DEV_VERSION = "dev";
     public static Boolean IS_WINDOWS;
     public static Path WORKING_DIRECTORY;
@@ -27,13 +23,12 @@ public class Globals {
     public static long PROCESS_ID;
 
 
-    public Globals(BuildProperties buildProperties) {
-        this.buildProperties = buildProperties;
+    public Globals(Optional<BuildProperties> buildProperties) {
 
         IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
         WORKING_DIRECTORY = workingDirAsPath();
         IS_RUNNING_FROM_JAR = isRunningFromJar();
-        APP_VERSION = getCurrentVersion();
+        APP_VERSION = getCurrentVersion(buildProperties);
         JAVA_EXE = Path.of(System.getProperty("java.home"), "bin", IS_WINDOWS ? "java.exe" : "java").toAbsolutePath().toString();
         SERVER_PORT = Optional.ofNullable(System.getProperty("server.port")).orElse("8080");
         PROCESS_ID = ProcessHandle.current().pid();
@@ -74,8 +69,7 @@ public class Globals {
         return resolveWorkingPath().contains(".jar");
     }
 
-    private String getCurrentVersion() {
-        String version = buildProperties.getVersion();
-        return version != null ? version : DEV_VERSION;
+    private String getCurrentVersion(Optional<BuildProperties> buildProperties) {
+        return buildProperties.map(BuildProperties::getVersion).orElse(DEV_VERSION);
     }
 }
