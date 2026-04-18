@@ -43,6 +43,9 @@ public class UpdateService {
     private static final int HEALTH_CHECK_RETRIES = 30;
     private static final int HEALTH_CHECK_DELAY_SECONDS = 2;
     private static final int SHUTDOWN_WAIT_SECONDS = 30;
+    private static final int START_MARKER_TIMEOUT_MS = 3000;
+    private static final int START_MARKER_POLL_INTERVAL_MS = 150;
+    private static final String START_MARKER_FILE = "mcmsm-updater.started";
 
     private final UpdateProperties properties;
     private final ConfigurableApplicationContext applicationContext;
@@ -380,6 +383,9 @@ public class UpdateService {
                 RETRIES=%d
                 DELAY=%d
                 APP_LOG="$(dirname "$NEW_JAR")/mcmsm-app.log"
+                START_MARKER="$(dirname "$0")/%s"
+
+                touch "$START_MARKER" || true
 
                 launch_jar() {
                     local jar="$1"
@@ -419,7 +425,8 @@ public class UpdateService {
                 rm -f "$NEW_JAR"
                 echo "[McMSM Updater] Rollback complete."
                 """.formatted(Globals.PROCESS_ID, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
-                Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
+                Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS,
+                START_MARKER_FILE);
 
         Files.writeString(scriptPath, script);
         scriptPath.toFile().setExecutable(true);
@@ -429,23 +436,65 @@ public class UpdateService {
 
     private void launchUpdaterScript(Path scriptPath) throws IOException {
         logger.info("Attempting to launch updater script: {}", scriptPath);
-        ProcessBuilder pb;
         if (Globals.IS_WINDOWS) {
-            pb = new ProcessBuilder("cmd.exe", "/c", scriptPath.toAbsolutePath().toString());
+            var pb = new ProcessBuilder("cmd.exe", "/c", scriptPath.toAbsolutePath().toString());
             pb.directory(scriptPath.getParent().toFile());
             pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
             pb.redirectErrorStream(true);
-        } else {
-            var terminal = detectLinuxTerminalEmulator();
-            pb = buildUnixUpdaterProcessBuilder(terminal, scriptPath);
+            logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
+            pb.start();
+            return;
+        }
+
+        Path markerPath = scriptPath.resolveSibling(START_MARKER_FILE);
+        Files.deleteIfExists(markerPath);
+
+        var terminal = detectLinuxTerminalEmulator();
+        if (terminal != null) {
+            var pb = buildUnixUpdaterProcessBuilder(terminal, scriptPath);
             pb.directory(scriptPath.getParent().toFile());
-            if (terminal == null) {
-                pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
-                pb.redirectErrorStream(true);
+            logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
+            pb.start();
+            if (waitForStartMarker(markerPath)) {
+                return;
+            }
+            logger.warn("Updater script did not create start marker within {} ms via terminal '{}'. " +
+                    "Falling back to headless launch.", START_MARKER_TIMEOUT_MS, terminal);
+        }
+
+        var pb = buildUnixUpdaterProcessBuilder(null, scriptPath);
+        pb.directory(scriptPath.getParent().toFile());
+        pb.redirectOutput(scriptPath.resolveSibling("mcmsm-updater.log").toFile());
+        pb.redirectErrorStream(true);
+        logger.info("Launching updater script (headless) with command: {}", String.join(" ", pb.command()));
+        pb.start();
+        if (!waitForStartMarker(markerPath)) {
+            throw new IOException("Updater script did not start within " + START_MARKER_TIMEOUT_MS
+                    + " ms. Check " + scriptPath.resolveSibling("mcmsm-updater.log"));
+        }
+    }
+
+    /**
+     * Polls for the updater script's start marker file as proof that it actually began executing.
+     *
+     * @param markerPath the marker file the script touches as its first action.
+     * @return {@code true} if the marker appeared before the timeout, {@code false} otherwise.
+     */
+    private boolean waitForStartMarker(Path markerPath) {
+        long deadline = System.currentTimeMillis() + START_MARKER_TIMEOUT_MS;
+        while (System.currentTimeMillis() < deadline) {
+            if (Files.exists(markerPath)) {
+                logger.info("Updater script confirmed running (marker {} present).", markerPath.getFileName());
+                return true;
+            }
+            try {
+                Thread.sleep(START_MARKER_POLL_INTERVAL_MS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
             }
         }
-        logger.info("Launching updater script with command: {}", String.join(" ", pb.command()));
-        pb.start();
+        return false;
     }
 
     /**

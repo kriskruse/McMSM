@@ -69,6 +69,7 @@ public class UpdateCleanupService {
             deleteQuietly(jarDirectory.resolve("mcmsm-updater.bat"));
             deleteQuietly(jarDirectory.resolve("mcmsm-updater.sh"));
             deleteQuietly(jarDirectory.resolve("mcmsm-updater.log"));
+            deleteQuietly(jarDirectory.resolve("mcmsm-updater.started"));
             deleteQuietly(metadataPath);
 
             logger.info("Post-update cleanup completed successfully.");
