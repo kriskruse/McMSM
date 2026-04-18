@@ -20,34 +20,19 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 
 ---
 
-## 3. UI/UX IMPROVEMENTS
-
-| # | Area | Current State | Improvement |
-|---|------|---------------|-------------|
-| U1 | **Empty state** | No message when 0 modpacks | Add illustration + "Upload your first modpack" CTA |
-| U2 | **No dark/light toggle** | Hardcoded dark theme | Add `prefers-color-scheme` detection + manual toggle. Tailwind v4 supports this natively |
-| U3 | **No loading skeletons** | "Loading modpacks..." text | Skeleton cards while loading — less layout shift |
-| U4 | **No toast notifications** | Actions succeed silently or inline text | Add toast system for deploy/start/stop/delete confirmations |
-| U5 | **Modal accessibility** | Missing `role="dialog"`, ARIA live regions | Add proper ARIA attributes throughout |
-| U6 | **No keyboard shortcuts** | Mouse-only interaction | Add shortcuts for common actions (R = refresh, U = upload, / = search) |
-| U7 | **Button style inconsistency** | Different hover states across components | Define button variant system (primary, danger, ghost, disabled) |
-| U8 | **Error display on register** | Raw response text shown | Parse and display friendly error messages |
-| U9 | **No favicon/branding** | Placeholder Tailwind logo on login/register | Custom McMSM logo or icon |
-
----
-
 ## 4. FEATURE IDEAS
 
 ### High Value
 
-| # | Feature | Description |
-|---|---------|-------------|
-| F1 | **Server resource monitoring** | Live CPU, memory, disk usage per container via Docker stats API. Dashboard cards or mini-graphs |
+| # | Feature | Description                                                                                                                |
+|---|---------|----------------------------------------------------------------------------------------------------------------------------|
+| F1 | **Server resource monitoring** | Live CPU, memory, disk usage per container via Docker stats API. Dashboard cards or mini-graphs                            |
+|F1.1| **Server system resource monitoring** | Host-level CPU, memory, disk space monitoring                                                                              |
 | F2 | **Backup & restore** | One-click world backup (tar the server dir), scheduled auto-backups, restore from backup list. Critical for modded servers |
-| F3 | **Scheduled tasks** | Auto-restart on crash detection, scheduled restarts (daily 4am), scheduled backups. Cron-like UI |
-| F4 | **Modpack version management** | Track uploaded versions, rollback to previous, keep version history |
-| F5 | **Import from CurseForge/Modrinth** | Paste modpack URL → auto-download ZIP, extract, configure. Biggest UX win for modpack management |
-| F6 | **"Update available" notification** | `GET /api/version` endpoint + frontend check against GitHub releases API. Low effort, high value for self-hosted users |
+| F3 | **Scheduled tasks** | Auto-restart on crash detection, scheduled restarts (daily 4am), scheduled backups. Cron-like UI                           |
+| F4 | **Modpack version management** | Track uploaded versions, rollback to previous, keep version history                                                        |
+| F5 | **Import from CurseForge/Modrinth** | Paste modpack URL → auto-download ZIP, extract, configure. Biggest UX win for modpack management                           |
+| F6 | **"Update available" notification** | `GET /api/version` endpoint + frontend check against GitHub releases API. Low effort, high value for self-hosted users     |
 
 ### Medium Value
 

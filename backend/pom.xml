@@ -64,6 +64,12 @@
         <artifactId>spring-boot-starter-actuator</artifactId>
       </dependency>
 
+      <dependency>
+        <groupId>com.github.oshi</groupId>
+        <artifactId>oshi-core</artifactId>
+        <version>6.6.5</version>
+      </dependency>
+
     </dependencies>
 
   <build>

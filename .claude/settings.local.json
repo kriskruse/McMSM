@@ -22,7 +22,9 @@
       "Bash(npm run *)",
       "Bash(mvn clean *)",
       "Bash(mvn compile *)",
-      "Bash(mvn test-compile *)"
+      "Bash(mvn test-compile *)",
+      "Bash(xargs grep *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")"
     ]
   }
 }

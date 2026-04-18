@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useOptimistic, useRef, useState, useTr
 import type { ModPackCardDto } from '../dto';
 import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack } from '../util/modpackApi';
 import {BackendStatus} from "../util/healthCheck.ts";
+import type { ToastVariant } from './useToast';
 
 type OptimisticUpdate = { packId: number; changes: Partial<ModPackCardDto> };
 
@@ -28,7 +29,11 @@ function isConnectionError(error: unknown): boolean {
     );
 }
 
-export function useModpacks() {
+type UseModpacksOptions = {
+    addToast?: (message: string, variant?: ToastVariant) => void;
+};
+
+export function useModpacks({ addToast }: UseModpacksOptions = {}) {
     const [modpacks, setModpacks] = useState<ModPackCardDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [loadError, setLoadError] = useState('');
@@ -168,6 +173,7 @@ export function useModpacks() {
         packId: number,
         action: () => Promise<void>,
         optimisticChanges?: Partial<ModPackCardDto>,
+        successMessage?: string,
     ) => {
         setPackActionState(packId, true);
         setLoadError('');
@@ -179,46 +185,54 @@ export function useModpacks() {
             try {
                 await action();
                 await refreshAllPacks();
-            } catch (error) {
-                if (error instanceof Error && error.message) {
-                    setLoadError(error.message);
-                } else {
-                    setLoadError('Failed to update modpack state.');
+                if (successMessage) {
+                    addToast?.(successMessage, 'success');
                 }
+            } catch (error) {
+                const message = error instanceof Error && error.message
+                    ? error.message
+                    : 'Failed to update modpack state.';
+                setLoadError(message);
+                addToast?.(message, 'error');
             } finally {
                 setPackActionState(packId, false);
             }
         });
-    }, [refreshAllPacks, setPackActionState, addOptimistic, startTransition]);
+    }, [refreshAllPacks, setPackActionState, addOptimistic, startTransition, addToast]);
 
     const handleDeletePack = useCallback((packId: number) => {
         const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
-        const confirmed = window.confirm(`Delete ${targetPack?.name ?? 'this modpack'}? This removes files and metadata.`);
+        const packName = targetPack?.name ?? 'Modpack';
+        const confirmed = window.confirm(`Delete ${packName}? This removes files and metadata.`);
         if (!confirmed) {
             return;
         }
-        runPackAction(packId, () => deletePack(packId));
+        runPackAction(packId, () => deletePack(packId), undefined, `${packName} deleted`);
     }, [runPackAction]);
 
     const handleDeployPack = useCallback((packId: number) => {
-        runPackAction(packId, () => deployPack(packId), { status: 'deployed', isDeployed: true });
+        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+        runPackAction(packId, () => deployPack(packId), { status: 'deployed', isDeployed: true }, `${packName} deployed`);
     }, [runPackAction]);
 
     const handleStartPack = useCallback((packId: number) => {
-        runPackAction(packId, () => startPack(packId), { status: 'running' });
+        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+        runPackAction(packId, () => startPack(packId), { status: 'running' }, `${packName} started`);
     }, [runPackAction]);
 
     const handleStopPack = useCallback((packId: number) => {
-        runPackAction(packId, () => stopPack(packId), { status: 'stopped' });
+        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+        runPackAction(packId, () => stopPack(packId), { status: 'stopped' }, `${packName} stopped`);
     }, [runPackAction]);
 
     const handleArchivePack = useCallback((packId: number) => {
         const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
-        const confirmed = window.confirm(`Archive ${targetPack?.name ?? 'this modpack'}? This removes only the container.`);
+        const packName = targetPack?.name ?? 'Modpack';
+        const confirmed = window.confirm(`Archive ${packName}? This removes only the container.`);
         if (!confirmed) {
             return;
         }
-        runPackAction(packId, () => archivePack(packId), { isDeployed: false, status: 'saved' });
+        runPackAction(packId, () => archivePack(packId), { isDeployed: false, status: 'saved' }, `${packName} archived`);
     }, [runPackAction]);
 
     return {

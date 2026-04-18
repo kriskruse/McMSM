@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
+import { btn } from '../util/buttonVariants';
 
 type ErrorBoundaryProps = {
     children: ReactNode;
@@ -34,7 +35,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                         <button
                             type="button"
                             onClick={() => this.setState({ hasError: false, error: null })}
-                            className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+                            className={`mt-4 ${btn('primary')}`}
                         >
                             Try again
                         </button>

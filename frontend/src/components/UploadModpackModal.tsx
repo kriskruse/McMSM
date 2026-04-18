@@ -3,6 +3,7 @@ import type { ChangeEvent, DragEvent } from 'react';
 import type { ModPackUploadResponseDto } from '../dto';
 import { isZipFile } from '../util/fileValidation';
 import { updateModpack, uploadModpack } from '../util/modpackApi';
+import { btn } from '../util/buttonVariants';
 import FileDropZone from './FileDropZone';
 import Modal from './Modal';
 import UploadProgress from './UploadProgress';
@@ -206,7 +207,7 @@ const UploadModpackModal = ({
                     <button
                         type="button"
                         onClick={chooseFile}
-                        className="rounded-lg border border-white/20 bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                        className={btn('ghost')}
                         disabled={isUploading}
                         aria-label="Choose modpack zip file"
                     >
@@ -218,7 +219,7 @@ const UploadModpackModal = ({
                         onClick={() => {
                             void startUpload();
                         }}
-                        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+                        className={btn('success')}
                         disabled={isUploading || !selectedFile}
                         aria-label="Start uploading selected modpack"
                     >

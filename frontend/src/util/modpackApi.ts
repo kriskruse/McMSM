@@ -1,9 +1,11 @@
 import type {
+    ContainerStatsDto,
     ModPackCardDto,
     ModPackMetadataRequestDto,
     ModPackMetadataResponseDto,
     ModPackStatus,
     ModPackUploadResponseDto,
+    SystemStatsDto,
     BackendModPackDto,
 } from '../dto/dto.tsx';
 
@@ -219,5 +221,24 @@ export async function sendCommand(packId: number, command: string): Promise<void
         const message = await response.text();
         throw new Error(message || `Failed to send command (${response.status}).`);
     }
+}
+
+export async function getContainerStats(packId: number): Promise<ContainerStatsDto | null> {
+    const response = await fetch(`${API_BASE}/${packId}/stats`);
+    if (response.status === 204) {
+        return null;
+    }
+    if (!response.ok) {
+        throw new Error(`Failed to fetch container stats (${response.status}).`);
+    }
+    return response.json();
+}
+
+export async function getSystemStats(): Promise<SystemStatsDto> {
+    const response = await fetch('/api/system/stats');
+    if (!response.ok) {
+        throw new Error(`Failed to fetch system stats (${response.status}).`);
+    }
+    return response.json();
 }
 

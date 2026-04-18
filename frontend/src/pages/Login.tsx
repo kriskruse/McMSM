@@ -1,7 +1,9 @@
 import { useActionState, useState } from 'react';
 import {NavLink, useNavigate} from "react-router";
 import CircularSpinner from "../components/CircularSpinner.tsx";
+import McmsmLogo from "../components/McmsmLogo";
 import type { LoginRequestDto, LoginResponseDto } from "../dto";
+import { btn } from "../util/buttonVariants";
 import { INPUT_CLASS } from "../util/styles";
 
 function Login() {
@@ -37,8 +39,7 @@ function Login() {
     return (
         <div className="w-full max-w-sm space-y-8">
             <div className="text-center">
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                     alt="McMSM logo" className="mx-auto h-10" />
+                <McmsmLogo className="mx-auto h-10 w-10" />
                 <h2 className="mt-6 text-2xl font-bold text-white">Sign in to your account</h2>
             </div>
 
@@ -58,7 +59,7 @@ function Login() {
                 </div>
 
                 <button type="submit" disabled={isPending}
-                        className="flex items-center justify-center w-full rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-400 disabled:opacity-50"
+                        className={`${btn('primary')} w-full`}
                         aria-label="Sign in">
                     {isPending ? (
                         <CircularSpinner />

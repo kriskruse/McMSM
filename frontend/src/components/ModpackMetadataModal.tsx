@@ -6,6 +6,7 @@ import type {
     ModPackMetadataResponseDto,
     ModPackUploadResponseDto,
 } from '../dto';
+import { btn } from '../util/buttonVariants';
 import { updatePackMetadata } from '../util/modpackApi';
 import { INPUT_CLASS } from '../util/styles';
 
@@ -317,7 +318,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
                         type="button"
                         onClick={onClose}
                         disabled={isSaving}
-                        className="rounded-lg border border-white/20 bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                        className={btn('ghost')}
                         aria-label="Cancel metadata changes"
                     >
                         Cancel
@@ -328,7 +329,7 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
                             void submit();
                         }}
                         disabled={isSaving}
-                        className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-50"
+                        className={btn('primary')}
                         aria-label="Save metadata"
                     >
                         {isSaving ? 'Saving...' : 'Save Metadata'}

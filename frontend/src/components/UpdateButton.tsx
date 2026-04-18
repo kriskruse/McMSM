@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { UpdateStatusDto } from '../dto';
+import { btn } from '../util/buttonVariants';
 import { checkForUpdate, forceCheckForUpdate, applyUpdate } from '../util/updateApi';
 import { healthCheck } from '../util/healthCheck';
 
@@ -138,14 +139,14 @@ function ConfirmDialog({
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="rounded-lg border border-white/20 bg-slate-800 px-4 py-2 text-sm text-white transition hover:bg-slate-700"
+                        className={btn('ghost')}
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
                         onClick={onConfirm}
-                        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                        className={btn('success')}
                     >
                         Update Now
                     </button>

@@ -2,10 +2,12 @@ package dk.mcmsm.controller;
 
 import dk.mcmsm.dto.requests.CommandRequestDto;
 import dk.mcmsm.dto.requests.ModPackMetadataRequestDto;
+import dk.mcmsm.dto.responses.ContainerStatsResponseDto;
 import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackMetadataResponseDto;
 import dk.mcmsm.dto.responses.ModPackUploadResponseDto;
 import dk.mcmsm.entities.ModPack;
+import dk.mcmsm.services.ContainerStatsService;
 import dk.mcmsm.services.McModPackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +30,11 @@ public class ModPackController {
     private static final Logger logger = LoggerFactory.getLogger(ModPackController.class);
 
     private final McModPackService mcModPackService;
+    private final ContainerStatsService containerStatsService;
 
-    public ModPackController(McModPackService mcModPackService) {
+    public ModPackController(McModPackService mcModPackService, ContainerStatsService containerStatsService) {
         this.mcModPackService = mcModPackService;
+        this.containerStatsService = containerStatsService;
     }
 
     @GetMapping("/")
@@ -46,6 +50,13 @@ public class ModPackController {
     @GetMapping("/deployed")
     public ResponseEntity<List<ModPack>> getDeployedPacks() {
         return ResponseEntity.ok(mcModPackService.getDeployedPacks());
+    }
+
+    @GetMapping("/{packId}/stats")
+    public ResponseEntity<ContainerStatsResponseDto> getPackStats(@PathVariable Long packId) {
+        return containerStatsService.getStats(packId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @GetMapping(value = "/{packId}/logs", produces = MediaType.TEXT_PLAIN_VALUE)

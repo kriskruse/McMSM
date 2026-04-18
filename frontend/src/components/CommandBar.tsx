@@ -1,4 +1,5 @@
 import { memo, useCallback, useRef, useState } from 'react';
+import { btn } from '../util/buttonVariants';
 import { sendCommand } from '../util/modpackApi';
 
 type CommandBarProps = {
@@ -43,7 +44,7 @@ const CommandBar = ({ packId, disabled }: CommandBarProps) => {
                 <button
                     type="submit"
                     disabled={disabled || !commandInput.trim()}
-                    className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-500 disabled:opacity-40"
+                    className={btn('success', 'xs')}
                 >
                     Send
                 </button>

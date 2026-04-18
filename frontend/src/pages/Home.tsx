@@ -5,15 +5,19 @@ import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
 import UploadModpackModal from '../components/UploadModpackModal.tsx';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useModpacks } from '../hooks/useModpacks';
+import { useToast } from '../hooks/useToast';
 import { useUploadFlow } from '../hooks/useUploadFlow';
+import { btn } from '../util/buttonVariants';
 import { isZipFile } from '../util/fileValidation';
-import StatusBox from "../components/StatusBox.tsx";
+import SkeletonCard from '../components/SkeletonCard';
+import SystemStatusPanel from '../components/SystemStatusPanel';
 import UpdateButton from "../components/UpdateButton.tsx";
 import {healthCheck} from "../util/healthCheck.ts";
 import {BackendStatus} from "../util/healthCheck.ts";
 import CloseButton from "../components/CloseButton";
 
 const Home = () => {
+    const { addToast } = useToast();
     const {
         modpacks,
         deployedModpacks,
@@ -30,7 +34,7 @@ const Home = () => {
         handleStartPack,
         handleStopPack,
         handleArchivePack,
-    } = useModpacks();
+    } = useModpacks({ addToast });
 
     const {
         isUploadModalOpen,
@@ -103,8 +107,8 @@ const Home = () => {
 
     return (
         <main className="w-full max-w-6xl px-4 py-6 text-slate-100 md:px-6">
-            <header className="mb-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-900/75 p-5 md:flex-row md:items-center md:justify-between">
-                <div>
+            <header className="mb-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-900/75 p-5 md:flex-row md:items-center md:justify-between md:gap-6">
+                <div className="min-w-0">
                     <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
                         MC Modded Server Manager
                     </h1>
@@ -112,9 +116,8 @@ const Home = () => {
                         <span className="text-xs">McMSM</span>
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <StatusBox text="Backend" status={backendStatus} />
-                    <StatusBox text="Docker" status={dockerStatus} />
+                <div className="w-full md:w-[45%] md:max-w-[45%] md:shrink-0">
+                    <SystemStatusPanel backendStatus={backendStatus} dockerStatus={dockerStatus} />
                 </div>
             </header>
 
@@ -124,7 +127,7 @@ const Home = () => {
                     onClick={() => {
                         void handleManualRefresh();
                     }}
-                    className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:opacity-50"
+                    className={`${btn('ghost')} gap-2`}
                     aria-label="Refresh modpacks"
                     disabled={isRefreshing || isLoading}
                 >
@@ -133,7 +136,7 @@ const Home = () => {
                 <button
                     type="button"
                     onClick={() => openNewUpload()}
-                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                    className={`${btn('success')} gap-2`}
                     aria-label="Upload new modpack"
                 >
                     <span className="text-lg leading-none">+</span>
@@ -143,8 +146,25 @@ const Home = () => {
 
             <section className="mb-6 rounded-2xl border border-white/10 bg-slate-900/70 p-5">
                 <h2 className="mb-4 text-lg font-semibold text-white">Currently Deployed Modpacks</h2>
-                {isLoading && <p className="text-sm text-slate-400">Loading modpacks...</p>}
+                {isLoading && (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                        <SkeletonCard />
+                    </div>
+                )}
                 {!isLoading && loadError && <p className="text-sm text-red-400">{loadError}</p>}
+                {!isLoading && !loadError && deployedModpacks.length === 0 && (
+                    <div className="flex flex-col items-center gap-3 py-10 text-center">
+                        <svg className="h-12 w-12 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                        <p className="text-sm text-slate-400">No deployed servers yet.</p>
+                        <p className="text-xs text-slate-500">Upload a modpack and deploy it to get started.</p>
+                    </div>
+                )}
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {deployedModpacks.map((pack) => (
                         <ModpackCard
@@ -166,6 +186,24 @@ const Home = () => {
 
             <section className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
                 <h2 className="mb-4 text-lg font-semibold text-white">Saved Instances</h2>
+                {!isLoading && nonDeployedModpacks.length === 0 && (
+                    <div className="flex flex-col items-center gap-3 py-10 text-center">
+                        <svg className="h-12 w-12 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="12" y1="18" x2="12" y2="12" />
+                            <line x1="9" y1="15" x2="15" y2="15" />
+                        </svg>
+                        <p className="text-sm text-slate-400">No saved instances.</p>
+                        <button
+                            type="button"
+                            onClick={() => openNewUpload()}
+                            className="mt-1 text-sm font-medium text-indigo-400 hover:text-indigo-300"
+                        >
+                            Upload your first modpack
+                        </button>
+                    </div>
+                )}
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {nonDeployedModpacks.map((pack) => (
                         <ModpackCard
@@ -215,6 +253,9 @@ const Home = () => {
             {expandedPack && expandedPack.isDeployed && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-4"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={`Console for ${expandedPack.name}`}
                     onClick={closeConsole}
                 >
                     <div

@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import type { ModPackCardDto } from '../dto';
+import { btn } from '../util/buttonVariants';
 import { resolveIndicator } from '../util/statusIndicator';
+import ContainerMetricsPanel from './ContainerMetricsPanel';
 import StatusBadge from './StatusBadge';
 
 type ModpackCardProps = {
@@ -74,7 +76,7 @@ const ModpackCard = ({
                     <StatusBadge indicator={indicator} />
                     <button
                         type="button"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/20 bg-slate-800/80 text-slate-200 transition hover:bg-slate-700"
+                        className={btn('ghost', 'icon')}
                         onClick={() => onToggleExpand(modpack.packId)}
                         aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${modpack.name} details`}
                     >
@@ -113,11 +115,13 @@ const ModpackCard = ({
                 )}
             </dl>
 
+            <ContainerMetricsPanel packId={modpack.packId} isRunning={isRunning} />
+
             <div className="mt-4 flex items-center gap-2">
                 {!modpack.isDeployed && (
                     <button
                         type="button"
-                        className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-50"
+                        className={`${btn('primary', 'sm')} px-3`}
                         onClick={() => onDeploy(modpack.packId)}
                         disabled={isBusy}
                         aria-label={`Deploy ${modpack.name}`}
@@ -155,7 +159,7 @@ const ModpackCard = ({
                 {modpack.isDeployed && (
                     <button
                         type="button"
-                        className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-md bg-amber-600 text-white transition hover:bg-amber-500 disabled:opacity-50"
+                        className={`ml-auto ${btn('warning', 'icon')}`}
                         onClick={() => onArchive(modpack.packId)}
                         disabled={isBusy}
                         aria-label={`Archive ${modpack.name}`}
@@ -170,7 +174,7 @@ const ModpackCard = ({
                 )}
                 <button
                     type="button"
-                    className={`${modpack.isDeployed ? '' : 'ml-auto'} inline-flex h-8 w-8 items-center justify-center rounded-md bg-slate-600 text-white transition hover:bg-slate-500 disabled:opacity-50`}
+                    className={`${modpack.isDeployed ? '' : 'ml-auto '}${btn('ghost', 'icon')}`}
                     onClick={() => onUpdate(modpack.packId, modpack.name)}
                     disabled={isBusy}
                     aria-label={`Update ${modpack.name}`}
@@ -183,7 +187,7 @@ const ModpackCard = ({
                 </button>
                 <button
                     type="button"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-600 text-white transition hover:bg-red-500 disabled:opacity-50"
+                    className={btn('danger', 'icon')}
                     onClick={() => onDelete(modpack.packId)}
                     disabled={isBusy}
                     aria-label={`Delete ${modpack.name}`}

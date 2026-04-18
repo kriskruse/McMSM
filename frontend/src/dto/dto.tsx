@@ -102,6 +102,26 @@ export type BackendModPackDto = {
     loaderType: string | null;
 };
 
+export type ContainerStatsDto = {
+    packId: number;
+    cpuPercent: number;
+    memoryUsedBytes: number;
+    memoryLimitBytes: number;
+    memoryPercent: number;
+    timestamp: string;
+};
+
+export type SystemStatsDto = {
+    cpuPercent: number;
+    memoryUsedBytes: number;
+    memoryTotalBytes: number;
+    memoryPercent: number;
+    diskUsedBytes: number;
+    diskTotalBytes: number;
+    diskPercent: number;
+    timestamp: string;
+};
+
 export type UpdateStatusDto = {
     currentVersion: string;
     latestVersion: string;
