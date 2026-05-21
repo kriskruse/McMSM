@@ -399,7 +399,6 @@ public class McModPackService {
         }
 
         try {
-            stopPack(packId);
             archivePack(packId);
 
             ModPackUploadResponseDto savePackResponse = savePack(file);
