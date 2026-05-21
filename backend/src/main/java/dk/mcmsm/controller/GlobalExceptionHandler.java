@@ -3,12 +3,14 @@ package dk.mcmsm.controller;
 import dk.mcmsm.exception.ModPackFileException;
 import dk.mcmsm.exception.ModPackNotFoundException;
 import dk.mcmsm.exception.ModPackOperationException;
+import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.multipart.MultipartException;
 
 /**
@@ -108,6 +110,28 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnreadableMessage(HttpMessageNotReadableException ex) {
         logger.warn("Unreadable request body: {}", ex.getMessage());
         return ResponseEntity.status(400).body(new ErrorResponse("Invalid request body."));
+    }
+
+    /**
+     * Handles SSE client disconnects (broken pipe, socket timeout) without writing a body.
+     * The response is already committed with Content-Type text/event-stream, so any attempt
+     * to write a JSON error body would fail with HttpMessageNotWritableException.
+     *
+     * @param ex the async-request-not-usable exception
+     */
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public void handleClientDisconnect(AsyncRequestNotUsableException ex) {
+        logger.debug("SSE client disconnected: {}", ex.getMessage());
+    }
+
+    /**
+     * Handles abrupt TCP-level client disconnects raised by Tomcat without writing a body.
+     *
+     * @param ex the client-abort exception
+     */
+    @ExceptionHandler(ClientAbortException.class)
+    public void handleClientAbort(ClientAbortException ex) {
+        logger.debug("Client aborted connection: {}", ex.getMessage());
     }
 
     /**

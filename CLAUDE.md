@@ -131,3 +131,5 @@ Apply when writing Dockerfiles or docker-compose files:
 
 ## Contribution Notes
 When modifying existing code, explain the rationale — why the change is better or what problem it solves, especially for refactors.
+
+When finishing an implementation, always run the backend test suite (`cd backend && mvn test`) before reporting the task complete. The dev build scripts use `-DskipTests` for fast iteration, so tests do not run as part of `./devBuildAndRun.sh` — they must be run explicitly.

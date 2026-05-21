@@ -14,12 +14,12 @@ type ModpackConsoleProps = {
 
 const LOG_POLL_MS = 2_000;
 const MAX_SSE_LINES = 5_000;
+const INITIAL_TAIL = 200;
 
 const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
     const [logs, setLogs] = useState('Loading logs...');
     const [logError, setLogError] = useState('');
     const [autoScroll, setAutoScroll] = useState(true);
-    const [tailCount, setTailCount] = useState(200);
     const [copied, setCopied] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const logContainerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +57,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
         const startPolling = () => {
             const loadLogs = async () => {
                 try {
-                    const nextLogs = await getPackLogs(modpack.packId, tailCount);
+                    const nextLogs = await getPackLogs(modpack.packId, INITIAL_TAIL);
                     if (!isMounted) return;
                     setLogs(nextLogs || 'No logs available yet.');
                     setLogError('');
@@ -87,9 +87,8 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
         };
 
         const startSSE = () => {
-            setLogs('');
             sseBufferRef.current = '';
-            eventSource = new EventSource(`/api/modpacks/${modpack.packId}/logs/stream?tail=${tailCount}`);
+            eventSource = new EventSource(`/api/modpacks/${modpack.packId}/logs/stream?tail=${INITIAL_TAIL}`);
 
             eventSource.addEventListener('log', (event: MessageEvent) => {
                 if (!isMounted) return;
@@ -119,7 +118,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
             if (pollTimer !== undefined) window.clearInterval(pollTimer);
             if (sseRafRef.current) cancelAnimationFrame(sseRafRef.current);
         };
-    }, [modpack.packId, modpack.status, tailCount]);
+    }, [modpack.packId, modpack.status]);
 
     const metadataTags = useMemo(
         () => [
@@ -187,16 +186,7 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
                             )}
                         </div>
                         <div className="flex items-center gap-3">
-                            <span className="text-xs text-slate-500">Last {tailCount} lines</span>
-                            {tailCount < 5000 && (
-                                <button
-                                    type="button"
-                                    onClick={() => setTailCount((prev) => Math.min(prev + 200, 5000))}
-                                    className="text-xs text-emerald-400 transition hover:text-emerald-300"
-                                >
-                                    Load more
-                                </button>
-                            )}
+                            <span className="text-xs text-slate-500">Live logs</span>
                             <button
                                 type="button"
                                 onClick={handleCopyLogs}
