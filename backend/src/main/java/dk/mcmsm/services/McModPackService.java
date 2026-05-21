@@ -410,6 +410,9 @@ public class McModPackService {
                 fileService.copyIfExists(item, oldPack.getPath(), newPack.getPath());
             }
 
+            inheritUserSettings(oldPack, newPack);
+            modPackRepository.save(newPack);
+
             deployPack(newPack.getPackId());
 
             oldPack.setName("(old) " + oldPack.getName());
@@ -422,6 +425,40 @@ public class McModPackService {
             logger.error("Update failed for modpack packId={}", packId, e);
             return new ModPackUploadResponseDto(e.getMessage());
         }
+    }
+
+    /**
+     * Copies user-customizable configuration from the previous modpack onto the new one so
+     * an update does not silently reset settings the user set via the metadata editor.
+     * Entry point is only inherited when the new archive still contains a script with the
+     * same name; otherwise the auto-detected entry point is kept and a warning is logged.
+     *
+     * @param oldPack the modpack being replaced
+     * @param newPack the freshly uploaded modpack that will become the active one
+     */
+    private void inheritUserSettings(ModPack oldPack, ModPack newPack) {
+        if (oldPack.getPort() != null) {
+            newPack.setPort(oldPack.getPort());
+        }
+        if (oldPack.getJavaVersion() != null) {
+            newPack.setJavaVersion(oldPack.getJavaVersion());
+        }
+        if (oldPack.getJavaXmx() != null) {
+            newPack.setJavaXmx(oldPack.getJavaXmx());
+        }
+
+        var oldEntryPoint = oldPack.getEntryPoint();
+        var candidates = newPack.getEntryPointCandidates();
+        if (oldEntryPoint != null && candidates != null && List.of(candidates).contains(oldEntryPoint)) {
+            newPack.setEntryPoint(oldEntryPoint);
+        } else if (oldEntryPoint != null) {
+            logger.warn("Entry point '{}' from old packId={} not present in new archive; keeping auto-detected '{}'.",
+                    oldEntryPoint, oldPack.getPackId(), newPack.getEntryPoint());
+        }
+
+        logger.info("Inherited user settings for new packId={} from oldPackId={}: port={}, javaVersion={}, javaXmx={}, entryPoint={}.",
+                newPack.getPackId(), oldPack.getPackId(),
+                newPack.getPort(), newPack.getJavaVersion(), newPack.getJavaXmx(), newPack.getEntryPoint());
     }
 
     private void removeMissingPackEntries() {

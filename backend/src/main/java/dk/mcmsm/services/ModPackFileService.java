@@ -164,13 +164,21 @@ public class ModPackFileService {
 
         try {
             var lines = Files.readAllLines(serverPropertiesPath);
+            var existingPort = lines.stream()
+                    .filter(line -> line.startsWith("server-port="))
+                    .map(line -> line.substring("server-port=".length()))
+                    .findFirst();
+            if (existingPort.isPresent() && !existingPort.get().equals(requestedPort)) {
+                logger.warn("Port drift for packId={}: server.properties had '{}', metadata has '{}'; writing metadata value.",
+                        modPack.getPackId(), existingPort.get(), requestedPort);
+            }
+
             var expectedLine = "server-port=" + requestedPort;
             var updatedLines = lines.stream()
                     .map(line -> line.startsWith("server-port=") ? expectedLine : line)
                     .toList();
 
-            var hasPortLine = updatedLines.stream().anyMatch(line -> line.startsWith("server-port="));
-            var linesToWrite = hasPortLine ? updatedLines : Stream.concat(updatedLines.stream(), Stream.of(expectedLine)).toList();
+            var linesToWrite = existingPort.isPresent() ? updatedLines : Stream.concat(updatedLines.stream(), Stream.of(expectedLine)).toList();
             Files.write(serverPropertiesPath, linesToWrite, CREATE, TRUNCATE_EXISTING);
             logger.info("Synchronized server port for packId={} to {}.", modPack.getPackId(), requestedPort);
         } catch (IOException e) {
