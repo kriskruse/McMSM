@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Code Search
+
+Prefer the `semble` MCP (`mcp__semble__search`, `mcp__semble__find_related`) over `grep`/`Read` for "how does X work" / "where is X implemented" / "what calls Y" questions. Repo path: `/home/kris/Documents/Github/McMSM`. Use `grep` only for exact-string lookups (specific identifier, error message, literal value).
+
 ## Project Overview
 
 McMSM (Minecraft Modpack Server Manager) is a self-hosted full-stack application for managing Minecraft modpack servers. Users upload modpack ZIPs, configure metadata, and manage Docker container lifecycles (deploy, start, stop, delete, archive) via a web UI.
