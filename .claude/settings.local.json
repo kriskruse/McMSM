@@ -24,7 +24,8 @@
       "Bash(mvn compile *)",
       "Bash(mvn test-compile *)",
       "Bash(xargs grep *)",
-      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "mcp__semble__search"
     ]
   }
 }
