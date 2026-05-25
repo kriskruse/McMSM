@@ -57,14 +57,17 @@ export function useUploadFlow({ refreshAllPacks, setLoadError }: UseUploadFlowOp
         setIsMetadataModalOpen(true);
     }, []);
 
-    const openUpdatePack = useCallback((packId: number, packName?: string) => {
-        setLoadError('');
-        setPendingUploadFile(null);
-        setUploadMode('update');
-        setUpdateTargetPackId(packId);
-        setUpdateTargetPackName(packName ?? null);
-        setIsUploadModalOpen(true);
-    }, [setLoadError]);
+    const openUpdatePack = useCallback(
+        (packId: number, packName?: string) => {
+            setLoadError('');
+            setPendingUploadFile(null);
+            setUploadMode('update');
+            setUpdateTargetPackId(packId);
+            setUpdateTargetPackName(packName ?? null);
+            setIsUploadModalOpen(true);
+        },
+        [setLoadError],
+    );
 
     const openMetadataForPack = useCallback((pack: ModPackCardDto) => {
         setPendingUploadResult(toUploadResultFromPack(pack));
@@ -76,18 +79,21 @@ export function useUploadFlow({ refreshAllPacks, setLoadError }: UseUploadFlowOp
         setPendingUploadResult(null);
     }, []);
 
-    const handleMetadataSaved = useCallback((response: ModPackMetadataResponseDto) => {
-        setIsMetadataModalOpen(false);
-        setPendingUploadResult(null);
+    const handleMetadataSaved = useCallback(
+        (response: ModPackMetadataResponseDto) => {
+            setIsMetadataModalOpen(false);
+            setPendingUploadResult(null);
 
-        if (response.message.toLowerCase().includes('failed')) {
-            setLoadError(response.message);
-        } else {
-            setLoadError('');
-        }
+            if (response.message.toLowerCase().includes('failed')) {
+                setLoadError(response.message);
+            } else {
+                setLoadError('');
+            }
 
-        void refreshAllPacks();
-    }, [refreshAllPacks, setLoadError]);
+            void refreshAllPacks();
+        },
+        [refreshAllPacks, setLoadError],
+    );
 
     return {
         isUploadModalOpen,

@@ -13,7 +13,9 @@ export default function UpdateButton() {
     const [checking, setChecking] = useState(false);
 
     useEffect(() => {
-        checkForUpdate().then(setStatus).catch(() => {});
+        checkForUpdate()
+            .then(setStatus)
+            .catch(() => {});
     }, []);
 
     const handleForceCheck = useCallback(async () => {
@@ -60,7 +62,11 @@ export default function UpdateButton() {
         );
     }
 
-    const behindText = formatVersionsBehind(status.majorVersionsBehind, status.minorVersionsBehind, status.patchVersionsBehind);
+    const behindText = formatVersionsBehind(
+        status.majorVersionsBehind,
+        status.minorVersionsBehind,
+        status.patchVersionsBehind,
+    );
 
     return (
         <>
@@ -122,7 +128,10 @@ function ConfirmDialog({
     onCancel: () => void;
 }) {
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4" onClick={onCancel}>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4"
+            onClick={onCancel}
+        >
             <div
                 className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
@@ -132,22 +141,14 @@ function ConfirmDialog({
                     {currentVersion} &rarr; {latestVersion}
                 </p>
                 <p className="mt-2 text-xs text-slate-400">
-                    The server will download the new version, restart, and clean up the old one.
-                    Your modpacks and data will not be affected.
+                    The server will download the new version, restart, and clean up the old one. Your modpacks
+                    and data will not be affected.
                 </p>
                 <div className="mt-5 flex justify-end gap-3">
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className={btn('ghost')}
-                    >
+                    <button type="button" onClick={onCancel} className={btn('ghost')}>
                         Cancel
                     </button>
-                    <button
-                        type="button"
-                        onClick={onConfirm}
-                        className={btn('success')}
-                    >
+                    <button type="button" onClick={onConfirm} className={btn('success')}>
                         Update Now
                     </button>
                 </div>

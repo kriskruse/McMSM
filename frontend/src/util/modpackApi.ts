@@ -42,7 +42,9 @@ function mapToCardDto(pack: BackendModPackDto): ModPackCardDto {
         javaXmx: pack.javaXmx ?? '5G',
         port: pack.port,
         entryPoint: pack.entryPoint ?? 'startserver.sh',
-        entryPointCandidates: pack.entryPointCandidates?.length ? pack.entryPointCandidates : ['startserver.sh'],
+        entryPointCandidates: pack.entryPointCandidates?.length
+            ? pack.entryPointCandidates
+            : ['startserver.sh'],
         containerName: pack.containerName,
         containerId: pack.containerId,
         lastDeployError: pack.lastDeployError,
@@ -66,7 +68,6 @@ async function fetchModpacks(path: string): Promise<ModPackCardDto[]> {
 export function getAllPacks(): Promise<ModPackCardDto[]> {
     return fetchModpacks('/');
 }
-
 
 async function runPackAction(path: string, method: 'POST' | 'DELETE'): Promise<void> {
     const response = await fetch(`${API_BASE}${path}`, { method });
@@ -241,4 +242,3 @@ export async function getSystemStats(): Promise<SystemStatsDto> {
     }
     return response.json();
 }
-

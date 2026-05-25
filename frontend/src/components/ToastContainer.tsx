@@ -16,7 +16,10 @@ const ToastContainer = () => {
     }
 
     return (
-        <div className="fixed bottom-4 left-1/2 z-[60] flex -translate-x-1/2 flex-col gap-2" aria-live="polite">
+        <div
+            className="fixed bottom-4 left-1/2 z-[60] flex -translate-x-1/2 flex-col gap-2"
+            aria-live="polite"
+        >
             {toasts.map((toast) => (
                 <div
                     key={toast.id}

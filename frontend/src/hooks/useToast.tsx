@@ -27,17 +27,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         setToasts((prev) => prev.filter((t) => t.id !== id));
     }, []);
 
-    const addToast = useCallback((message: string, variant: ToastVariant = 'success') => {
-        const id = nextId.current++;
-        setToasts((prev) => [...prev, { id, message, variant }]);
-        window.setTimeout(() => removeToast(id), TOAST_DURATION_MS);
-    }, [removeToast]);
-
-    return (
-        <ToastContext value={{ toasts, addToast, removeToast }}>
-            {children}
-        </ToastContext>
+    const addToast = useCallback(
+        (message: string, variant: ToastVariant = 'success') => {
+            const id = nextId.current++;
+            setToasts((prev) => [...prev, { id, message, variant }]);
+            window.setTimeout(() => removeToast(id), TOAST_DURATION_MS);
+        },
+        [removeToast],
     );
+
+    return <ToastContext value={{ toasts, addToast, removeToast }}>{children}</ToastContext>;
 }
 
 export function useToast() {

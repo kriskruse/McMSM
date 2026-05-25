@@ -13,7 +13,13 @@ export const LOG_LEVEL_CLASSES: Record<LogLevel, string> = {
 export function parseLogLevel(line: string): LogLevel {
     if (line.includes('/INFO]') || line.includes('[INFO]') || line.includes(' INFO ')) return 'info';
     if (line.includes('/WARN]') || line.includes('[WARN]') || line.includes(' WARN ')) return 'warn';
-    if (line.includes('/ERROR]') || line.includes('[ERROR]') || line.includes(' ERROR ') || line.includes('/FATAL]')) return 'error';
+    if (
+        line.includes('/ERROR]') ||
+        line.includes('[ERROR]') ||
+        line.includes(' ERROR ') ||
+        line.includes('/FATAL]')
+    )
+        return 'error';
     return 'default';
 }
 

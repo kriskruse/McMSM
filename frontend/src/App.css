@@ -1,35 +1,37 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 #root {
-  min-height: 100vh;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  padding: 2rem;
-  width: 100%;
-  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 45%, #020617 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 2rem;
+    width: 100%;
+    background: radial-gradient(circle at top, #1e293b 0%, #0f172a 45%, #020617 100%);
 }
 
 .app {
-  font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
 }
 
 .auth-shell {
-  width: 100%;
-  min-height: calc(100vh - 4rem);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-

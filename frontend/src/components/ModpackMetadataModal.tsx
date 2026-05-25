@@ -1,11 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import Modal from './Modal';
 import compatData from '../data/minecraft_java_compat.json';
-import type {
-    ModPackMetadataRequestDto,
-    ModPackMetadataResponseDto,
-    ModPackUploadResponseDto,
-} from '../dto';
+import type { ModPackMetadataRequestDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
 import { btn } from '../util/buttonVariants';
 import { updatePackMetadata } from '../util/modpackApi';
 import { INPUT_CLASS } from '../util/styles';
@@ -77,7 +73,10 @@ function compareVersions(left: string, right: string): number {
 
 function mapJavaFromMinecraftVersion(minecraftVersion: string): number {
     for (const range of compat.ranges) {
-        if (compareVersions(minecraftVersion, range.min) >= 0 && compareVersions(minecraftVersion, range.max) <= 0) {
+        if (
+            compareVersions(minecraftVersion, range.min) >= 0 &&
+            compareVersions(minecraftVersion, range.max) <= 0
+        ) {
             return range.java;
         }
     }
@@ -87,7 +86,10 @@ function mapJavaFromMinecraftVersion(minecraftVersion: string): number {
 function resolveGroupVersion(minecraftVersion: string | null): string {
     if (minecraftVersion) {
         for (const range of compat.ranges) {
-            if (compareVersions(minecraftVersion, range.min) >= 0 && compareVersions(minecraftVersion, range.max) <= 0) {
+            if (
+                compareVersions(minecraftVersion, range.min) >= 0 &&
+                compareVersions(minecraftVersion, range.max) <= 0
+            ) {
                 return range.max;
             }
         }
@@ -138,7 +140,13 @@ function buildInitialForm(uploadResult: ModPackUploadResponseDto): MetadataForm 
     };
 }
 
-const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, onSaved }: ModpackMetadataModalProps) => {
+const ModpackMetadataModal = ({
+    isOpen,
+    uploadResult,
+    existingPorts,
+    onClose,
+    onSaved,
+}: ModpackMetadataModalProps) => {
     const [form, setForm] = useState<MetadataForm | null>(null);
     const [error, setError] = useState('');
     const [isSaving, setIsSaving] = useState(false);
@@ -234,110 +242,140 @@ const ModpackMetadataModal = ({ isOpen, uploadResult, existingPorts, onClose, on
             onClose={onClose}
             closeDisabled={isSaving}
         >
-                {uploadResult.loaderWarnings && uploadResult.loaderWarnings.length > 0 && (
-                    <div className="mb-4 flex flex-col gap-2">
-                        {uploadResult.loaderWarnings.map((warning, index) => (
-                            <p key={index} className="rounded-md bg-amber-400/10 px-3 py-2 text-sm text-amber-400">
-                                {warning}
-                            </p>
+            {uploadResult.loaderWarnings && uploadResult.loaderWarnings.length > 0 && (
+                <div className="mb-4 flex flex-col gap-2">
+                    {uploadResult.loaderWarnings.map((warning, index) => (
+                        <p
+                            key={index}
+                            className="rounded-md bg-amber-400/10 px-3 py-2 text-sm text-amber-400"
+                        >
+                            {warning}
+                        </p>
+                    ))}
+                </div>
+            )}
+
+            <div className="grid gap-4 md:grid-cols-2">
+                <label>
+                    <span className="text-sm text-slate-300">Name</span>
+                    <input
+                        className={INPUT_CLASS}
+                        value={form.name}
+                        onChange={(event) => updateForm('name', event.target.value)}
+                    />
+                </label>
+
+                <label>
+                    <span className="text-sm text-slate-300">Pack Version</span>
+                    <input
+                        className={INPUT_CLASS}
+                        value={form.packVersion}
+                        onChange={(event) => updateForm('packVersion', event.target.value)}
+                    />
+                </label>
+
+                <label>
+                    <span className="text-sm text-slate-300">Minecraft Version</span>
+                    <select
+                        className={INPUT_CLASS}
+                        value={form.minecraftVersion}
+                        onChange={(event) => onMinecraftVersionChange(event.target.value)}
+                    >
+                        {minecraftVersionGroups.map((group) => (
+                            <option key={group.value} value={group.value} className="bg-slate-900 text-white">
+                                {group.label}
+                            </option>
                         ))}
-                    </div>
-                )}
+                    </select>
+                </label>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                    <label>
-                        <span className="text-sm text-slate-300">Name</span>
-                        <input className={INPUT_CLASS} value={form.name} onChange={(event) => updateForm('name', event.target.value)} />
-                    </label>
+                <label>
+                    <span className="text-sm text-slate-300">Java Version</span>
+                    <input
+                        className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`}
+                        value={form.javaVersion}
+                        readOnly
+                    />
+                </label>
 
-                    <label>
-                        <span className="text-sm text-slate-300">Pack Version</span>
-                        <input className={INPUT_CLASS} value={form.packVersion} onChange={(event) => updateForm('packVersion', event.target.value)} />
-                    </label>
+                <label>
+                    <span className="text-sm text-slate-300">Java Xmx</span>
+                    <input
+                        className={INPUT_CLASS}
+                        value={form.javaXmx}
+                        onChange={(event) => updateForm('javaXmx', event.target.value)}
+                    />
+                </label>
 
-                    <label>
-                        <span className="text-sm text-slate-300">Minecraft Version</span>
-                        <select
-                            className={INPUT_CLASS}
-                            value={form.minecraftVersion}
-                            onChange={(event) => onMinecraftVersionChange(event.target.value)}
-                        >
-                            {minecraftVersionGroups.map((group) => (
-                                <option key={group.value} value={group.value} className="bg-slate-900 text-white">
-                                    {group.label}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
+                <label>
+                    <span className="text-sm text-slate-300">Port</span>
+                    <input
+                        className={INPUT_CLASS}
+                        value={form.port}
+                        onChange={(event) => updateForm('port', event.target.value)}
+                    />
+                    {portConflict && (
+                        <p className="mt-1 text-xs text-amber-400">
+                            Port {form.port} is already used by "{portConflict.name}"
+                        </p>
+                    )}
+                </label>
 
-                    <label>
-                        <span className="text-sm text-slate-300">Java Version</span>
-                        <input className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`} value={form.javaVersion} readOnly />
-                    </label>
-
-                    <label>
-                        <span className="text-sm text-slate-300">Java Xmx</span>
-                        <input className={INPUT_CLASS} value={form.javaXmx} onChange={(event) => updateForm('javaXmx', event.target.value)} />
-                    </label>
-
-                    <label>
-                        <span className="text-sm text-slate-300">Port</span>
-                        <input className={INPUT_CLASS} value={form.port} onChange={(event) => updateForm('port', event.target.value)} />
-                        {portConflict && (
-                            <p className="mt-1 text-xs text-amber-400">
-                                Port {form.port} is already used by "{portConflict.name}"
-                            </p>
-                        )}
-                    </label>
-
-                    <label>
-                        <span className="text-sm text-slate-300">Entry Point</span>
-                        <select
-                            className={INPUT_CLASS}
-                            value={form.entryPoint}
-                            onChange={(event) => updateForm('entryPoint', event.target.value)}
-                        >
-                            {entryPointCandidates.map((entryPointCandidate) => (
-                                <option key={entryPointCandidate} value={entryPointCandidate} className="bg-slate-900 text-white">
-                                    {entryPointCandidate}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-
-                    <label>
-                        <span className="text-sm text-slate-300">Detected Loader</span>
-                        <input className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`} value={form.loaderType} readOnly />
-                    </label>
-                </div>
-
-                {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-
-                <div className="mt-6 flex justify-end gap-3">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        disabled={isSaving}
-                        className={btn('ghost')}
-                        aria-label="Cancel metadata changes"
+                <label>
+                    <span className="text-sm text-slate-300">Entry Point</span>
+                    <select
+                        className={INPUT_CLASS}
+                        value={form.entryPoint}
+                        onChange={(event) => updateForm('entryPoint', event.target.value)}
                     >
-                        Cancel
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            void submit();
-                        }}
-                        disabled={isSaving}
-                        className={btn('primary')}
-                        aria-label="Save metadata"
-                    >
-                        {isSaving ? 'Saving...' : 'Save Metadata'}
-                    </button>
-                </div>
+                        {entryPointCandidates.map((entryPointCandidate) => (
+                            <option
+                                key={entryPointCandidate}
+                                value={entryPointCandidate}
+                                className="bg-slate-900 text-white"
+                            >
+                                {entryPointCandidate}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+
+                <label>
+                    <span className="text-sm text-slate-300">Detected Loader</span>
+                    <input
+                        className={`${INPUT_CLASS} cursor-not-allowed text-slate-400`}
+                        value={form.loaderType}
+                        readOnly
+                    />
+                </label>
+            </div>
+
+            {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+
+            <div className="mt-6 flex justify-end gap-3">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={isSaving}
+                    className={btn('ghost')}
+                    aria-label="Cancel metadata changes"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        void submit();
+                    }}
+                    disabled={isSaving}
+                    className={btn('primary')}
+                    aria-label="Save metadata"
+                >
+                    {isSaving ? 'Saving...' : 'Save Metadata'}
+                </button>
+            </div>
         </Modal>
     );
 };
 
 export default memo(ModpackMetadataModal);
-

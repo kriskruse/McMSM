@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ModpackCard from '../components/ModpackCard.tsx';
 import ModpackConsole from '../components/ModpackConsole.tsx';
 import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
@@ -11,10 +11,10 @@ import { btn } from '../util/buttonVariants';
 import { isZipFile } from '../util/fileValidation';
 import SkeletonCard from '../components/SkeletonCard';
 import SystemStatusPanel from '../components/SystemStatusPanel';
-import UpdateButton from "../components/UpdateButton.tsx";
-import {healthCheck} from "../util/healthCheck.ts";
-import {BackendStatus} from "../util/healthCheck.ts";
-import CloseButton from "../components/CloseButton";
+import UpdateButton from '../components/UpdateButton.tsx';
+import { healthCheck } from '../util/healthCheck.ts';
+import { BackendStatus } from '../util/healthCheck.ts';
+import CloseButton from '../components/CloseButton';
 
 const Home = () => {
     const { addToast } = useToast();
@@ -55,8 +55,12 @@ const Home = () => {
 
     useEffect(() => {
         const pollHealth = () => {
-            healthCheck('/docker').then(setDockerStatus).catch(() => setDockerStatus('offline'));
-            healthCheck('').then(setBackendStatus).catch(() => setBackendStatus('offline'));
+            healthCheck('/docker')
+                .then(setDockerStatus)
+                .catch(() => setDockerStatus('offline'));
+            healthCheck('')
+                .then(setBackendStatus)
+                .catch(() => setBackendStatus('offline'));
         };
         pollHealth();
         const intervalId = window.setInterval(pollHealth, 2000);
@@ -69,34 +73,40 @@ const Home = () => {
     const modpacksRef = useRef(modpacks);
     modpacksRef.current = modpacks;
 
-    const handleFileDrop = useCallback((file: File) => {
-        if (isUploadModalOpen) {
-            return;
-        }
-        if (!isZipFile(file)) {
-            setLoadError('Only .zip files are supported for upload.');
-            return;
-        }
-        setLoadError('');
-        openNewUpload(file);
-    }, [setLoadError, openNewUpload, isUploadModalOpen]);
+    const handleFileDrop = useCallback(
+        (file: File) => {
+            if (isUploadModalOpen) {
+                return;
+            }
+            if (!isZipFile(file)) {
+                setLoadError('Only .zip files are supported for upload.');
+                return;
+            }
+            setLoadError('');
+            openNewUpload(file);
+        },
+        [setLoadError, openNewUpload, isUploadModalOpen],
+    );
 
     const { isActive: isGlobalFileDragActive } = useDragDrop(handleFileDrop);
 
-    const toggleExpandedPack = useCallback((packId: number) => {
-        const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
-        if (!targetPack) {
-            return;
-        }
+    const toggleExpandedPack = useCallback(
+        (packId: number) => {
+            const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
+            if (!targetPack) {
+                return;
+            }
 
-        if (!targetPack.isDeployed) {
-            setExpandedPackId(null);
-            openMetadataForPack(targetPack);
-            return;
-        }
+            if (!targetPack.isDeployed) {
+                setExpandedPackId(null);
+                openMetadataForPack(targetPack);
+                return;
+            }
 
-        setExpandedPackId((previous) => (previous === packId ? null : packId));
-    }, [openMetadataForPack]);
+            setExpandedPackId((previous) => (previous === packId ? null : packId));
+        },
+        [openMetadataForPack],
+    );
 
     const expandedPack = useMemo(
         () => modpacks.find((pack) => pack.packId === expandedPackId) ?? null,
@@ -156,13 +166,22 @@ const Home = () => {
                 {!isLoading && loadError && <p className="text-sm text-red-400">{loadError}</p>}
                 {!isLoading && !loadError && deployedModpacks.length === 0 && (
                     <div className="flex flex-col items-center gap-3 py-10 text-center">
-                        <svg className="h-12 w-12 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                        <svg
+                            className="h-12 w-12 text-slate-600"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            aria-hidden="true"
+                        >
                             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                             <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
                             <line x1="12" y1="22.08" x2="12" y2="12" />
                         </svg>
                         <p className="text-sm text-slate-400">No deployed servers yet.</p>
-                        <p className="text-xs text-slate-500">Upload a modpack and deploy it to get started.</p>
+                        <p className="text-xs text-slate-500">
+                            Upload a modpack and deploy it to get started.
+                        </p>
                     </div>
                 )}
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -188,7 +207,14 @@ const Home = () => {
                 <h2 className="mb-4 text-lg font-semibold text-white">Saved Instances</h2>
                 {!isLoading && nonDeployedModpacks.length === 0 && (
                     <div className="flex flex-col items-center gap-3 py-10 text-center">
-                        <svg className="h-12 w-12 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                        <svg
+                            className="h-12 w-12 text-slate-600"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            aria-hidden="true"
+                        >
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                             <polyline points="14 2 14 8 20 8" />
                             <line x1="12" y1="18" x2="12" y2="12" />
@@ -236,7 +262,11 @@ const Home = () => {
             <ModpackMetadataModal
                 isOpen={isMetadataModalOpen}
                 uploadResult={pendingUploadResult}
-                existingPorts={modpacks.map((pack) => ({ packId: pack.packId, name: pack.name, port: pack.port }))}
+                existingPorts={modpacks.map((pack) => ({
+                    packId: pack.packId,
+                    name: pack.name,
+                    port: pack.port,
+                }))}
                 onClose={closeMetadataModal}
                 onSaved={handleMetadataSaved}
             />
@@ -245,7 +275,9 @@ const Home = () => {
                 <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-slate-950/45 backdrop-blur-sm">
                     <div className="mx-4 w-full max-w-3xl rounded-2xl border-2 border-dashed border-emerald-300/80 bg-emerald-500/10 px-10 py-16 text-center shadow-2xl">
                         <p className="text-2xl font-semibold text-emerald-200">Drop .zip to upload</p>
-                        <p className="mt-2 text-sm text-emerald-100/90">Release anywhere to open upload with the file preselected.</p>
+                        <p className="mt-2 text-sm text-emerald-100/90">
+                            Release anywhere to open upload with the file preselected.
+                        </p>
                     </div>
                 </div>
             )}

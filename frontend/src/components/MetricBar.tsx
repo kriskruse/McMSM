@@ -47,9 +47,7 @@ const MetricBar = ({ label, percent, displayValue, fraction }: MetricBarProps) =
         <div>
             <div className="mb-1 flex items-center justify-between text-xs">
                 <span className="text-slate-400">{label}</span>
-                <span className="font-mono text-slate-200">
-                    {displayValue ?? `${clamped.toFixed(1)}%`}
-                </span>
+                <span className="font-mono text-slate-200">{displayValue ?? `${clamped.toFixed(1)}%`}</span>
             </div>
             {bar}
         </div>

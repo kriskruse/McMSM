@@ -1,6 +1,7 @@
 export type ButtonVariant = 'primary' | 'danger' | 'ghost' | 'success' | 'warning';
 
-const base = 'inline-flex items-center justify-center font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed';
+const base =
+    'inline-flex items-center justify-center font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variants: Record<ButtonVariant, string> = {
     primary: 'bg-indigo-600 text-white hover:bg-indigo-500',

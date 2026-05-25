@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useOptimistic, useRef, useState, useTransition } from 'react';
 import type { ModPackCardDto } from '../dto';
 import { archivePack, deletePack, deployPack, getAllPacks, startPack, stopPack } from '../util/modpackApi';
-import {BackendStatus} from "../util/healthCheck.ts";
+import { BackendStatus } from '../util/healthCheck.ts';
 import type { ToastVariant } from './useToast';
 
 type OptimisticUpdate = { packId: number; changes: Partial<ModPackCardDto> };
-
-
 
 const DASHBOARD_REFRESH_MS = 15_000;
 const BACKEND_RECOVERY_HEALTH_POLL_MS = 5_000;
@@ -22,10 +20,10 @@ function isConnectionError(error: unknown): boolean {
 
     const normalizedMessage = error.message.toLowerCase();
     return (
-        normalizedMessage.includes('failed to fetch')
-        || normalizedMessage.includes('networkerror')
-        || normalizedMessage.includes('err_connection')
-        || normalizedMessage.includes('load failed')
+        normalizedMessage.includes('failed to fetch') ||
+        normalizedMessage.includes('networkerror') ||
+        normalizedMessage.includes('err_connection') ||
+        normalizedMessage.includes('load failed')
     );
 }
 
@@ -44,9 +42,7 @@ export function useModpacks({ addToast }: UseModpacksOptions = {}) {
     const [optimisticModpacks, addOptimistic] = useOptimistic(
         modpacks,
         (currentModpacks, { packId, changes }: OptimisticUpdate) =>
-            currentModpacks.map(pack =>
-                pack.packId === packId ? { ...pack, ...changes } : pack
-            )
+            currentModpacks.map((pack) => (pack.packId === packId ? { ...pack, ...changes } : pack)),
     );
     const modpacksRef = useRef(modpacks);
     modpacksRef.current = modpacks;
@@ -154,8 +150,14 @@ export function useModpacks({ addToast }: UseModpacksOptions = {}) {
         };
     }, [backendStatus, checkBackendHealth, refreshAllPacks]);
 
-    const deployedModpacks = useMemo(() => optimisticModpacks.filter((pack) => pack.isDeployed), [optimisticModpacks]);
-    const nonDeployedModpacks = useMemo(() => optimisticModpacks.filter((pack) => !pack.isDeployed), [optimisticModpacks]);
+    const deployedModpacks = useMemo(
+        () => optimisticModpacks.filter((pack) => pack.isDeployed),
+        [optimisticModpacks],
+    );
+    const nonDeployedModpacks = useMemo(
+        () => optimisticModpacks.filter((pack) => !pack.isDeployed),
+        [optimisticModpacks],
+    );
 
     const setPackActionState = useCallback((packId: number, isActive: boolean) => {
         setActivePackActions((previous) => {
@@ -169,71 +171,100 @@ export function useModpacks({ addToast }: UseModpacksOptions = {}) {
         });
     }, []);
 
-    const runPackAction = useCallback((
-        packId: number,
-        action: () => Promise<void>,
-        optimisticChanges?: Partial<ModPackCardDto>,
-        successMessage?: string,
-    ) => {
-        setPackActionState(packId, true);
-        setLoadError('');
+    const runPackAction = useCallback(
+        (
+            packId: number,
+            action: () => Promise<void>,
+            optimisticChanges?: Partial<ModPackCardDto>,
+            successMessage?: string,
+        ) => {
+            setPackActionState(packId, true);
+            setLoadError('');
 
-        startTransition(async () => {
-            if (optimisticChanges) {
-                addOptimistic({ packId, changes: optimisticChanges });
-            }
-            try {
-                await action();
-                await refreshAllPacks();
-                if (successMessage) {
-                    addToast?.(successMessage, 'success');
+            startTransition(async () => {
+                if (optimisticChanges) {
+                    addOptimistic({ packId, changes: optimisticChanges });
                 }
-            } catch (error) {
-                const message = error instanceof Error && error.message
-                    ? error.message
-                    : 'Failed to update modpack state.';
-                setLoadError(message);
-                addToast?.(message, 'error');
-            } finally {
-                setPackActionState(packId, false);
+                try {
+                    await action();
+                    await refreshAllPacks();
+                    if (successMessage) {
+                        addToast?.(successMessage, 'success');
+                    }
+                } catch (error) {
+                    const message =
+                        error instanceof Error && error.message
+                            ? error.message
+                            : 'Failed to update modpack state.';
+                    setLoadError(message);
+                    addToast?.(message, 'error');
+                } finally {
+                    setPackActionState(packId, false);
+                }
+            });
+        },
+        [refreshAllPacks, setPackActionState, addOptimistic, startTransition, addToast],
+    );
+
+    const handleDeletePack = useCallback(
+        (packId: number) => {
+            const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
+            const packName = targetPack?.name ?? 'Modpack';
+            const confirmed = window.confirm(`Delete ${packName}? This removes files and metadata.`);
+            if (!confirmed) {
+                return;
             }
-        });
-    }, [refreshAllPacks, setPackActionState, addOptimistic, startTransition, addToast]);
+            runPackAction(packId, () => deletePack(packId), undefined, `${packName} deleted`);
+        },
+        [runPackAction],
+    );
 
-    const handleDeletePack = useCallback((packId: number) => {
-        const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
-        const packName = targetPack?.name ?? 'Modpack';
-        const confirmed = window.confirm(`Delete ${packName}? This removes files and metadata.`);
-        if (!confirmed) {
-            return;
-        }
-        runPackAction(packId, () => deletePack(packId), undefined, `${packName} deleted`);
-    }, [runPackAction]);
+    const handleDeployPack = useCallback(
+        (packId: number) => {
+            const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+            runPackAction(
+                packId,
+                () => deployPack(packId),
+                { status: 'deployed', isDeployed: true },
+                `${packName} deployed`,
+            );
+        },
+        [runPackAction],
+    );
 
-    const handleDeployPack = useCallback((packId: number) => {
-        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
-        runPackAction(packId, () => deployPack(packId), { status: 'deployed', isDeployed: true }, `${packName} deployed`);
-    }, [runPackAction]);
+    const handleStartPack = useCallback(
+        (packId: number) => {
+            const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+            runPackAction(packId, () => startPack(packId), { status: 'running' }, `${packName} started`);
+        },
+        [runPackAction],
+    );
 
-    const handleStartPack = useCallback((packId: number) => {
-        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
-        runPackAction(packId, () => startPack(packId), { status: 'running' }, `${packName} started`);
-    }, [runPackAction]);
+    const handleStopPack = useCallback(
+        (packId: number) => {
+            const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
+            runPackAction(packId, () => stopPack(packId), { status: 'stopped' }, `${packName} stopped`);
+        },
+        [runPackAction],
+    );
 
-    const handleStopPack = useCallback((packId: number) => {
-        const packName = modpacksRef.current.find((p) => p.packId === packId)?.name ?? 'Modpack';
-        runPackAction(packId, () => stopPack(packId), { status: 'stopped' }, `${packName} stopped`);
-    }, [runPackAction]);
-
-    const handleArchivePack = useCallback((packId: number) => {
-        const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
-        const packName = targetPack?.name ?? 'Modpack';
-        const confirmed = window.confirm(`Archive ${packName}? This removes only the container.`);
-        if (!confirmed) {
-            return;
-        }
-        runPackAction(packId, () => archivePack(packId), { isDeployed: false, status: 'saved' }, `${packName} archived`);
-    }, [runPackAction]);
+    const handleArchivePack = useCallback(
+        (packId: number) => {
+            const targetPack = modpacksRef.current.find((pack) => pack.packId === packId);
+            const packName = targetPack?.name ?? 'Modpack';
+            const confirmed = window.confirm(`Archive ${packName}? This removes only the container.`);
+            if (!confirmed) {
+                return;
+            }
+            runPackAction(
+                packId,
+                () => archivePack(packId),
+                { isDeployed: false, status: 'saved' },
+                `${packName} archived`,
+            );
+        },
+        [runPackAction],
+    );
 
     return {
         modpacks: optimisticModpacks,

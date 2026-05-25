@@ -9,7 +9,13 @@ type FileDropZoneProps = {
     onDragLeave: (event: DragEvent<HTMLDivElement>) => void;
 };
 
-const FileDropZone = ({ isDragging, selectedFileName, onDrop, onDragOver, onDragLeave }: FileDropZoneProps) => (
+const FileDropZone = ({
+    isDragging,
+    selectedFileName,
+    onDrop,
+    onDragOver,
+    onDragLeave,
+}: FileDropZoneProps) => (
     <div
         onDrop={onDrop}
         onDragOver={onDragOver}
@@ -19,9 +25,7 @@ const FileDropZone = ({ isDragging, selectedFileName, onDrop, onDragOver, onDrag
         }`}
     >
         <p className="text-sm text-slate-300">Drop your modpack .zip file here</p>
-        {selectedFileName && (
-            <p className="mt-2 text-xs text-emerald-300">Selected: {selectedFileName}</p>
-        )}
+        {selectedFileName && <p className="mt-2 text-xs text-emerald-300">Selected: {selectedFileName}</p>}
     </div>
 );
 

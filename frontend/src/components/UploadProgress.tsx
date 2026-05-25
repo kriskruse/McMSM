@@ -18,7 +18,12 @@ type UploadProgressProps = {
     uploadProgress: number;
 };
 
-const UploadProgress = ({ isUploading, isSuccess, isBackendProcessing, uploadProgress }: UploadProgressProps) => {
+const UploadProgress = ({
+    isUploading,
+    isSuccess,
+    isBackendProcessing,
+    uploadProgress,
+}: UploadProgressProps) => {
     const [messageIndex, setMessageIndex] = useState(0);
 
     useEffect(() => {
@@ -48,8 +53,19 @@ const UploadProgress = ({ isUploading, isSuccess, isBackendProcessing, uploadPro
                         fill="none"
                         viewBox="0 0 24 24"
                     >
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                        />
+                        <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
                     </svg>
                     <span className="text-sm text-slate-300 transition-opacity duration-300">
                         {PROCESSING_MESSAGES[messageIndex]}

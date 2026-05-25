@@ -79,7 +79,9 @@ const UploadModpackModal = ({
 
         if (isFileSizeTooLow(initialFile.size)) {
             setSelectedFile(null);
-            setError('The size of the file is too small for a modpack. Please make sure that it is a valid modpack');
+            setError(
+                'The size of the file is too small for a modpack. Please make sure that it is a valid modpack',
+            );
             return;
         }
 
@@ -101,10 +103,12 @@ const UploadModpackModal = ({
             setError('Only .zip files are supported.');
             return;
         }
-        
+
         if (isFileSizeTooLow(file.size)) {
             setSelectedFile(null);
-            setError('The size of the file is too small for a modpack. Please make sure that it is a valid modpack');
+            setError(
+                'The size of the file is too small for a modpack. Please make sure that it is a valid modpack',
+            );
             return;
         }
 
@@ -153,10 +157,11 @@ const UploadModpackModal = ({
         };
 
         try {
-            console.log('mode: ', mode, 'updateTargetPackId: ', updateTargetPackId );
-            const response = mode === 'update' && updateTargetPackId != null
-                ? await updateModpack(updateTargetPackId, selectedFile, onProgress)
-                : await uploadModpack(selectedFile, onProgress);
+            console.log('mode: ', mode, 'updateTargetPackId: ', updateTargetPackId);
+            const response =
+                mode === 'update' && updateTargetPackId != null
+                    ? await updateModpack(updateTargetPackId, selectedFile, onProgress)
+                    : await uploadModpack(selectedFile, onProgress);
 
             setUploadProgress(100);
             setIsSuccess(true);
@@ -177,78 +182,76 @@ const UploadModpackModal = ({
         }
     };
 
-    const modalTitle = mode === 'update'
-        ? `Update ${updatePackName ?? 'Modpack'}`
-        : 'Upload Modpack';
+    const modalTitle = mode === 'update' ? `Update ${updatePackName ?? 'Modpack'}` : 'Upload Modpack';
 
-    const modalSubtitle = mode === 'update'
-        ? 'Upload a replacement .zip for this existing modpack.'
-        : 'Drag and drop a .zip file or choose one manually.';
+    const modalSubtitle =
+        mode === 'update'
+            ? 'Upload a replacement .zip for this existing modpack.'
+            : 'Drag and drop a .zip file or choose one manually.';
 
     return (
         <Modal title={modalTitle} subtitle={modalSubtitle} onClose={handleClose} closeDisabled={isUploading}>
-                <FileDropZone
-                    isDragging={isDragging}
-                    selectedFileName={selectedFile?.name ?? null}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    onDragLeave={onDragLeave}
-                />
+            <FileDropZone
+                isDragging={isDragging}
+                selectedFileName={selectedFile?.name ?? null}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+            />
 
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".zip,application/zip"
-                    className="hidden"
-                    onChange={onFileInputChange}
-                />
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".zip,application/zip"
+                className="hidden"
+                onChange={onFileInputChange}
+            />
 
-                <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={chooseFile}
-                        className={btn('ghost')}
-                        disabled={isUploading}
-                        aria-label="Choose modpack zip file"
-                    >
-                        Choose File
-                    </button>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                    type="button"
+                    onClick={chooseFile}
+                    className={btn('ghost')}
+                    disabled={isUploading}
+                    aria-label="Choose modpack zip file"
+                >
+                    Choose File
+                </button>
 
-                    <button
-                        type="button"
-                        onClick={() => {
-                            void startUpload();
-                        }}
-                        className={btn('success')}
-                        disabled={isUploading || !selectedFile}
-                        aria-label="Start uploading selected modpack"
-                    >
-                        {isUploading ? 'Uploading...' : mode === 'update' ? 'Start Update' : 'Start Upload'}
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={() => {
+                        void startUpload();
+                    }}
+                    className={btn('success')}
+                    disabled={isUploading || !selectedFile}
+                    aria-label="Start uploading selected modpack"
+                >
+                    {isUploading ? 'Uploading...' : mode === 'update' ? 'Start Update' : 'Start Upload'}
+                </button>
+            </div>
 
-                <p className="mt-3 text-xs text-slate-400">
-                    By clicking upload, you agree to Mojang's EULA.
-                    {' '}
-                    <a
-                        href="https://aka.ms/MinecraftEULA"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-indigo-300 underline underline-offset-2 hover:text-indigo-200"
-                    >
-                        Read the EULA
-                    </a>
-                    .
-                </p>
+            <p className="mt-3 text-xs text-slate-400">
+                By clicking upload, you agree to Mojang's EULA.{' '}
+                <a
+                    href="https://aka.ms/MinecraftEULA"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-indigo-300 underline underline-offset-2 hover:text-indigo-200"
+                >
+                    Read the EULA
+                </a>
+                .
+            </p>
 
-                <UploadProgress
-                    isUploading={isUploading}
-                    isSuccess={isSuccess}
-                    isBackendProcessing={isBackendProcessing}
-                    uploadProgress={uploadProgress}
-                />
+            <UploadProgress
+                isUploading={isUploading}
+                isSuccess={isSuccess}
+                isBackendProcessing={isBackendProcessing}
+                uploadProgress={uploadProgress}
+            />
 
-                {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+            {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
         </Modal>
     );
 };

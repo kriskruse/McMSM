@@ -71,7 +71,9 @@ const ModpackCard = ({
     return (
         <article className="rounded-xl border border-white/10 bg-slate-900/70 p-4 shadow-md">
             <div className="mb-3 flex items-start justify-between gap-4">
-                <h3 className="min-w-0 truncate text-lg font-semibold text-white" title={modpack.name}>{modpack.name}</h3>
+                <h3 className="min-w-0 truncate text-lg font-semibold text-white" title={modpack.name}>
+                    {modpack.name}
+                </h3>
                 <div className="flex items-center gap-2">
                     <StatusBadge indicator={indicator} />
                     <button
@@ -80,7 +82,13 @@ const ModpackCard = ({
                         onClick={() => onToggleExpand(modpack.packId)}
                         aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${modpack.name} details`}
                     >
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <svg
+                            className="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
                             <path d="M8 4H4v4" />
                             <path d="M16 4h4v4" />
                             <path d="M4 16v4h4" />
@@ -139,7 +147,12 @@ const ModpackCard = ({
                             disabled={isBusy || isRunning}
                             aria-label={`Start ${modpack.name}`}
                         >
-                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <svg
+                                className="h-5 w-5"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
                                 <path d="M8 5v14l11-7z" />
                             </svg>
                         </button>
@@ -150,7 +163,12 @@ const ModpackCard = ({
                             disabled={isBusy || !isRunning}
                             aria-label={`Stop ${modpack.name}`}
                         >
-                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <svg
+                                className="h-5 w-5"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
                                 <rect x="7" y="7" width="10" height="10" rx="1" />
                             </svg>
                         </button>
@@ -164,7 +182,14 @@ const ModpackCard = ({
                         disabled={isBusy}
                         aria-label={`Archive ${modpack.name}`}
                     >
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <svg
+                            className="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            aria-hidden="true"
+                        >
                             <path d="M3 7h18" />
                             <path d="M5 7v12h14V7" />
                             <path d="M9 11h6" />
@@ -179,7 +204,14 @@ const ModpackCard = ({
                     disabled={isBusy}
                     aria-label={`Update ${modpack.name}`}
                 >
-                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <svg
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        aria-hidden="true"
+                    >
                         <path d="M12 3v12" />
                         <path d="m7 10 5 5 5-5" />
                         <path d="M4 18h16" />
@@ -192,7 +224,14 @@ const ModpackCard = ({
                     disabled={isBusy}
                     aria-label={`Delete ${modpack.name}`}
                 >
-                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <svg
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        aria-hidden="true"
+                    >
                         <path d="M3 6h18" />
                         <path d="M8 6V4h8v2" />
                         <path d="M19 6l-1 14H6L5 6" />
@@ -208,4 +247,3 @@ const ModpackCard = ({
 };
 
 export default memo(ModpackCard);
-
