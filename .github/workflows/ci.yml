@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -70,3 +71,20 @@ jobs:
           name: checkstyle-report
           path: backend/target/checkstyle-result.xml
           retention-days: 14
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: '0'
+
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@03e4368ac7daa2bd82b3e85262f3bf87ee112f57 # v3
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy

@@ -19,9 +19,9 @@ Full codebase audit of McMSM — a self-hosted Minecraft modpack server manager.
 |---|------|---------|-------------|
 | ✅ I1 | **Tests always skipped** | `-DskipTests` in dev scripts + release.yml | Enable tests. 10 E2E test files exist but never run. Done: release.yml now runs `mvn verify`; dev scripts still skip per CLAUDE.md (fast iteration) |
 | ✅ I2 | **No PR CI workflow** | Only `release.yml` exists | Add `ci.yml`: trigger on PR + push to main. `mvn clean verify` (includes frontend build). Pin actions to commit SHAs. Declare minimal `permissions`. Done: `.github/workflows/ci.yml` |
-| ❌ I3 | **No linting** | No ESLint, Prettier, Checkstyle | Add ESLint + Prettier for frontend, Checkstyle or PMD for backend |
-| ❌ I4 | **No dependency scanning** | No Dependabot or Renovate | Add `dependabot.yml` for both Maven + npm ecosystems. Set `open-pull-requests-limit: 5` |
-| ❌ I5 | **No security scanning in CI** | No SAST | Add CodeQL for Java + Trivy for filesystem scanning. Upload SARIF to GitHub Security tab |
+| ✅ I3 | **No linting** | No ESLint, Prettier, Checkstyle | Add ESLint + Prettier for frontend, Checkstyle or PMD for backend. Done: frontend `eslint.config.js` + `.prettierrc.json` + scripts; backend `maven-checkstyle-plugin` (Google style, warn-only) |
+| ✅ I4 | **No dependency scanning** | No Dependabot or Renovate | Add `dependabot.yml` for both Maven + npm ecosystems. Set `open-pull-requests-limit: 5`. Done: `.github/dependabot.yml` covers npm + maven + github-actions ecosystems |
+| ✅ I5 | **No security scanning in CI** | No SAST | Add CodeQL for Java + Trivy for filesystem scanning. Upload SARIF to GitHub Security tab. Done: `.github/workflows/codeql.yml` (java-kotlin + javascript-typescript matrix); Trivy SARIF step added to `ci.yml` |
 
 ---
 
