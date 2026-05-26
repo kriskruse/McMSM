@@ -6,6 +6,7 @@ import { ToastProvider } from './hooks/useToast';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import Home from './pages/Home.tsx';
+import Settings from './pages/Settings.tsx';
 
 function App() {
     return (
@@ -30,6 +31,7 @@ function App() {
                             }
                         />
                         <Route path="/home" element={<Home />} />
+                        <Route path="/settings" element={<Settings />} />
                     </Routes>
                 </ErrorBoundary>
             </Router>
