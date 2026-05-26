@@ -4,3 +4,4 @@ export type { ModPackUploadResponseDto } from './dto';
 export type { ModPackMetadataRequestDto, ModPackMetadataResponseDto } from './dto';
 export type { ContainerStatsDto, SystemStatsDto } from './dto';
 export type { UpdateStatusDto } from './dto';
+export type { SettingsResponseDto, SettingsUpdateRequestDto } from './dto';
