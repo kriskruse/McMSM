@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { NavLink } from 'react-router';
 import ModpackCard from '../components/ModpackCard.tsx';
 import ModpackConsole from '../components/ModpackConsole.tsx';
 import ModpackMetadataModal from '../components/ModpackMetadataModal.tsx';
@@ -132,6 +133,9 @@ const Home = () => {
             </header>
 
             <div className="mb-4 flex justify-end gap-2">
+                <NavLink to="/settings" className={`${btn('ghost')} gap-2`} aria-label="Open settings">
+                    Settings
+                </NavLink>
                 <button
                     type="button"
                     onClick={() => {
