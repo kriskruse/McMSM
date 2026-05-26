@@ -22,7 +22,7 @@
         "tailwindcss": "^4.2.1"
     },
     "devDependencies": {
-        "@eslint/js": "^9.18.0",
+        "@eslint/js": "^10.0.1",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^6.0.2",
