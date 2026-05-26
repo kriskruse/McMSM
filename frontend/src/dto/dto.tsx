@@ -122,6 +122,14 @@ export type SystemStatsDto = {
     timestamp: string;
 };
 
+export type SettingsResponseDto = {
+    curseforgeApiKeyConfigured: boolean;
+};
+
+export type SettingsUpdateRequestDto = {
+    curseforgeApiKey?: string | null;
+};
+
 export type UpdateStatusDto = {
     currentVersion: string;
     latestVersion: string;
