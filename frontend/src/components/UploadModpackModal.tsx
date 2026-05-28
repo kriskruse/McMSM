@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import type { ModPackUploadResponseDto } from '../dto';
 import { isZipFile } from '../util/fileValidation';
@@ -42,6 +42,25 @@ const UploadModpackModal = ({
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isBackendProcessing, setIsBackendProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [lastInitialFile, setLastInitialFile] = useState<File | null>(null);
+
+    if (initialFile !== lastInitialFile) {
+        setLastInitialFile(initialFile);
+        if (initialFile) {
+            if (!isZipFile(initialFile)) {
+                setSelectedFile(null);
+                setError('Only .zip files are supported.');
+            } else if (isFileSizeTooLow(initialFile.size)) {
+                setSelectedFile(null);
+                setError(
+                    'The size of the file is too small for a modpack. Please make sure that it is a valid modpack',
+                );
+            } else {
+                setSelectedFile(initialFile);
+                setError('');
+            }
+        }
+    }
 
     const chooseFile = () => {
         fileInputRef.current?.click();
@@ -65,29 +84,6 @@ const UploadModpackModal = ({
         clearState();
         onClose();
     };
-
-    useEffect(() => {
-        if (!initialFile) {
-            return;
-        }
-
-        if (!isZipFile(initialFile)) {
-            setSelectedFile(null);
-            setError('Only .zip files are supported.');
-            return;
-        }
-
-        if (isFileSizeTooLow(initialFile.size)) {
-            setSelectedFile(null);
-            setError(
-                'The size of the file is too small for a modpack. Please make sure that it is a valid modpack',
-            );
-            return;
-        }
-
-        setSelectedFile(initialFile);
-        setError('');
-    }, [initialFile]);
 
     if (!isOpen) {
         return null;

@@ -45,7 +45,10 @@ export function useModpacks({ addToast }: UseModpacksOptions = {}) {
             currentModpacks.map((pack) => (pack.packId === packId ? { ...pack, ...changes } : pack)),
     );
     const modpacksRef = useRef(modpacks);
-    modpacksRef.current = modpacks;
+
+    useEffect(() => {
+        modpacksRef.current = modpacks;
+    });
 
     const refreshAllPacks = useCallback(async () => {
         try {

@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import Modal from './Modal';
 import compatData from '../data/minecraft_java_compat.json';
 import type { ModPackMetadataRequestDto, ModPackMetadataResponseDto, ModPackUploadResponseDto } from '../dto';
@@ -150,36 +150,27 @@ const ModpackMetadataModal = ({
     const [form, setForm] = useState<MetadataForm | null>(null);
     const [error, setError] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [lastInitializedFor, setLastInitializedFor] = useState<ModPackUploadResponseDto | null>(null);
 
-    useEffect(() => {
-        if (isOpen && uploadResult) {
-            setForm(buildInitialForm(uploadResult));
-            setError('');
-        }
-    }, [isOpen, uploadResult]);
+    if (isOpen && uploadResult && uploadResult !== lastInitializedFor) {
+        setLastInitializedFor(uploadResult);
+        setForm(buildInitialForm(uploadResult));
+        setError('');
+    }
 
     const canRender = isOpen && uploadResult && form;
     const packId = uploadResult?.packId ?? null;
 
-    const portConflict = useMemo(() => {
-        if (!form?.port || !packId) return null;
-        const conflict = existingPorts.find((p) => p.port === form.port && p.packId !== packId);
-        return conflict ?? null;
-    }, [form?.port, packId, existingPorts]);
+    const portConflict =
+        form?.port && packId
+            ? (existingPorts.find((p) => p.port === form.port && p.packId !== packId) ?? null)
+            : null;
 
-    const title = useMemo(() => {
-        if (!uploadResult?.name) {
-            return 'Review Metadata';
-        }
-        return `Review Metadata: ${uploadResult.name}`;
-    }, [uploadResult?.name]);
+    const title = uploadResult?.name ? `Review Metadata: ${uploadResult.name}` : 'Review Metadata';
 
-    const entryPointCandidates = useMemo(() => {
-        if (!uploadResult) {
-            return ['startserver.sh'];
-        }
-        return resolveEntryPointCandidates(uploadResult);
-    }, [uploadResult]);
+    const entryPointCandidates = uploadResult
+        ? resolveEntryPointCandidates(uploadResult)
+        : ['startserver.sh'];
 
     if (!canRender) {
         return null;

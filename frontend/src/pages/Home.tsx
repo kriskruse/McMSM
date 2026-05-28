@@ -54,6 +54,15 @@ const Home = () => {
         handleMetadataSaved,
     } = useUploadFlow({ refreshAllPacks, setLoadError });
 
+    const [dockerStatus, setDockerStatus] = useState<BackendStatus>('checking');
+    const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
+    const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
+    const modpacksRef = useRef(modpacks);
+
+    useEffect(() => {
+        modpacksRef.current = modpacks;
+    });
+
     useEffect(() => {
         const pollHealth = () => {
             healthCheck('/docker')
@@ -67,12 +76,6 @@ const Home = () => {
         const intervalId = window.setInterval(pollHealth, 2000);
         return () => window.clearInterval(intervalId);
     }, []);
-    const [dockerStatus, setDockerStatus] = useState<BackendStatus>('checking');
-    const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
-
-    const [expandedPackId, setExpandedPackId] = useState<number | null>(null);
-    const modpacksRef = useRef(modpacks);
-    modpacksRef.current = modpacks;
 
     const handleFileDrop = useCallback(
         (file: File) => {
