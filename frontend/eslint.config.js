@@ -1,6 +1,6 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import react from 'eslint-plugin-react';
+import eslintReact from '@eslint-react/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactCompiler from 'eslint-plugin-react-compiler';
 import prettier from 'eslint-config-prettier';
@@ -14,6 +14,7 @@ export default tseslint.config(
     ...tseslint.configs.recommended,
     {
         files: ['**/*.{ts,tsx}'],
+        ...eslintReact.configs['recommended-typescript'],
         languageOptions: {
             ecmaVersion: 2024,
             sourceType: 'module',
@@ -25,21 +26,13 @@ export default tseslint.config(
                 ecmaFeatures: { jsx: true },
             },
         },
-        settings: {
-            react: { version: 'detect' },
-        },
         plugins: {
-            react,
             'react-hooks': reactHooks,
             'react-compiler': reactCompiler,
         },
         rules: {
-            ...react.configs.recommended.rules,
             ...reactHooks.configs.recommended.rules,
             'react-compiler/react-compiler': 'error',
-            'react/react-in-jsx-scope': 'off',
-            'react/prop-types': 'off',
-            'react/no-unescaped-entities': 'off',
             '@typescript-eslint/no-unused-vars': [
                 'warn',
                 { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

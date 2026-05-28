@@ -21,17 +21,20 @@
         "react-router": "^7.15.1",
         "tailwindcss": "^4.2.1"
     },
+    "overrides": {
+        "zod-validation-error": "^4.0.0"
+    },
     "devDependencies": {
-        "@eslint/js": "^9.18.0",
+        "@eslint-react/eslint-plugin": "^5.8.6",
+        "@eslint/js": "^10.0.1",
         "@types/react": "^19.2.15",
         "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^6.0.2",
         "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "^9.18.0",
+        "eslint": "^10.4.0",
         "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-react": "^7.37.4",
         "eslint-plugin-react-compiler": "19.1.0-rc.2",
-        "eslint-plugin-react-hooks": "^5.1.0",
+        "eslint-plugin-react-hooks": "^7.1.1",
         "globals": "^17.6.0",
         "prettier": "^3.4.2",
         "typescript": "~6.0.3",

@@ -12,7 +12,10 @@ export function useDragDrop(onFileDrop: (file: File) => void) {
     const [isActive, setIsActive] = useState(false);
     const depthRef = useRef(0);
     const onFileDropRef = useRef(onFileDrop);
-    onFileDropRef.current = onFileDrop;
+
+    useEffect(() => {
+        onFileDropRef.current = onFileDrop;
+    });
 
     const handleDragOver = useCallback((event: DragEvent) => {
         if (!isFileDragEvent(event)) {

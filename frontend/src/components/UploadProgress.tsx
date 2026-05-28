@@ -25,10 +25,17 @@ const UploadProgress = ({
     uploadProgress,
 }: UploadProgressProps) => {
     const [messageIndex, setMessageIndex] = useState(0);
+    const [prevProcessing, setPrevProcessing] = useState(isBackendProcessing);
+
+    if (prevProcessing !== isBackendProcessing) {
+        setPrevProcessing(isBackendProcessing);
+        if (!isBackendProcessing) {
+            setMessageIndex(0);
+        }
+    }
 
     useEffect(() => {
         if (!isBackendProcessing) {
-            setMessageIndex(0);
             return;
         }
 

@@ -7,11 +7,13 @@ export function usePollingStats<T>(
 ): T | null {
     const [value, setValue] = useState<T | null>(null);
     const fetcherRef = useRef(fetcher);
-    fetcherRef.current = fetcher;
+
+    useEffect(() => {
+        fetcherRef.current = fetcher;
+    });
 
     useEffect(() => {
         if (!enabled) {
-            setValue(null);
             return;
         }
 
@@ -41,5 +43,5 @@ export function usePollingStats<T>(
         };
     }, [enabled, intervalMs]);
 
-    return value;
+    return enabled ? value : null;
 }
