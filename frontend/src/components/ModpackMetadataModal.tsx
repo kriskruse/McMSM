@@ -166,9 +166,7 @@ const ModpackMetadataModal = ({
             ? (existingPorts.find((p) => p.port === form.port && p.packId !== packId) ?? null)
             : null;
 
-    const title = uploadResult?.name
-        ? `Review Metadata: ${uploadResult.name}`
-        : 'Review Metadata';
+    const title = uploadResult?.name ? `Review Metadata: ${uploadResult.name}` : 'Review Metadata';
 
     const entryPointCandidates = uploadResult
         ? resolveEntryPointCandidates(uploadResult)
