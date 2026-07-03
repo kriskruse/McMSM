@@ -256,11 +256,7 @@ export async function readConfigFile(packId: number, relativePath: string): Prom
     return response.text();
 }
 
-export async function writeConfigFile(
-    packId: number,
-    relativePath: string,
-    content: string,
-): Promise<void> {
+export async function writeConfigFile(packId: number, relativePath: string, content: string): Promise<void> {
     const response = await fetch(
         `${API_BASE}/${packId}/config/file?path=${encodeURIComponent(relativePath)}`,
         {

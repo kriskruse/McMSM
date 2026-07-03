@@ -43,9 +43,7 @@ const FileButton = ({
         onClick={() => onSelect(file.relativePath)}
         title={file.relativePath}
         className={`block w-full truncate rounded-md px-2 py-1 text-left text-sm transition ${
-            selected
-                ? 'bg-indigo-600/30 text-white'
-                : 'text-slate-300 hover:bg-white/5 hover:text-white'
+            selected ? 'bg-indigo-600/30 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'
         }`}
     >
         {file.fileName}
@@ -72,7 +70,7 @@ const ConfigFileList = ({ files, selectedPath, onSelect }: ConfigFileListProps) 
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search configs..."
-                className="mb-3 w-full rounded-md bg-white/5 px-3 py-1.5 text-sm text-white outline outline-1 outline-white/10 placeholder:text-slate-500 focus:outline-2 focus:outline-indigo-500"
+                className="mb-3 w-full rounded-md bg-white/5 px-3 py-1.5 text-sm text-white outline outline-white/10 placeholder:text-slate-500 focus:outline-2 focus:outline-indigo-500"
             />
             <div className="flex-1 overflow-auto pr-1">
                 {filtered.length === 0 && (

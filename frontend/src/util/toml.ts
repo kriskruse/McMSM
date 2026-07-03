@@ -11,4 +11,3 @@ export function parseToml(text: string): TomlModel {
 export function stringifyToml(model: TomlModel): string {
     return stringify(model as Parameters<typeof stringify>[0]);
 }
-

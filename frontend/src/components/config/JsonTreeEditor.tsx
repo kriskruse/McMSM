@@ -18,9 +18,7 @@ const CommentHint = ({ comment }: { comment: string }) => {
     if (!comment) {
         return null;
     }
-    return (
-        <p className="mb-1 whitespace-pre-wrap text-xs italic text-emerald-300/70">{comment}</p>
-    );
+    return <p className="mb-1 whitespace-pre-wrap text-xs italic text-emerald-300/70">{comment}</p>;
 };
 
 const TreeRow = ({ parent, keyName, path, onChangeValue }: TreeRowProps) => {
@@ -31,9 +29,7 @@ const TreeRow = ({ parent, keyName, path, onChangeValue }: TreeRowProps) => {
 
     if (isContainer(value)) {
         const childKeys = Object.keys(value);
-        const summary = Array.isArray(value)
-            ? `[${childKeys.length}]`
-            : `{${childKeys.length}}`;
+        const summary = Array.isArray(value) ? `[${childKeys.length}]` : `{${childKeys.length}}`;
         return (
             <div className="border-l border-white/10 pl-3">
                 <CommentHint comment={comment} />
@@ -75,7 +71,7 @@ const TreeRow = ({ parent, keyName, path, onChangeValue }: TreeRowProps) => {
                 type="text"
                 defaultValue={formatLeaf(value)}
                 onChange={(event) => onChangeValue(childPath, event.target.value)}
-                className="mt-0.5 block w-full rounded-md bg-white/5 px-3 py-1.5 font-mono text-sm text-white outline outline-1 outline-white/10 focus:outline-2 focus:outline-indigo-500"
+                className="mt-0.5 block w-full rounded-md bg-white/5 px-3 py-1.5 font-mono text-sm text-white outline outline-white/10 focus:outline-2 focus:outline-indigo-500"
             />
         </div>
     );
@@ -89,13 +85,7 @@ const JsonTreeEditor = ({ node, path, onChangeValue }: JsonTreeEditorProps) => {
     return (
         <div className="space-y-0.5">
             {keys.map((key) => (
-                <TreeRow
-                    key={key}
-                    parent={node}
-                    keyName={key}
-                    path={path}
-                    onChangeValue={onChangeValue}
-                />
+                <TreeRow key={key} parent={node} keyName={key} path={path} onChangeValue={onChangeValue} />
             ))}
         </div>
     );

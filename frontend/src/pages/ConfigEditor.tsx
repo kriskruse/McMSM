@@ -117,9 +117,7 @@ const ConfigEditor = () => {
                     }
                 })
                 .catch((error: unknown) => {
-                    setParseError(
-                        error instanceof Error ? error.message : 'Failed to read file.',
-                    );
+                    setParseError(error instanceof Error ? error.message : 'Failed to read file.');
                 })
                 .finally(() => setIsLoadingFile(false));
         },
@@ -206,9 +204,7 @@ const ConfigEditor = () => {
                     </button>
                     <div>
                         <h1 className="text-xl font-bold text-white">Config editor</h1>
-                        <p className="text-xs text-slate-400">
-                            {pack ? pack.name : `Pack ${packIdParam}`}
-                        </p>
+                        <p className="text-xs text-slate-400">{pack ? pack.name : `Pack ${packIdParam}`}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -246,11 +242,7 @@ const ConfigEditor = () => {
             {!showLoading && !effectiveError && (
                 <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
                     <aside className="min-h-0 rounded-2xl border border-white/10 bg-slate-900/70 p-3">
-                        <ConfigFileList
-                            files={files}
-                            selectedPath={selectedPath}
-                            onSelect={openFile}
-                        />
+                        <ConfigFileList files={files} selectedPath={selectedPath} onSelect={openFile} />
                     </aside>
                     <section className="min-h-0 overflow-auto rounded-2xl border border-white/10 bg-slate-900/70 p-4">
                         {selectedPath === null && (
@@ -266,9 +258,7 @@ const ConfigEditor = () => {
                         {selectedPath !== null && !isLoadingFile && (
                             <>
                                 <div className="mb-3 flex items-center gap-2">
-                                    <h2 className="font-mono text-sm text-slate-200">
-                                        {selectedPath}
-                                    </h2>
+                                    <h2 className="font-mono text-sm text-slate-200">{selectedPath}</h2>
                                     {dirty && (
                                         <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs text-amber-300">
                                             unsaved
