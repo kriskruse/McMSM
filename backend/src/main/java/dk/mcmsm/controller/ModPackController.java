@@ -2,6 +2,7 @@ package dk.mcmsm.controller;
 
 import dk.mcmsm.dto.requests.CommandRequestDto;
 import dk.mcmsm.dto.requests.ModPackMetadataRequestDto;
+import dk.mcmsm.dto.responses.ConfigFileDto;
 import dk.mcmsm.dto.responses.ContainerStatsResponseDto;
 import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackMetadataResponseDto;
@@ -158,6 +159,52 @@ public class ModPackController {
         var response = mcModPackService.updatePack(packId, file);
         logger.info("Update completed for modpack packId={}", packId);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Lists the JSON config files under a modpack's {@code config/} directory.
+     *
+     * @param packId the modpack ID.
+     * @return config file descriptors relative to the pack's {@code config/} root.
+     */
+    @GetMapping("/{packId}/config/files")
+    public ResponseEntity<List<ConfigFileDto>> listConfigFiles(@PathVariable Long packId) {
+        return ResponseEntity.ok(mcModPackService.listConfigFiles(packId));
+    }
+
+    /**
+     * Reads a single JSON config file as plain text.
+     *
+     * @param packId the modpack ID.
+     * @param path   the config file path relative to the pack's {@code config/} root.
+     * @return the raw file contents.
+     */
+    @GetMapping(value = "/{packId}/config/file", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> readConfigFile(
+            @PathVariable Long packId,
+            @RequestParam("path") String path
+    ) {
+        logger.debug("Config read requested for packId={}, path='{}'", packId, path);
+        return ResponseEntity.ok(mcModPackService.readConfigFile(packId, path));
+    }
+
+    /**
+     * Writes a single JSON config file from a raw text request body.
+     *
+     * @param packId  the modpack ID.
+     * @param path    the config file path relative to the pack's {@code config/} root.
+     * @param content the new file contents.
+     * @return an empty 204 response.
+     */
+    @PutMapping(value = "/{packId}/config/file", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<Void> writeConfigFile(
+            @PathVariable Long packId,
+            @RequestParam("path") String path,
+            @RequestBody String content
+    ) {
+        logger.info("Config write requested for packId={}, path='{}', bytes={}", packId, path, content.length());
+        mcModPackService.writeConfigFile(packId, path, content);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete")

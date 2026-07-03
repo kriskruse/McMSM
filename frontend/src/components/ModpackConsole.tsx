@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { ModPackCardDto } from '../dto';
 import { getPackLogs } from '../util/modpackApi';
@@ -166,6 +167,12 @@ const ModpackConsole = ({ modpack }: ModpackConsoleProps) => {
             <h4 className="mb-3 flex items-center gap-3 text-sm font-semibold text-white">
                 {modpack.name}
                 <StatusBadge indicator={indicator} />
+                <Link
+                    to={`/packs/${modpack.packId}/config`}
+                    className="ml-auto rounded-md border border-white/20 bg-slate-800 px-3 py-1 text-xs font-medium text-white transition hover:bg-slate-700"
+                >
+                    Configs
+                </Link>
             </h4>
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
                 <div className="relative rounded-lg border border-white/10 bg-slate-950 p-3">

@@ -8,6 +8,7 @@ import static dk.mcmsm.services.MemoryCalculationService.DEFAULT_JAVA_XMX;
 import dk.mcmsm.services.loader.LoaderDetectionResult;
 import dk.mcmsm.services.loader.LoaderService;
 import dk.mcmsm.services.loader.LoaderType;
+import dk.mcmsm.util.PathSafety;
 import dk.mcmsm.util.ZipArchiveUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,8 +296,8 @@ public class ModPackFileService {
         var sourcePath = sourceRoot.resolve(item).normalize();
         var targetPath = targetRoot.resolve(item).normalize();
 
-        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
-        ensurePathWithinRoot(targetPath, targetRoot, "target");
+        PathSafety.ensureWithinRoot(sourcePath, sourceRoot, "source");
+        PathSafety.ensureWithinRoot(targetPath, targetRoot, "target");
 
         if (!Files.exists(sourcePath)) {
             throw new IllegalStateException("Source path does not exist: " + sourcePath);
@@ -328,7 +329,7 @@ public class ModPackFileService {
 
         var sourceRoot = Path.of(from).toAbsolutePath().normalize();
         var sourcePath = sourceRoot.resolve(item).normalize();
-        ensurePathWithinRoot(sourcePath, sourceRoot, "source");
+        PathSafety.ensureWithinRoot(sourcePath, sourceRoot, "source");
 
         if (!Files.exists(sourcePath)) {
             logger.debug("Skipping copy of '{}' from '{}' — source does not exist.", item, sourceRoot);
@@ -544,13 +545,5 @@ public class ModPackFileService {
                         }
                     });
         }
-    }
-
-    private void ensurePathWithinRoot(Path candidate, Path root, String label) {
-        if (candidate.startsWith(root)) {
-            return;
-        }
-
-        throw new IllegalArgumentException("Resolved " + label + " path escaped its root: " + candidate);
     }
 }

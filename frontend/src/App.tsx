@@ -7,6 +7,7 @@ import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import Home from './pages/Home.tsx';
 import Settings from './pages/Settings.tsx';
+import ConfigEditor from './pages/ConfigEditor.tsx';
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                         />
                         <Route path="/home" element={<Home />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/packs/:packId/config" element={<ConfigEditor />} />
                     </Routes>
                 </ErrorBoundary>
             </Router>

@@ -122,6 +122,12 @@ export type SystemStatsDto = {
     timestamp: string;
 };
 
+export type ConfigFileDto = {
+    relativePath: string;
+    fileName: string;
+    sizeBytes: number;
+};
+
 export type SettingsResponseDto = {
     curseforgeApiKeyConfigured: boolean;
 };

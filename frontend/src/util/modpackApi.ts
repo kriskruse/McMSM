@@ -1,4 +1,5 @@
 import type {
+    ConfigFileDto,
     ContainerStatsDto,
     ModPackCardDto,
     ModPackMetadataRequestDto,
@@ -233,6 +234,45 @@ export async function getContainerStats(packId: number): Promise<ContainerStatsD
         throw new Error(`Failed to fetch container stats (${response.status}).`);
     }
     return response.json();
+}
+
+export async function listConfigFiles(packId: number): Promise<ConfigFileDto[]> {
+    const response = await fetch(`${API_BASE}/${packId}/config/files`);
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to list config files (${response.status}).`);
+    }
+    return response.json();
+}
+
+export async function readConfigFile(packId: number, relativePath: string): Promise<string> {
+    const response = await fetch(
+        `${API_BASE}/${packId}/config/file?path=${encodeURIComponent(relativePath)}`,
+    );
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to read config file (${response.status}).`);
+    }
+    return response.text();
+}
+
+export async function writeConfigFile(
+    packId: number,
+    relativePath: string,
+    content: string,
+): Promise<void> {
+    const response = await fetch(
+        `${API_BASE}/${packId}/config/file?path=${encodeURIComponent(relativePath)}`,
+        {
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/plain' },
+            body: content,
+        },
+    );
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Failed to write config file (${response.status}).`);
+    }
 }
 
 export async function getSystemStats(): Promise<SystemStatsDto> {

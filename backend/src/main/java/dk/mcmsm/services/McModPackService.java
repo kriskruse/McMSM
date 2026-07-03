@@ -1,6 +1,7 @@
 package dk.mcmsm.services;
 
 import dk.mcmsm.dto.requests.ModPackMetadataRequestDto;
+import dk.mcmsm.dto.responses.ConfigFileDto;
 import dk.mcmsm.dto.responses.ModPackDeployResponseDto;
 import dk.mcmsm.dto.responses.ModPackMetadataResponseDto;
 import dk.mcmsm.dto.responses.ModPackUploadResponseDto;
@@ -51,15 +52,17 @@ public class McModPackService {
     private final ModPackRepository modPackRepository;
     private final ModPackFileService fileService;
     private final MemoryCalculationService memoryCalculationService;
+    private final ModPackConfigService configService;
 
     public McModPackService(ContainerService containerService, ContainerLogService containerLogService,
                             ModPackRepository modPackRepository, ModPackFileService fileService,
-                            MemoryCalculationService memoryCalculationService) {
+                            MemoryCalculationService memoryCalculationService, ModPackConfigService configService) {
         this.containerService = containerService;
         this.containerLogService = containerLogService;
         this.modPackRepository = modPackRepository;
         this.fileService = fileService;
         this.memoryCalculationService = memoryCalculationService;
+        this.configService = configService;
     }
 
     /**
@@ -96,6 +99,46 @@ public class McModPackService {
         List<ModPack> packs = modPackRepository.getAllByIsDeployed(true);
         logger.debug("Loaded {} deployed modpacks.", packs.size());
         return packs;
+    }
+
+    /**
+     * Lists the JSON config files under a modpack's {@code config/} directory.
+     *
+     * @param packId the modpack ID.
+     * @return config file descriptors relative to the pack's {@code config/} root.
+     * @throws ModPackNotFoundException if no modpack has the given ID.
+     */
+    public List<ConfigFileDto> listConfigFiles(Long packId) {
+        return configService.listConfigFiles(requirePack(packId));
+    }
+
+    /**
+     * Reads a single JSON config file as text.
+     *
+     * @param packId       the modpack ID.
+     * @param relativePath path relative to the pack's {@code config/} root.
+     * @return the file contents.
+     * @throws ModPackNotFoundException if no modpack has the given ID.
+     */
+    public String readConfigFile(Long packId, String relativePath) {
+        return configService.readConfigFile(requirePack(packId), relativePath);
+    }
+
+    /**
+     * Writes a single JSON config file.
+     *
+     * @param packId       the modpack ID.
+     * @param relativePath path relative to the pack's {@code config/} root.
+     * @param content      the new file contents.
+     * @throws ModPackNotFoundException if no modpack has the given ID.
+     */
+    public void writeConfigFile(Long packId, String relativePath, String content) {
+        configService.writeConfigFile(requirePack(packId), relativePath, content);
+    }
+
+    private ModPack requirePack(Long packId) {
+        return modPackRepository.findByPackId(packId)
+                .orElseThrow(() -> new ModPackNotFoundException(packId));
     }
 
     /**
