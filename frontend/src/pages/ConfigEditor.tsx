@@ -22,8 +22,15 @@ import {
     type ContainerNode,
     type JsonModel,
 } from '../util/jsonc';
+import { parseToml, stringifyToml } from '../util/toml';
 
 const UNSAVED_PROMPT = 'You have unsaved changes. Discard them?';
+
+type ConfigFormat = 'jsonc' | 'toml';
+
+function detectConfigFormat(relativePath: string): ConfigFormat {
+    return relativePath.toLowerCase().endsWith('.toml') ? 'toml' : 'jsonc';
+}
 
 const ConfigEditor = () => {
     const { packId: packIdParam } = useParams<{ packId: string }>();
@@ -44,6 +51,7 @@ const ConfigEditor = () => {
     const [dirty, setDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [model, setModel] = useState<JsonModel>(null);
+    const [activeFormat, setActiveFormat] = useState<ConfigFormat>('jsonc');
 
     useEffect(() => {
         if (!isValidPackId) {
@@ -90,16 +98,21 @@ const ConfigEditor = () => {
             setIsLoadingFile(true);
             setModel(null);
 
+            const format = detectConfigFormat(relativePath);
+            setActiveFormat(format);
+
             readConfigFile(packId, relativePath)
                 .then((content) => {
                     setRawText(content);
                     try {
-                        setModel(parseJsonc(content));
+                        setModel(format === 'toml' ? parseToml(content) : parseJsonc(content));
                         setParseError('');
                     } catch (error) {
                         setModel(null);
                         setParseError(
-                            error instanceof Error ? error.message : 'Could not parse JSON.',
+                            error instanceof Error
+                                ? error.message
+                                : `Could not parse ${format.toUpperCase()}.`,
                         );
                     }
                 })
@@ -131,8 +144,8 @@ const ConfigEditor = () => {
         if (parseError || model === null) {
             return rawText;
         }
-        return stringifyJsonc(model);
-    }, [model, parseError, rawText]);
+        return activeFormat === 'toml' ? stringifyToml(model) : stringifyJsonc(model);
+    }, [activeFormat, model, parseError, rawText]);
 
     const persist = useCallback(async (): Promise<boolean> => {
         if (selectedPath === null) return false;
@@ -265,15 +278,15 @@ const ConfigEditor = () => {
                                 {parseError ? (
                                     <div className="space-y-2">
                                         <p className="rounded-md border border-amber-500/40 bg-amber-500/10 p-2 text-xs text-amber-300">
-                                            Could not parse as JSON ({parseError}). Editing raw text
-                                            instead.
+                                            Could not parse as {activeFormat.toUpperCase()} ({parseError}).
+                                            Editing raw text instead.
                                         </p>
                                         <textarea
                                             key={selectedPath}
                                             value={rawText}
                                             onChange={(event) => handleRawChange(event.target.value)}
                                             spellCheck={false}
-                                            className="h-[70vh] w-full rounded-md bg-slate-950 p-3 font-mono text-xs text-slate-200 outline outline-1 outline-white/10 focus:outline-2 focus:outline-indigo-500"
+                                            className="h-[70vh] w-full rounded-md bg-slate-950 p-3 font-mono text-xs text-slate-200 outline outline-white/10 focus:outline-2 focus:outline-indigo-500"
                                         />
                                     </div>
                                 ) : treeNode ? (
