@@ -10,24 +10,23 @@ import dk.mcmsm.exception.RunningInDevModeException;
 import dk.mcmsm.util.Globals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -152,7 +151,11 @@ public class UpdateService {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                applicationContext.close();
+                // SpringApplication.exit ensures the JVM actually terminates even if
+                // non-daemon threads (e.g. docker-java) outlive the closed context;
+                // a hung old process would block the updater's wait loop forever.
+                int exitCode = SpringApplication.exit(applicationContext);
+                System.exit(exitCode);
             });
         } finally {
             updateLock.unlock();
@@ -319,6 +322,7 @@ public class UpdateService {
                 set "OLD_PID=%d"
                 set "OLD_JAR=%s"
                 set "NEW_JAR=%s"
+                set "NEW_JAR_NAME=%s"
                 set "JAVA_EXE=%s"
                 set "PORT=%s"
                 set "RETRIES=%d"
@@ -354,13 +358,14 @@ public class UpdateService {
                 taskkill /f /im java.exe >nul 2>&1
                 timeout /t 2 /nobreak >nul
                 start "" "%%JAVA_EXE%%" -jar "%%OLD_JAR%%"
-                del "%%NEW_JAR%%" >nul 2>&1
+                ren "%%NEW_JAR%%" "%%NEW_JAR_NAME%%.failed" >nul 2>&1
                 echo [McMSM Updater] Rollback complete.
 
                 :END
                 endlocal
                 """.formatted(Globals.PROCESS_ID, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
-                Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
+                newJar.getFileName().toString(), Globals.JAVA_EXE, Globals.SERVER_PORT,
+                HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS);
 
         Files.writeString(scriptPath, script);
         logger.info("Windows updater script written to: {}", scriptPath);
@@ -382,20 +387,22 @@ public class UpdateService {
                 PORT="%s"
                 RETRIES=%d
                 DELAY=%d
-                APP_LOG="$(dirname "$NEW_JAR")/mcmsm-app.log"
-                START_MARKER="$(dirname "$0")/%s"
+                SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+                APP_LOG="$SCRIPT_DIR/mcmsm-app.log"
+                UPDATER_LOG="$SCRIPT_DIR/mcmsm-updater.log"
+                START_MARKER="$SCRIPT_DIR/%s"
+                
+                # Persist all updater output even when launched from a terminal that closes.
+                exec > >(tee -a "$UPDATER_LOG") 2>&1
 
                 touch "$START_MARKER" || true
 
                 launch_jar() {
                     local jar="$1"
-                    if [ -t 1 ]; then
-                        "$JAVA_EXE" -jar "$jar" &
-                        echo "[McMSM Updater] Process output visible in this terminal."
-                    else
-                        nohup "$JAVA_EXE" -jar "$jar" > "$APP_LOG" 2>&1 &
-                        echo "[McMSM Updater] Headless mode. Output: $APP_LOG"
-                    fi
+                    # nohup + disown so the server survives the terminal window closing.
+                    nohup "$JAVA_EXE" -jar "$jar" > "$APP_LOG" 2>&1 &
+                    disown
+                    echo "[McMSM Updater] Launched $jar (PID $!). Output: $APP_LOG"
                 }
 
                 echo "[McMSM Updater] Waiting for old process (PID $OLD_PID) to exit..."
@@ -422,8 +429,8 @@ public class UpdateService {
                 kill "$NEW_PID" 2>/dev/null || true
                 sleep 2
                 launch_jar "$OLD_JAR"
-                rm -f "$NEW_JAR"
-                echo "[McMSM Updater] Rollback complete."
+                mv -f "$NEW_JAR" "$NEW_JAR.failed"
+                echo "[McMSM Updater] Rollback complete. Failed release kept as $(basename "$NEW_JAR").failed"
                 """.formatted(Globals.PROCESS_ID, oldJar.toAbsolutePath(), newJar.toAbsolutePath(),
                 Globals.JAVA_EXE, Globals.SERVER_PORT, HEALTH_CHECK_RETRIES, HEALTH_CHECK_DELAY_SECONDS,
                 START_MARKER_FILE);
