@@ -82,6 +82,7 @@ Configured in `backend/src/main/resources/application.properties`, all overridab
 | `DATA_ROOT` | `data/` | JSON metadata storage |
 | `TEMP_DIR` | system temp | Temp upload directory |
 | `RUNTIME_SYNC_INTERVAL_MS` | `15000` | Docker state poll interval |
+| `CONTAINER_USER` | *(auto-detect)* | `uid[:gid]` that Minecraft server containers run as. When unset, auto-detected from `/proc/self/status` on Linux. Set this so server-generated files on the bind mount stay owned (and deletable) by the McMSM process. |
 | `MAX_UPLOAD_FILE_SIZE` | `15360MB` | Max upload file size |
 | `MAX_UPLOAD_REQUEST_SIZE` | `15360MB` | Max request size |
 

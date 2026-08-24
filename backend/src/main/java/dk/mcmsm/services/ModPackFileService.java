@@ -26,8 +26,11 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -211,30 +214,116 @@ public class ModPackFileService {
     /**
      * Recursively deletes the modpack's directory from disk.
      *
+     * <p>Directories owned by this process are made writable before descending into
+     * them (server processes may have revoked write permissions), and traversal does
+     * not abort on the first failure: all failed paths are collected and reported in
+     * a single aggregated exception.</p>
+     *
      * @param modPack the modpack whose directory should be deleted
+     * @throws dk.mcmsm.exception.ModPackFileException when one or more paths could not be deleted
      */
     public void deletePackDirectory(ModPack modPack) {
         Objects.requireNonNull(modPack, "modPack must not be null");
-        var packPath = resolvePackPath(modPack);
+        if (!hasText(modPack.getPath())) {
+            throw new IllegalStateException("Modpack path is not set for packId=" + modPack.getPackId() + ".");
+        }
+        // Resolved without the existence check in resolvePackPath so that an already-deleted
+        // directory is tolerated and reported instead of failing the delete operation.
+        var packPath = Path.of(modPack.getPath()).toAbsolutePath().normalize();
 
         if (!Files.exists(packPath)) {
             logger.warn("Skipping directory delete for packId={} because path does not exist: {}", modPack.getPackId(), packPath);
             return;
         }
 
-        try (Stream<Path> stream = Files.walk(packPath)) {
-            stream.sorted((left, right) -> right.getNameCount() - left.getNameCount())
-                    .forEach(path -> {
-                        try {
-                            Files.deleteIfExists(path);
-                        } catch (IOException e) {
-                            throw new IllegalStateException("Failed deleting path: " + path, e);
-                        }
-                    });
-            logger.info("Deleted modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath);
+        var failedPaths = new ArrayList<Path>();
+        try {
+            Files.walkFileTree(packPath, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                    ensureWritableByOwner(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    failedPaths.add(file);
+                    logger.debug("Could not access path while deleting packId={}: {} ({})", modPack.getPackId(), file, exc.getMessage());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    deleteAndRecordFailure(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                    if (exc != null) {
+                        failedPaths.add(dir);
+                        logger.debug("Failed traversing directory while deleting packId={}: {} ({})", modPack.getPackId(), dir, exc.getMessage());
+                        return FileVisitResult.CONTINUE;
+                    }
+                    deleteAndRecordFailure(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                private void deleteAndRecordFailure(Path path) {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        ensureWritableByOwner(path.getParent());
+                        retryDelete(path);
+                    }
+                }
+
+                private void retryDelete(Path path) {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        failedPaths.add(path);
+                        logger.debug("Could not delete path while deleting packId={}: {} ({})", modPack.getPackId(), path, e.getMessage());
+                    }
+                }
+            });
         } catch (IOException e) {
-            logger.error("Failed deleting modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath, e);
+            logger.error("Failed walking modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath, e);
             throw new ModPackFileException("Failed deleting modpack directory for '" + modPack.getName() + "'.", e);
+        }
+
+        if (!failedPaths.isEmpty()) {
+            logger.error("Failed deleting modpack directory for packId={} at '{}'; {} path(s) could not be deleted.",
+                    modPack.getPackId(), packPath, failedPaths.size());
+            throw new ModPackFileException("Failed deleting modpack directory for '" + modPack.getName()
+                    + "'. Undeletable paths: " + failedPaths);
+        }
+
+        logger.info("Deleted modpack directory for packId={} at '{}'.", modPack.getPackId(), packPath);
+    }
+
+    /**
+     * Grants the owner read, write, and execute permissions on the given path,
+     * best effort. Ownership by another user cannot be fixed without elevated
+     * privileges; such failures are logged at debug level only.
+     *
+     * @param path the path to make owner-writable, ignored when {@code null}
+     */
+    private void ensureWritableByOwner(Path path) {
+        if (path == null) {
+            return;
+        }
+        try {
+            var permissions = Files.getPosixFilePermissions(path);
+            var updated = EnumSet.copyOf(permissions);
+            updated.add(PosixFilePermission.OWNER_READ);
+            updated.add(PosixFilePermission.OWNER_WRITE);
+            updated.add(PosixFilePermission.OWNER_EXECUTE);
+            if (!updated.equals(permissions)) {
+                Files.setPosixFilePermissions(path, updated);
+            }
+        } catch (IOException | UnsupportedOperationException e) {
+            logger.debug("Could not adjust permissions of '{}': {}", path, e.getMessage());
         }
     }
 
