@@ -30,16 +30,20 @@ public class ContainerService {
 
     private final DockerClient dockerClient;
     private final ModPackRepository modPackRepository;
+    private final ContainerRunAsResolver runAsResolver;
 
     /**
-     * Creates the container service with an injected Docker client and modpack repository.
+     * Creates the container service with an injected Docker client, modpack repository,
+     * and container user resolver.
      *
      * @param dockerClient       the Docker client bean
      * @param modPackRepository   the modpack repository
+     * @param runAsResolver      resolver for the uid:gid the containers should run as
      */
-    public ContainerService(DockerClient dockerClient, ModPackRepository modPackRepository) {
+    public ContainerService(DockerClient dockerClient, ModPackRepository modPackRepository, ContainerRunAsResolver runAsResolver) {
         this.dockerClient = dockerClient;
         this.modPackRepository = modPackRepository;
+        this.runAsResolver = runAsResolver;
     }
 
     public boolean isDockerRunning() {
@@ -96,15 +100,25 @@ public class ContainerService {
                 .withBinds(new Bind(packPath.toString(), new Volume(CONTAINER_WORKDIR)))
                 .withPortBindings(new PortBinding(Ports.Binding.bindPort(hostPort), containerPort));
 
-        var containerResponse = dockerClient.createContainerCmd(image)
+        var createCmd = dockerClient.createContainerCmd(image)
                 .withName(containerName)
                 .withWorkingDir(CONTAINER_WORKDIR)
                 .withHostConfig(hostConfig)
                 .withExposedPorts(containerPort)
                 .withStdinOpen(true)
                 .withAttachStdin(true)
-                .withCmd("bash", CONTAINER_WORKDIR + "/" + modPack.getEntryPoint())
-                .exec();
+                .withCmd("bash", CONTAINER_WORKDIR + "/" + modPack.getEntryPoint());
+
+        var runAs = runAsResolver.resolve();
+        runAs.ifPresentOrElse(
+                user -> logger.info("Deploying container for packId={} as user '{}'.", modPack.getPackId(), user),
+                () -> logger.warn("Deploying container for packId={} with image default user; server-generated files may not be deletable by this process.", modPack.getPackId())
+        );
+        if (runAs.isPresent()) {
+            createCmd = createCmd.withUser(runAs.get());
+        }
+
+        var containerResponse = createCmd.exec();
 
         dockerClient.startContainerCmd(containerResponse.getId()).exec();
         logger.info("Container started for packId={} with containerId='{}' and name='{}'.", modPack.getPackId(), containerResponse.getId(), containerName);

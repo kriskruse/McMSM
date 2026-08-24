@@ -17,4 +17,14 @@ public class ModPackFileException extends RuntimeException {
     public ModPackFileException(String message, IOException cause) {
         super(message, cause);
     }
+
+    /**
+     * Creates a new file exception with a descriptive message and no underlying cause,
+     * for aggregated failures that cannot be attributed to a single I/O error.
+     *
+     * @param message description of the failed operation
+     */
+    public ModPackFileException(String message) {
+        super(message);
+    }
 }
