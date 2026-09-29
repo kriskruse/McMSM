@@ -19,7 +19,12 @@
             "min": "1.20.5",
             "max": "1.21.11",
             "java": 21
+        },
+        {
+            "min": "26.1",
+            "max": "26.6",
+            "java": 26
         }
     ],
-    "default_java": 21
+    "default_java": 26
 }
