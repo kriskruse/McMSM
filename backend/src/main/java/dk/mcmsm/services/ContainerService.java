@@ -3,23 +3,19 @@ package dk.mcmsm.services;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.NotFoundException;
-import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.api.model.Volume;
+import com.github.dockerjava.api.model.*;
 import dk.mcmsm.entities.ModPack;
 import dk.mcmsm.entities.PackStatus;
 import dk.mcmsm.repository.ModPackRepository;
+import dk.mcmsm.util.JavaImageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.Objects;
 
 @Service
@@ -31,6 +27,7 @@ public class ContainerService {
     private final DockerClient dockerClient;
     private final ModPackRepository modPackRepository;
     private final ContainerRunAsResolver runAsResolver;
+    private final JavaImageBuilder javaImageBuilder;
 
     /**
      * Creates the container service with an injected Docker client, modpack repository,
@@ -40,10 +37,11 @@ public class ContainerService {
      * @param modPackRepository   the modpack repository
      * @param runAsResolver      resolver for the uid:gid the containers should run as
      */
-    public ContainerService(DockerClient dockerClient, ModPackRepository modPackRepository, ContainerRunAsResolver runAsResolver) {
+    public ContainerService(DockerClient dockerClient, ModPackRepository modPackRepository, ContainerRunAsResolver runAsResolver, JavaImageBuilder javaImageBuilder) {
         this.dockerClient = dockerClient;
         this.modPackRepository = modPackRepository;
         this.runAsResolver = runAsResolver;
+        this.javaImageBuilder = javaImageBuilder;
     }
 
     public boolean isDockerRunning() {
@@ -86,7 +84,8 @@ public class ContainerService {
 
         var hostPort = parseHostPort(modPack.getPort());
         var containerName = buildContainerName(modPack);
-        var image = resolveJavaImage(modPack.getJavaVersion());
+
+        var image = javaImageBuilder.ensureImage(modPack.getJavaVersion());
 
         pullImageIfNeeded(image);
         removeContainerIfExists(containerName);
@@ -282,11 +281,6 @@ public class ContainerService {
                 }
             }
         }
-    }
-
-    private String resolveJavaImage(Integer javaVersion) {
-        var effectiveVersion = javaVersion == null ? 21 : javaVersion;
-        return "eclipse-temurin:" + effectiveVersion + "-jre";
     }
 
     private String buildContainerName(ModPack modPack) {
